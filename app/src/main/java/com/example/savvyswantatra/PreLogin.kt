@@ -13,7 +13,7 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 @Composable
 fun Prelogin() {
     Column {
-        Text(text = "Halo Android", fontSize = 60.sp, color = PurpleSavvy1)
+        Text(text = "Halo sepuh", fontSize = 60.sp, color = PurpleSavvy1)
         Text(text = "Halo Android", fontSize = 60.sp, color = PurpleSavvy2)
         Text(text = "Halo Android", fontSize = 60.sp, color = GraySavvy2)
         Text(text = "Halo Android", fontSize = 60.sp, color = OrangeSavvy)
