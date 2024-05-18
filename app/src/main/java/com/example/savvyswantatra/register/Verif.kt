@@ -118,4 +118,45 @@ fun OtpPhoneNumber() {
     }
 }
 
+@Composable
+fun OtpCode() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PurpleSavvy1)
+    ) {
+//        Title
+        Spacer(modifier = Modifier.height(100.dp))
+        Text(text = "Masukkan Kode OTP", style = Typography.titleLarge, color = WhiteSavvy)
+        Text(
+            text = "Masukkan kode OTP yang Anda terima\nmelalui pesan",
+            style = Typography.labelSmall,
+            textAlign = TextAlign.Center,
+            color = PinkSavvy
+        )
+//        Form
+        TextField(
+            value = "",
+            onValueChange = {},
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.offset(y = 30.dp)
+        )
+//        Button
+        Button(
+            onClick = { /*TODO*/ },
+            colors = buttonColors(containerColor = OrangeSavvy),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier
+                .size(width = 186.dp, height = 46.dp)
+                .offset(y = 420.dp)
+        ) {
+            Text(text = "Verifikasi", style = Typography.displayMedium)
+        }
+    }
+}
+
+
+
 
