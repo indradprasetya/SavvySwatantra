@@ -73,10 +73,7 @@ fun Verif() {
         ) {
             Text(text = "Lanjut", style = Typography.displayMedium)
         }
-
-
     }
-
-
 }
+
 

@@ -5,7 +5,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,10 +29,11 @@ import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 fun Register() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = Modifier.fillMaxSize()
     ) {
 //        Title
+        Spacer(modifier = Modifier.height(100.dp))
         Text(text = "Selamat Datang!", style = Typography.titleLarge, color = PurpleSavvy1)
         Text(
             text = "Sikahkan  isi form dibawah ini untuk \n membuat akun savvy anda",
@@ -36,7 +41,7 @@ fun Register() {
             textAlign = TextAlign.Center,
             color = PurpleSavvy2
         )
-        Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(70.dp))
 //        Form
         OutlinedTextField(
             value = "",
@@ -55,13 +60,14 @@ fun Register() {
             value = "",
             onValueChange = {},
             label = { Text("Ulangi Password", fontFamily = poppinsFontFamily) })
-        Spacer(modifier = Modifier.height(100.dp))
 //        Button
         Button(
             onClick = { /*TODO*/ },
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = OrangeSavvy,
-            ),
+            colors = buttonColors(containerColor = OrangeSavvy),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier
+                .size(width = 186.dp, height = 46.dp)
+                .offset(y = 170.dp)
         ) {
             Text(text = "Lanjut", style = Typography.displayMedium)
         }
