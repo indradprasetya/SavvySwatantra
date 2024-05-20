@@ -157,6 +157,45 @@ fun OtpCode() {
     }
 }
 
+@Composable
+fun VerifSucceed() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(PurpleSavvy1)
+    ) {
+        Spacer(modifier = Modifier.height(100.dp))
+//Image
+        Image(
+            painter = painterResource(id = R.drawable.verif_succeed),
+            contentDescription = "verif",
+            modifier = Modifier
+                .size(258.dp)
+                .offset(y = 50.dp)
+        )
+//        Title
+        Text(text = "Verifikasi Berhasil ", style = Typography.titleLarge, color = WhiteSavvy)
+        Text(
+            text = "Selamat datang di Savvy, atur keuanganmu\njauh lebih mudah",
+            style = Typography.labelSmall,
+            textAlign = TextAlign.Center,
+            color = PinkSavvy
+        )
+//        Button
+        Button(
+            onClick = { /*TODO*/ },
+            colors = buttonColors(containerColor = OrangeSavvy),
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier
+                .size(width = 186.dp, height = 46.dp)
+                .offset(y = 220.dp)
+        ) {
+            Text(text = "Lanjut", style = Typography.displayMedium)
+        }
+    }
+}
 
 
 
