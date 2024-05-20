@@ -1,7 +1,9 @@
 package com.example.savvyswantatra.register
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -67,9 +69,17 @@ fun Register() {
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .size(width = 186.dp, height = 46.dp)
-                .offset(y = 170.dp)
+                .offset(y = 162.dp)
         ) {
             Text(text = "Lanjut", style = Typography.displayMedium)
+        }
+        Row(modifier = Modifier.offset(y = 167.dp)) {
+            Text(text = "Sudah Punya Akun?", style = Typography.bodyMedium, color = PurpleSavvy1)
+            Text(
+                text = " Masuk",
+                style = Typography.bodyMedium,
+                color = OrangeSavvy,
+                modifier = Modifier.clickable {})
         }
 
 
