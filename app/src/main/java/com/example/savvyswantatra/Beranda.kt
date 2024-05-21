@@ -328,7 +328,7 @@ fun SubSaldo(
             modifier = Modifier
                 .clip(CircleShape)
                 .size(40.dp),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.FillWidth
         )
     }
     Spacer(modifier = Modifier.width(8.dp))
