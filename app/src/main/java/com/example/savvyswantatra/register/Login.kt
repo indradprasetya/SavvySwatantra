@@ -25,15 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
+import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 
 @Composable
-fun Login() {
+fun Login(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -69,13 +72,13 @@ fun Login() {
 //        Button
         Spacer(modifier = Modifier.height(40.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(Screen.beranda.route) },
             colors = ButtonDefaults.buttonColors(containerColor = OrangeSavvy),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .size(width = 280.dp, height = 46.dp)
         ) {
-            Text(text = "Masuk", style = Typography.displayMedium)
+            Text(text = "Masuk", style = Typography.displayMedium, color = WhiteSavvy)
         }
         Text(
             text = "Atau",
@@ -84,7 +87,7 @@ fun Login() {
             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp)
         )
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {navController.navigate(Screen.beranda.route)},
             colors = ButtonDefaults.buttonColors(containerColor = OrangeSavvy),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
@@ -92,7 +95,7 @@ fun Login() {
         ) {
             Image(painter = painterResource(id = R.drawable.google), contentDescription = "google")
             Spacer(modifier = Modifier.width(10.dp))
-            Text(text = "Masuk dengan Google", style = Typography.displayMedium)
+            Text(text = "Masuk dengan Google", style = Typography.displayMedium, color = WhiteSavvy)
         }
         Row() {
             Text(text = "Belum Punya Akun?", style = Typography.bodyMedium, color = PurpleSavvy1)
@@ -100,7 +103,7 @@ fun Login() {
                 text = " Daftar",
                 style = Typography.bodyMedium,
                 color = OrangeSavvy,
-                modifier = Modifier.clickable {})
+                modifier = Modifier.clickable { navController.navigate(Screen.register.route) })
         }
     }
 }

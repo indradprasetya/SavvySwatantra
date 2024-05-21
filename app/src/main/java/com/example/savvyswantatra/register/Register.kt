@@ -21,14 +21,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
+import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 
 @Composable
-fun Register() {
+fun Register(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -64,14 +67,14 @@ fun Register() {
             label = { Text("Ulangi Password", fontFamily = poppinsFontFamily) })
 //        Button
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(Screen.verif.route) },
             colors = buttonColors(containerColor = OrangeSavvy),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .size(width = 186.dp, height = 46.dp)
                 .offset(y = 162.dp)
         ) {
-            Text(text = "Lanjut", style = Typography.displayMedium)
+            Text(text = "Lanjut", style = Typography.displayMedium, color = WhiteSavvy)
         }
         Row(modifier = Modifier.offset(y = 167.dp)) {
             Text(text = "Sudah Punya Akun?", style = Typography.bodyMedium, color = PurpleSavvy1)
@@ -79,7 +82,7 @@ fun Register() {
                 text = " Masuk",
                 style = Typography.bodyMedium,
                 color = OrangeSavvy,
-                modifier = Modifier.clickable {})
+                modifier = Modifier.clickable {navController.navigate(Screen.login.route)})
         }
 
 

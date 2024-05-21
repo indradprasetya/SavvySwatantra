@@ -1,6 +1,7 @@
 package com.example.savvyswantatra
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,14 +37,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 
 @Composable
-fun SettingScreen() {
+fun SettingScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
             .background(Color(0xFF392467)),
         contentAlignment = Alignment.Center
     ) {
@@ -88,7 +90,10 @@ fun SettingScreen() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 16.dp)
+                        .clickable(onClick = {
+                            navController.navigate(Screen.profil.route)
+                        }),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -172,15 +177,10 @@ fun SettingScreen() {
                     )
                     Icon(
                         imageVector = Icons.Default.KeyboardArrowRight,
-                        contentDescription = "Keluar" )
+                        contentDescription = "Keluar"
+                    )
                 }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun SettingScreenPreview() {
-    SettingScreen()
 }

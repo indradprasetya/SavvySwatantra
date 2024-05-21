@@ -32,11 +32,19 @@ import com.example.savvyswantatra.AnggaranScreen
 import com.example.savvyswantatra.BerandaScreen
 import com.example.savvyswantatra.CalenderScreen
 import com.example.savvyswantatra.PengaturanScreen
+import com.example.savvyswantatra.ProfileScreen
+import com.example.savvyswantatra.SettingScreen
 import com.example.savvyswantatra.SimpananScreen
 import com.example.savvyswantatra.SplashScreen
 import com.example.savvyswantatra.Wt1_screen
 import com.example.savvyswantatra.Wt2_screen
 import com.example.savvyswantatra.Wt3_screen
+import com.example.savvyswantatra.register.Login
+import com.example.savvyswantatra.register.OtpCode
+import com.example.savvyswantatra.register.OtpPhoneNumber
+import com.example.savvyswantatra.register.Register
+import com.example.savvyswantatra.register.Verif
+import com.example.savvyswantatra.register.VerifSucceed
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
@@ -44,13 +52,13 @@ import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NavigationApp(){
+fun NavigationApp() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route,
     ) {
-        composable( Screen.Splash.route) {
+        composable(Screen.Splash.route) {
             SplashScreen(navController = navController)
         }
         composable(Screen.preLogin1.route) {
@@ -62,6 +70,30 @@ fun NavigationApp(){
         composable(Screen.preLogin3.route) {
             Wt3_screen(navController = navController)
         }
+        composable(Screen.profil.route) {
+            ProfileScreen(navController = navController)
+        }
+        composable(Screen.register.route) {
+            Register(navController = navController)
+        }
+        composable(Screen.login.route) {
+            Login(navController = navController)
+        }
+        composable(Screen.verif.route) {
+            Verif(navController = navController)
+        }
+        composable(Screen.otpphonenumber.route) {
+            OtpPhoneNumber(navController = navController)
+        }
+        composable(Screen.otpcode.route) {
+            OtpCode(navController = navController)
+        }
+        composable(Screen.verifsucceed.route) {
+            VerifSucceed(navController = navController)
+        }
+
+
+
         composable(Screen.beranda.route) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
@@ -99,59 +131,61 @@ fun NavigationApp(){
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { BottomNavigationBar(navController) }
             ) {
-                PengaturanScreen(navController = navController)
+                SettingScreen(navController = navController)
+            }
+
             }
         }
     }
-}
 
-@Composable
-fun BottomNavigationBar(navController: NavController) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
+    @Composable
+    fun BottomNavigationBar(navController: NavController) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
 
-    Surface(
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        shadowElevation = 6.dp,
-        color = WhiteSavvy
-    ) {
-        NavigationBar(
-            containerColor = WhiteSavvy
+        Surface(
+            shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
+            shadowElevation = 6.dp,
+            color = WhiteSavvy
         ) {
-            BottomNavigationItem().bottomNavigationItems().forEachIndexed { _, navigationItem ->
-                NavigationBarItem(
-                    selected = navigationItem.route == currentDestination?.route,
-                    label = {
-                        Text(
-                            navigationItem.label,
-                            style = Typography.bodySmall
-                        )
-                    },
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = navigationItem.icon),
-                            contentDescription = navigationItem.label,
-                            modifier = Modifier.size(25.dp)
-                        )
-                    },
-                    onClick = {
-                        navController.navigate(navigationItem.route) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+            NavigationBar(
+                containerColor = WhiteSavvy
+            ) {
+                BottomNavigationItem().bottomNavigationItems().forEachIndexed { _, navigationItem ->
+                    NavigationBarItem(
+                        selected = navigationItem.route == currentDestination?.route,
+                        label = {
+                            Text(
+                                navigationItem.label,
+                                style = Typography.bodySmall
+                            )
+                        },
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = navigationItem.icon),
+                                contentDescription = navigationItem.label,
+                                modifier = Modifier.size(25.dp)
+                            )
+                        },
+                        onClick = {
+                            navController.navigate(navigationItem.route) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    colors = androidx.compose.material3.NavigationBarItemDefaults
-                        .colors(
-                            selectedIconColor = PurpleSavvy2,
-                            indicatorColor = WhiteSavvy,
-                            selectedTextColor = PurpleSavvy2)
-                )
+                        },
+                        colors = androidx.compose.material3.NavigationBarItemDefaults
+                            .colors(
+                                selectedIconColor = PurpleSavvy2,
+                                indicatorColor = WhiteSavvy,
+                                selectedTextColor = PurpleSavvy2
+                            )
+                    )
+                }
             }
         }
     }
-}
 
 

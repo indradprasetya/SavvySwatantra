@@ -29,9 +29,10 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -115,7 +116,7 @@ fun ProfileScreen() {
                 .background(Color.Transparent) // Ganti dengan warna atau konten yang sesuai
         ) {
             Image(
-                painter = painterResource(id = R.drawable.oppa),
+                painter = painterResource(id = R.drawable.zhaolusi),
                 contentDescription = "profile",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -135,10 +136,4 @@ fun ProfileScreen() {
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ProfileScreenPreview() {
-    ProfileScreen()
 }

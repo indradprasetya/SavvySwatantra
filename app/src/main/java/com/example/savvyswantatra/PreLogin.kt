@@ -191,7 +191,7 @@ fun Wt3_screen(navController: NavController) {
                 modifier = Modifier.padding(top = 280.dp)
             )
             Button(
-                onClick = { navController.navigate(Screen.beranda.route)},
+                onClick = { navController.navigate(Screen.register.route)},
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xffeb7f63)),
                 contentPadding = PaddingValues(all = 10.dp),

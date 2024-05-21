@@ -30,7 +30,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PinkSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
@@ -40,7 +42,7 @@ import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 
 @Composable
-fun Verif() {
+fun Verif(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -67,7 +69,7 @@ fun Verif() {
         )
 //        Button
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(Screen.otpphonenumber.route) },
             colors = buttonColors(containerColor = OrangeSavvy),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
@@ -80,7 +82,7 @@ fun Verif() {
 }
 
 @Composable
-fun OtpPhoneNumber() {
+fun OtpPhoneNumber(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -106,7 +108,7 @@ fun OtpPhoneNumber() {
             )
 //        Button
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate(Screen.otpcode.route) },
                 colors = buttonColors(containerColor = OrangeSavvy),
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier
@@ -119,7 +121,7 @@ fun OtpPhoneNumber() {
 }
 
 @Composable
-fun OtpCode() {
+fun OtpCode(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -145,7 +147,7 @@ fun OtpCode() {
         )
 //        Button
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(Screen.verifsucceed.route)},
             colors = buttonColors(containerColor = OrangeSavvy),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
@@ -158,7 +160,7 @@ fun OtpCode() {
 }
 
 @Composable
-fun VerifSucceed() {
+fun VerifSucceed(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -185,7 +187,7 @@ fun VerifSucceed() {
         )
 //        Button
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(Screen.beranda.route) },
             colors = buttonColors(containerColor = OrangeSavvy),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier

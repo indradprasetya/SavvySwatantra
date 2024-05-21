@@ -3,6 +3,7 @@ package com.example.savvyswantatra
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +43,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PinkSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
@@ -70,8 +72,9 @@ fun BerandaScreen(navController: NavController) {
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .size(50.dp),
-                contentScale = ContentScale.Crop
+                    .size(50.dp)
+                    .clickable(onClick = {navController.navigate(Screen.profil.route)}),
+                contentScale = ContentScale.Crop,
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
