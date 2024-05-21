@@ -22,10 +22,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent{
-            Prelogin()
         }
     }
 }
 
 //Gini ya cara manggil warnanya
 //Text(text = "Hello, World!", color = PurpleSavvy1)
+
