@@ -19,15 +19,15 @@ import androidx.core.view.WindowCompat
 private val DarkColorScheme = darkColorScheme(
     primary = PurpleSavvy1,
     secondary = PurpleSavvy1,
-    tertiary = Pink40,
-    background = PurpleSavvy1,
+    tertiary = WhiteSavvy,
+    background = WhiteSavvy,
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = PurpleSavvy1,
     secondary = PurpleSavvy1,
-    tertiary = Pink40,
-    background = PurpleSavvy1,
+    tertiary = WhiteSavvy,
+    background = WhiteSavvy,
 
 
     /* Other default colors to override
@@ -54,8 +54,8 @@ fun SavvySwantatraTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> LightColorScheme
+        else -> DarkColorScheme
     }
     val view = LocalView.current
     if (!view.isInEditMode) {

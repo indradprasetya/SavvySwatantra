@@ -14,6 +14,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.savvyswantatra.navigation.BottomNavigationBar
 import com.example.savvyswantatra.navigation.NavigationApp
 import com.example.savvyswantatra.ui.theme.Purple80
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
