@@ -33,3 +33,4 @@ class MainActivity : ComponentActivity() {
 
 //Gini ya cara manggil warnanya
 //Text(text = "Hello, World!", color = PurpleSavvy1)
+
