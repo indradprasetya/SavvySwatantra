@@ -18,6 +18,8 @@ sealed class Screen(val route: String) {
     data object otpphonenumber : Screen("otpphonenumber")
     data object otpcode : Screen("otocode")
     data object verifsucceed : Screen("verifsucceed")
+    data object syaratket : Screen("syaratket")
+    data object ubahsandi : Screen("ubahsandi")
 }
 
 

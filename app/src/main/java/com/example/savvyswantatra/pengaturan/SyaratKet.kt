@@ -182,9 +182,3 @@ fun SyaratKet() {
 
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun SyaratKetPrev(){
-    SyaratKet()
-}

@@ -11,8 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -36,6 +35,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.Typography
@@ -51,7 +52,7 @@ val custom = TextStyle(
 )
 
 @Composable
-fun ubahSandi() {
+fun ubahSandi(navController: NavController) {
     val (currentPassword, setCurrentPasword) = remember { mutableStateOf("") }
     val (newPassword, setNewPassword) = remember { mutableStateOf("") }
     val (confirmPassword, setConfirmPassword) = remember { mutableStateOf("") }
@@ -87,11 +88,18 @@ fun ubahSandi() {
         TextField(
             value = currentPassword,
             onValueChange = setCurrentPasword,
-            label = { Text("", fontFamily = poppinsFontFamily, fontStyle = FontStyle.Italic, color = WhiteSavvy) },
+            label = {
+                Text(
+                    "",
+                    fontFamily = poppinsFontFamily,
+                    fontStyle = FontStyle.Italic,
+                    color = WhiteSavvy
+                )
+            },
             trailingIcon = {
                 IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
                     Icon(
-                        imageVector = if (passwordVisibility.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        imageVector = if (passwordVisibility.value) Icons.Filled.Person else Icons.Filled.Person,
                         contentDescription = if (passwordVisibility.value) "Hide password" else "Show password",
                         tint = Color.White
                     )
@@ -117,11 +125,20 @@ fun ubahSandi() {
         TextField(
             value = newPassword,
             onValueChange = setNewPassword,
-            label = { Text("", fontFamily = poppinsFontFamily, fontStyle = FontStyle.Italic, color = WhiteSavvy) },
+            label = {
+                Text(
+                    "",
+                    fontFamily = poppinsFontFamily,
+                    fontStyle = FontStyle.Italic,
+                    color = WhiteSavvy
+                )
+            },
             trailingIcon = {
-                IconButton(onClick = { newPasswordVisibility.value = !newPasswordVisibility.value }) {
+                IconButton(onClick = {
+                    newPasswordVisibility.value = !newPasswordVisibility.value
+                }) {
                     Icon(
-                        imageVector = if (newPasswordVisibility.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        imageVector = if (newPasswordVisibility.value) Icons.Filled.Person else Icons.Filled.Person,
                         contentDescription = if (newPasswordVisibility.value) "Hide password" else "Show password",
                         tint = Color.White
                     )
@@ -147,11 +164,20 @@ fun ubahSandi() {
         TextField(
             value = confirmPassword,
             onValueChange = setConfirmPassword,
-            label = { Text("", fontFamily = poppinsFontFamily, fontStyle = FontStyle.Italic, color = WhiteSavvy) },
+            label = {
+                Text(
+                    "",
+                    fontFamily = poppinsFontFamily,
+                    fontStyle = FontStyle.Italic,
+                    color = WhiteSavvy
+                )
+            },
             trailingIcon = {
-                IconButton(onClick = { confirmPasswordVisibility.value = !confirmPasswordVisibility.value }) {
+                IconButton(onClick = {
+                    confirmPasswordVisibility.value = !confirmPasswordVisibility.value
+                }) {
                     Icon(
-                        imageVector = if (confirmPasswordVisibility.value) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        imageVector = if (confirmPasswordVisibility.value) Icons.Filled.Person else Icons.Filled.Person,
                         contentDescription = if (confirmPasswordVisibility.value) "Hide password" else "Show password",
                         tint = Color.White
                     )
@@ -170,20 +196,14 @@ fun ubahSandi() {
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(Screen.pengaturan.route) },
             colors = ButtonDefaults.buttonColors(containerColor = OrangeSavvy),
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier
                 .size(width = 290.dp, height = 46.dp)
-                .offset(y = 270.dp)
+                .offset(y = 240.dp)
         ) {
             Text(text = "Ubah Kata Sandi", style = Typography.displayMedium)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun ubahSandiPrev() {
-    ubahSandi()
 }

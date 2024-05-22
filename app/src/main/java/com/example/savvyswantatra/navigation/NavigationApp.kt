@@ -1,12 +1,9 @@
 package com.example.savvyswantatra.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -16,10 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.Red
-import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,14 +24,15 @@ import androidx.navigation.compose.rememberNavController
 import com.example.savvyswantatra.AnggaranScreen
 import com.example.savvyswantatra.BerandaScreen
 import com.example.savvyswantatra.CalenderScreen
-import com.example.savvyswantatra.PengaturanScreen
-import com.example.savvyswantatra.ProfileScreen
-import com.example.savvyswantatra.SettingScreen
+import com.example.savvyswantatra.pengaturan.ProfileScreen
+import com.example.savvyswantatra.pengaturan.SettingScreen
 import com.example.savvyswantatra.SimpananScreen
 import com.example.savvyswantatra.SplashScreen
 import com.example.savvyswantatra.Wt1_screen
 import com.example.savvyswantatra.Wt2_screen
 import com.example.savvyswantatra.Wt3_screen
+import com.example.savvyswantatra.pengaturan.SyaratKet
+import com.example.savvyswantatra.pengaturan.ubahSandi
 import com.example.savvyswantatra.register.Login
 import com.example.savvyswantatra.register.OtpCode
 import com.example.savvyswantatra.register.OtpPhoneNumber
@@ -48,7 +42,6 @@ import com.example.savvyswantatra.register.VerifSucceed
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
-import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -91,6 +84,14 @@ fun NavigationApp() {
         composable(Screen.verifsucceed.route) {
             VerifSucceed(navController = navController)
         }
+        composable(Screen.syaratket.route) {
+            SyaratKet()
+        }
+        composable(Screen.ubahsandi.route) {
+            ubahSandi(navController = navController)
+        }
+
+
 
 
 
