@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.savvyswantatra.AddAnggaranScreen
 import com.example.savvyswantatra.AnggaranScreen
 import com.example.savvyswantatra.BerandaScreen
 import com.example.savvyswantatra.CalenderScreen
@@ -90,7 +91,9 @@ fun NavigationApp() {
         composable(Screen.ubahsandi.route) {
             ubahSandi(navController = navController)
         }
-
+        composable(Screen.tambahAnggaran.route) {
+            AddAnggaranScreen(navController = navController)
+        }
 
 
 
@@ -188,5 +191,3 @@ fun NavigationApp() {
             }
         }
     }
-
-
