@@ -32,6 +32,8 @@ import com.example.savvyswantatra.SplashScreen
 import com.example.savvyswantatra.Wt1_screen
 import com.example.savvyswantatra.Wt2_screen
 import com.example.savvyswantatra.Wt3_screen
+import com.example.savvyswantatra.component.Anggaran
+import com.example.savvyswantatra.component.AnggaranData
 import com.example.savvyswantatra.pengaturan.SyaratKet
 import com.example.savvyswantatra.pengaturan.ubahSandi
 import com.example.savvyswantatra.register.Login
@@ -94,8 +96,6 @@ fun NavigationApp() {
         composable(Screen.tambahAnggaran.route) {
             AddAnggaranScreen(navController = navController)
         }
-
-
 
 
         composable(Screen.beranda.route) {

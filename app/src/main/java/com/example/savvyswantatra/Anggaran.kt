@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,6 +31,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +42,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.savvyswantatra.component.Anggaran
+import com.example.savvyswantatra.component.AnggaranData
 import com.example.savvyswantatra.component.Anggaran_card
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
@@ -46,6 +51,7 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+
 
 @Composable
 fun AnggaranScreen(navController: NavController) {
@@ -60,7 +66,7 @@ fun AnggaranScreen(navController: NavController) {
             Row(
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){
+            ) {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "Kembali", tint = Color.Black)
                 }
@@ -86,14 +92,13 @@ fun AnggaranScreen(navController: NavController) {
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Anggaran_card(imageResources = R.drawable.cash, label = "Uang Tunai" , nominal = "5.000.000")
-            }
-            item {
-                Anggaran_card(imageResources = R.drawable.bca, label = "Bank BCA" , nominal = "3.000.000")
-            }
-            item {
-                Anggaran_card(imageResources = R.drawable.mandiri, label = "Bank Mandiri" , nominal = "3.000.000")
+            items(AnggaranData.anggaranList) { anggaran ->
+                Anggaran_card(
+                    imageResources = anggaran.imageResources,
+                    label = anggaran.nama,
+                    nominal = anggaran.jumlah,
+                    onDelete = { AnggaranData.anggaranList.remove(anggaran) }
+                )
             }
         }
     }

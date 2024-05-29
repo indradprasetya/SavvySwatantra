@@ -31,6 +31,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -41,6 +42,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -57,7 +59,31 @@ import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 
 @Composable
-fun Anggaran_card(imageResources: Int, label:String, nominal:String) {
+fun Anggaran_card(imageResources: Int, label:String, nominal:String,onDelete: () -> Unit) {
+    val openDialog = remember { mutableStateOf(false) }
+
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = { openDialog.value = false },
+            title = { Text(text = "Konfirmasi Penghapusan") },
+            text = { Text(text = "Apakah Anda ingin menghapus anggaran ini?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onDelete()
+                        openDialog.value = false
+                    }
+                ) {
+                    Text("Hapus")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { openDialog.value = false }) {
+                    Text("Batal")
+                }
+            }
+        )
+    }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopCenter
@@ -83,7 +109,7 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:String) {
                         style = Typography.labelSmall,
                         fontSize = 14.sp
                     )
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = { openDialog.value = true }) {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = null,
@@ -128,8 +154,7 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:String) {
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
-fun BankList() {
-    val selectedOption = remember { mutableStateOf(bankList[0]) }
+fun BankList(selectedImage: MutableState<Int>){
     val pagerState = rememberPagerState(pageCount = { bankList.size })
 
     HorizontalPager(state = pagerState) { page ->
@@ -140,13 +165,14 @@ fun BankList() {
             modifier = Modifier
                 .padding(horizontal = 38.dp)
         ) {
-            bankList.chunked(4).forEach { banks ->
-                banks.forEach { bank ->
+            bankList.chunked(4).forEachIndexed { rowIndex, banks ->
+                banks.forEachIndexed { columnIndex, bank ->
+                    val index = rowIndex * 4 + columnIndex
                     Surface(
                         shape = RoundedCornerShape(5.dp),
                         border = BorderStroke(
                             width = 2.dp,
-                            color = if (bank == selectedOption.value) Color(0xFFFFA500) else Color.Transparent
+                            color = if (index == selectedImage.value) Color(0xFFFFA500) else Color.Transparent
                         ),
                         color = WhiteSavvy
                     ) {
@@ -156,14 +182,14 @@ fun BankList() {
                             modifier = Modifier
                                 .size(100.dp)
                                 .clickable {
-                                    selectedOption.value = bank
+                                    selectedImage.value = index
                                 }
                         )
                     }
                 }
             }
         }
-
     }
 }
+
 

@@ -1,5 +1,6 @@
 package com.example.savvyswantatra.component
 
+import androidx.compose.runtime.mutableStateListOf
 import com.example.savvyswantatra.R
 
 object Image {
@@ -15,4 +16,8 @@ object Image {
         R.drawable.dana
     )
 
+}
+data class Anggaran(val nama: String, val jumlah: String, val imageResources: Int)
+object AnggaranData {
+    val anggaranList = mutableStateListOf<Anggaran>()
 }

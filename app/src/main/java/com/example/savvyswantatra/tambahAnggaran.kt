@@ -29,6 +29,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,7 +40,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.savvyswantatra.component.Anggaran
+import com.example.savvyswantatra.component.AnggaranData
 import com.example.savvyswantatra.component.BankList
+import com.example.savvyswantatra.component.Image
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
@@ -48,7 +52,13 @@ import com.example.savvyswantatra.ui.theme.WhiteSavvy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddAnggaranScreen(navController: NavController){
+fun AddAnggaranScreen(
+    navController: NavController,
+){
+    val textNama = remember { mutableStateOf("") }
+    val textJumlah = remember { mutableStateOf("") }  // Ubah ini menjadi String
+    val selectedImage = remember { mutableStateOf(0) }  // Ubah ini menjadi Int
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = WhiteSavvy
@@ -76,7 +86,6 @@ fun AddAnggaranScreen(navController: NavController){
                 }
             }
             Column {
-                var text by remember { mutableStateOf("") }
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
@@ -90,12 +99,12 @@ fun AddAnggaranScreen(navController: NavController){
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     TextField(
-                        value = text,
+                        value = textNama.value,
                         onValueChange = { newText ->
-                            text = newText
+                            textNama.value = newText
                         },
                         label = { Text(
-                            "BCA",
+                            text = "",  // Ubah ini menjadi String kosong
                             style = Typography.displayMedium,
                             fontSize = 14.sp,
                             color = PurpleSavvy1,
@@ -119,23 +128,21 @@ fun AddAnggaranScreen(navController: NavController){
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     TextField(
-                        value = text,
+                        value = textJumlah.value,
                         onValueChange = { newText ->
-                            text = newText
+                            textJumlah.value = newText
                         },
                         label = { Text(
-                            "3.000.000",
+                            text = "",  // Ubah ini menjadi String kosong
                             style = Typography.displayMedium,
                             fontSize = 14.sp,
                             color = PurpleSavvy1,
                             fontWeight = FontWeight.Normal
-
                         ) },
                         modifier = Modifier
                             .fillMaxWidth(),
                         colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy)
                     )
-
                 }
                 Text(
                     text = "Pilih Icon dibawah",
@@ -143,9 +150,8 @@ fun AddAnggaranScreen(navController: NavController){
                     style = Typography.bodyMedium,
                     fontWeight = FontWeight.Normal,
                     modifier = Modifier.padding(30.dp)
-
                 )
-                BankList()
+                BankList(selectedImage)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -154,7 +160,11 @@ fun AddAnggaranScreen(navController: NavController){
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Button(
-                        onClick = { },
+                        onClick = {
+                            val imageResId = Image.bankList.getOrNull(selectedImage.value) ?: R.drawable.ic_launcher_background
+                            AnggaranData.anggaranList.add(Anggaran(nama = textNama.value, jumlah = textJumlah.value, imageResources = imageResId))
+                            navController.popBackStack()
+                        },
                         shape = RoundedCornerShape(5.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xffeb7f63)),
                         modifier = Modifier
@@ -167,7 +177,11 @@ fun AddAnggaranScreen(navController: NavController){
                         )
                     }
                     Button(
-                        onClick = { },
+                        onClick = {
+                            textNama.value = ""
+                            textJumlah.value = ""  // Ubah ini menjadi String kosong
+                            selectedImage.value = 0
+                        },
                         shape = RoundedCornerShape(5.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xffEBE7E7)),
                         modifier = Modifier
@@ -186,4 +200,3 @@ fun AddAnggaranScreen(navController: NavController){
         }
     }
 }
-
