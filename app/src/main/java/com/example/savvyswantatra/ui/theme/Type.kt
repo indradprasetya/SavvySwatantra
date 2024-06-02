@@ -37,6 +37,11 @@ val Typography = Typography(
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
     ),
+    displaySmall = TextStyle(
+        fontFamily = poppinsFontFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp,
+    ),
 //    Di dashboard yang "Rp5.000.000"
     bodyLarge = TextStyle(
         fontFamily = poppinsFontFamily,
