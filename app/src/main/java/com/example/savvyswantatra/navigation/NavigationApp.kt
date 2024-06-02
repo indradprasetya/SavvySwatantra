@@ -17,14 +17,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.savvyswantatra.AddAnggaranScreen
 import com.example.savvyswantatra.AnggaranScreen
 import com.example.savvyswantatra.BerandaScreen
 import com.example.savvyswantatra.CalenderScreen
+import com.example.savvyswantatra.DetailScreen
 import com.example.savvyswantatra.pengaturan.ProfileScreen
 import com.example.savvyswantatra.pengaturan.SettingScreen
 import com.example.savvyswantatra.SimpananScreen
@@ -95,6 +98,17 @@ fun NavigationApp() {
         }
         composable(Screen.tambahAnggaran.route) {
             AddAnggaranScreen(navController = navController)
+        }
+        composable(
+            route = "detailAnggaran/{namaAnggaran}",
+            arguments = listOf(navArgument("namaAnggaran") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val namaAnggaran = backStackEntry.arguments?.getString("namaAnggaran")
+            if (namaAnggaran != null) {
+                DetailScreen(navController = navController, namaAnggaran = namaAnggaran)
+            } else {
+                // Handle error, namaAnggaran is null
+            }
         }
 
 
