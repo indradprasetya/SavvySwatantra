@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
@@ -92,15 +93,36 @@ fun AnggaranScreen(navController: NavController) {
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(AnggaranData.anggaranList) { anggaran ->
-                Anggaran_card(
-                    imageResources = anggaran.imageResources,
-                    label = anggaran.nama,
-                    nominal = anggaran.jumlah,
-                    onDelete = { AnggaranData.anggaranList.remove(anggaran) }
-                )
+            if (AnggaranData.anggaranList.isEmpty()) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset(y = 200.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painterResource(id = R.drawable.notfound),
+                            contentDescription = "",
+                            modifier = Modifier.size(200.dp)
+                        )
+                        Text(text = "Tidak ada anggaran", style = Typography.bodyMedium, color = Color.LightGray, modifier = Modifier.offset(y = (-20).dp))
+                    }
+                }
+            } else {
+                items(AnggaranData.anggaranList) { anggaran ->
+                    Anggaran_card(
+                        imageResources = anggaran.imageResources,
+                        label = anggaran.nama,
+                        nominal = anggaran.jumlah,
+                        onDelete = { AnggaranData.anggaranList.remove(anggaran) },
+                        onCardClick = {navController.navigate("detailAnggaran/${anggaran.nama}")}
+                    )
+                }
             }
         }
+
     }
 }
 
