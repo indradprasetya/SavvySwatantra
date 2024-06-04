@@ -156,11 +156,13 @@ fun TampilanKalender() {
                     .padding(top = 15.dp)
             )
             {
-                Spacer(
-                    modifier = Modifier
-                        .width(35.dp)
+                Spacer(modifier = Modifier
+                    .width(45.dp)
                 )
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
                     Text(
                         text = "Pemasukan",
                         style = Typography.bodyMedium,
@@ -173,11 +175,13 @@ fun TampilanKalender() {
                     )
                 }
 
-                Spacer(
-                    modifier = Modifier
-                        .width(60.dp)
+                Spacer(modifier = Modifier
+                    .width(45.dp)
                 )
-                Column {
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ){
                     Text(
                         text = "Pengeluaran",
                         style = Typography.bodyMedium,
@@ -190,11 +194,12 @@ fun TampilanKalender() {
                     )
                 }
 
-                Spacer(
-                    modifier = Modifier
-                        .width(60.dp)
+                Spacer(modifier = Modifier
+                    .width(45.dp)
                 )
                 Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
                         text = "Total",
@@ -208,6 +213,7 @@ fun TampilanKalender() {
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
             hari()
             Spacer(modifier = Modifier.height(16.dp))
             Row {

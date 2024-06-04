@@ -1,6 +1,7 @@
 package com.example.savvyswantatra.Kalender
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -137,7 +138,10 @@ fun MonthlyScreen(navController: NavController) {
                 Spacer(modifier = Modifier
                     .width(45.dp)
                 )
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
                     Text(
                         text = "Pemasukan",
                         style = Typography.bodyMedium,
@@ -151,9 +155,12 @@ fun MonthlyScreen(navController: NavController) {
                 }
 
                 Spacer(modifier = Modifier
-                    .width(60.dp)
+                    .width(45.dp)
                 )
-                Column {
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ){
                     Text(
                         text = "Pengeluaran",
                         style = Typography.bodyMedium,
@@ -167,9 +174,12 @@ fun MonthlyScreen(navController: NavController) {
                 }
 
                 Spacer(modifier = Modifier
-                    .width(60.dp)
+                    .width(45.dp)
                 )
-                Column {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
                     Text(
                         text = "Total",
                         style = Typography.bodyMedium,
