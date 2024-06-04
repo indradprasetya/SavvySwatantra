@@ -39,6 +39,7 @@ import com.example.savvyswantatra.register.OtpPhoneNumber
 import com.example.savvyswantatra.register.Register
 import com.example.savvyswantatra.register.Verif
 import com.example.savvyswantatra.register.VerifSucceed
+import com.example.savvyswantatra.tambahSimpanan
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
@@ -49,7 +50,7 @@ fun NavigationApp() {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash.route,
+        startDestination = Screen.tambahsimpanan.route
     ) {
         composable(Screen.Splash.route) {
             SplashScreen(navController = navController)
@@ -90,6 +91,10 @@ fun NavigationApp() {
         composable(Screen.ubahsandi.route) {
             ubahSandi(navController = navController)
         }
+        composable(Screen.tambahsimpanan.route) {
+            tambahSimpanan(navController = navController)
+        }
+
 
 
 
