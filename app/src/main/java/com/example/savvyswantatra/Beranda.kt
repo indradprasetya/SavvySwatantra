@@ -41,8 +41,10 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PinkSavvy
@@ -406,5 +408,11 @@ fun TampilAnggaran(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BerandaScreenPreview() {
+    BerandaScreen(navController = rememberNavController())
 }
 
