@@ -50,6 +50,7 @@ import com.example.savvyswantatra.register.OtpPhoneNumber
 import com.example.savvyswantatra.register.Register
 import com.example.savvyswantatra.register.Verif
 import com.example.savvyswantatra.register.VerifSucceed
+import com.example.savvyswantatra.tambahSimpanan
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
@@ -61,7 +62,7 @@ fun NavigationApp() {
     val addedCategories = remember { mutableStateListOf<KategoriAnggaran>() }
     NavHost(
         navController = navController,
-        startDestination = Screen.Splash.route,
+        startDestination = Screen.Splash.route
     ) {
         composable(Screen.Splash.route) {
             SplashScreen(navController = navController)
@@ -102,12 +103,19 @@ fun NavigationApp() {
         composable(Screen.ubahsandi.route) {
             ubahSandi(navController = navController)
         }
+
+        composable(Screen.tambahsimpanan.route) {
+            tambahSimpanan(navController = navController)
+        }
+
+
         composable(Screen.tambahAnggaran.route) {
             AddAnggaranScreen(navController = navController)
         }
         composable(Screen.riwayatAnggaran.route){
             RiwayatAnggaranScreen(navController = navController)
         }
+
 
         composable(
             route = "detailAnggaran/{namaAnggaran}",
