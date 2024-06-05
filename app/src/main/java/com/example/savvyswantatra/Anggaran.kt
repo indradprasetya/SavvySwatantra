@@ -1,5 +1,4 @@
 package com.example.savvyswantatra
-
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -125,4 +124,3 @@ fun AnggaranScreen(navController: NavController) {
 
     }
 }
-
