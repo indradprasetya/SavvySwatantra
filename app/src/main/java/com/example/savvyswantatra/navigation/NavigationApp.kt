@@ -11,19 +11,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.savvyswantatra.AddAnggaranScreen
 import com.example.savvyswantatra.AnggaranScreen
 import com.example.savvyswantatra.BerandaScreen
 import com.example.savvyswantatra.CalenderScreen
+import com.example.savvyswantatra.DetailScreen
+import com.example.savvyswantatra.RiwayatAnggaranScreen
 import com.example.savvyswantatra.pengaturan.ProfileScreen
 import com.example.savvyswantatra.pengaturan.SettingScreen
 import com.example.savvyswantatra.SimpananScreen
@@ -31,6 +39,9 @@ import com.example.savvyswantatra.SplashScreen
 import com.example.savvyswantatra.Wt1_screen
 import com.example.savvyswantatra.Wt2_screen
 import com.example.savvyswantatra.Wt3_screen
+import com.example.savvyswantatra.component.Anggaran
+import com.example.savvyswantatra.component.AnggaranData
+import com.example.savvyswantatra.component.KategoriAnggaran
 import com.example.savvyswantatra.pengaturan.SyaratKet
 import com.example.savvyswantatra.pengaturan.ubahSandi
 import com.example.savvyswantatra.register.Login
@@ -48,6 +59,7 @@ import com.example.savvyswantatra.ui.theme.WhiteSavvy
 @Composable
 fun NavigationApp() {
     val navController = rememberNavController()
+    val addedCategories = remember { mutableStateListOf<KategoriAnggaran>() }
     NavHost(
         navController = navController,
         startDestination = Screen.Splash.route
@@ -91,21 +103,39 @@ fun NavigationApp() {
         composable(Screen.ubahsandi.route) {
             ubahSandi(navController = navController)
         }
+
         composable(Screen.tambahsimpanan.route) {
             tambahSimpanan(navController = navController)
         }
 
 
+        composable(Screen.tambahAnggaran.route) {
+            AddAnggaranScreen(navController = navController)
+        }
+        composable(Screen.riwayatAnggaran.route){
+            RiwayatAnggaranScreen(navController = navController)
+        }
 
 
-
-
+        composable(
+            route = "detailAnggaran/{namaAnggaran}",
+            arguments = listOf(
+                navArgument("namaAnggaran") { type = NavType.StringType },
+            )
+        ) { backStackEntry ->
+            val namaAnggaran = backStackEntry.arguments?.getString("namaAnggaran")
+            if (namaAnggaran != null) {
+                DetailScreen(navController = navController, namaAnggaran = namaAnggaran, addedCategories = addedCategories)
+            } else {
+                // Handle error, namaAnggaran or idKategori is null
+            }
+        }
         composable(Screen.beranda.route) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { BottomNavigationBar(navController) }
             ) {
-                BerandaScreen(navController = navController)
+                BerandaScreen(navController = navController, addedCategories = addedCategories)
             }
         }
         composable(Screen.kalender.route) {
@@ -139,7 +169,6 @@ fun NavigationApp() {
             ) {
                 SettingScreen(navController = navController)
             }
-
             }
         }
     }
@@ -193,5 +222,3 @@ fun NavigationApp() {
             }
         }
     }
-
-
