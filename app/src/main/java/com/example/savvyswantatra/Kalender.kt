@@ -9,3 +9,13 @@ import androidx.navigation.NavController
 fun CalenderScreen(navController: NavController){
     Text(text = "2")
 }
+
+@Composable
+fun MontlyTrasnsaction(){
+
+}
+
+@Composable
+fun Ringkasan(){
+
+}
