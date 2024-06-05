@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.savvyswantatra.R
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PieChartTheme
@@ -51,7 +52,7 @@ data class PieChartData(val color: Color, val fraction: Float, val label: String
 
 
 @Composable
-fun RingkasanScreen (){
+fun RingkasanScreen (navController: NavController){
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -392,9 +393,3 @@ fun ProgressBarExample() {
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun RingkasanScreenPreview() {
-    RingkasanScreen()
-}

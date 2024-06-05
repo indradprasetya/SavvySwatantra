@@ -134,10 +134,3 @@ fun BerandaScreen(navController: NavController,addedCategories: MutableList<Kate
 }
 
 
-
-@Preview(showBackground = true)
-@Composable
-fun BerandaScreenPreview() {
-    BerandaScreen(navController = rememberNavController())
-}
-

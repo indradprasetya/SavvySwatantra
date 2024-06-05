@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.savvyswantatra.R
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
@@ -36,7 +37,7 @@ import com.example.savvyswantatra.ui.theme.WhiteSavvy
 
 
 @Composable
-fun FormExpense() {
+fun FormExpense(navController: NavController) {
     Row (modifier = Modifier
         .fillMaxSize()
         .padding(top = 100.dp)
@@ -286,7 +287,7 @@ fun FormExpense() {
 
 
 @Composable
-fun FormIncome() {
+fun FormIncome(navController: NavController) {
     Row (modifier = Modifier
         .fillMaxSize()
         .padding(top = 100.dp)
@@ -416,11 +417,12 @@ fun FormIncome() {
                 color = PurpleSavvy1
             )
             Spacer(modifier = Modifier.width(5.dp))
-            val textState = remember { mutableStateOf("") }
+            val catatanState = remember { mutableStateOf("") }
 
             TextField(
-                value =textState.value ,
-                onValueChange ={},
+                singleLine = true,
+                value =catatanState.value ,
+                onValueChange ={catatanState.value= it},
                 modifier = Modifier
                     .background(WhiteSavvy)
                     .height(15.dp) // Adjust the height as needed
@@ -541,9 +543,3 @@ fun AkunAndaDropdown() {
     }
 }
 */
-
-@Preview(showBackground = true)
-@Composable
-fun FormIncomePreview() {
-    FormIncome()
-}

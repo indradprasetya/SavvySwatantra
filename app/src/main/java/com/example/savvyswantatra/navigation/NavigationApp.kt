@@ -29,8 +29,14 @@ import androidx.navigation.navArgument
 import com.example.savvyswantatra.AddAnggaranScreen
 import com.example.savvyswantatra.AnggaranScreen
 import com.example.savvyswantatra.BerandaScreen
-import com.example.savvyswantatra.CalenderScreen
 import com.example.savvyswantatra.DetailScreen
+import com.example.savvyswantatra.Kalender.FormExpense
+import com.example.savvyswantatra.Kalender.FormIncome
+import com.example.savvyswantatra.Kalender.HarianKalender
+import com.example.savvyswantatra.Kalender.KalenderMingguan
+import com.example.savvyswantatra.Kalender.MonthlyScreen
+import com.example.savvyswantatra.Kalender.RingkasanScreen
+import com.example.savvyswantatra.Kalender.TampilanKalender
 import com.example.savvyswantatra.RiwayatAnggaranScreen
 import com.example.savvyswantatra.pengaturan.ProfileScreen
 import com.example.savvyswantatra.pengaturan.SettingScreen
@@ -42,6 +48,7 @@ import com.example.savvyswantatra.Wt3_screen
 import com.example.savvyswantatra.component.Anggaran
 import com.example.savvyswantatra.component.AnggaranData
 import com.example.savvyswantatra.component.KategoriAnggaran
+import com.example.savvyswantatra.component.TampilAnggaran
 import com.example.savvyswantatra.pengaturan.SyaratKet
 import com.example.savvyswantatra.pengaturan.ubahSandi
 import com.example.savvyswantatra.register.Login
@@ -108,12 +115,29 @@ fun NavigationApp() {
             tambahSimpanan(navController = navController)
         }
 
-
         composable(Screen.tambahAnggaran.route) {
             AddAnggaranScreen(navController = navController)
         }
         composable(Screen.riwayatAnggaran.route){
             RiwayatAnggaranScreen(navController = navController)
+        }
+        composable(Screen.bulananKalender.route){
+            MonthlyScreen(navController = navController)
+        }
+        composable(Screen.ringkasanKalender.route){
+            RingkasanScreen(navController = navController)
+        }
+        composable(Screen.harianKalender.route){
+            HarianKalender(navController = navController)
+        }
+        composable(Screen.mingguanKalender.route){
+            KalenderMingguan(navController = navController)
+        }
+        composable(Screen.pemasukanKalender.route){
+            FormIncome(navController = navController)
+        }
+        composable(Screen.pengeluaranKalender.route){
+            FormExpense(navController = navController)
         }
 
 
@@ -143,7 +167,7 @@ fun NavigationApp() {
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { BottomNavigationBar(navController) }
             ) {
-                CalenderScreen(navController)
+                TampilanKalender(navController)
             }
         }
         composable(Screen.anggaran.route) {

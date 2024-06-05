@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.navigation.NavController
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.Pink40
 import com.example.savvyswantatra.ui.theme.Pinkeu
@@ -53,7 +54,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
-fun TampilanKalender() {
+fun TampilanKalender(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -93,8 +94,11 @@ fun TampilanKalender() {
                     text = "Kalender",
                     style = Typography.bodySmall,
                     color = WhiteSavvy,
+                    modifier = Modifier.clickable(onClick = {
+                        navController.navigate("kalender")
+                    })
 
-                    )
+                )
                 Spacer(modifier = Modifier.height(5.dp))
                 Divider(
                     modifier = Modifier
@@ -109,26 +113,34 @@ fun TampilanKalender() {
                 text = "Harian",
                 style = Typography.bodySmall,
                 color = WhiteSavvy,
+                modifier = Modifier.clickable(onClick = {
+                    navController.navigate("harianKalender")
+                })
 
 
-                )
+            )
             Spacer(modifier = Modifier.width(25.dp))
             Text(
                 text = "Mingguan",
                 style = Typography.bodySmall,
                 color = WhiteSavvy,
+                modifier = Modifier.clickable(onClick = {
+                    navController.navigate("mingguanKalender")
+                })
 
 
-                )
+            )
             Spacer(modifier = Modifier.width(25.dp))
             Column {
                 Text(
                     text = "Bulanan",
                     style = Typography.bodySmall,
                     color = WhiteSavvy,
-
-
+                    modifier = Modifier.clickable(onClick = {
+                        navController.navigate("bulananKalender")
+                    }
                     )
+                )
                 Spacer(modifier = Modifier.height(5.dp))
 
             }
@@ -138,9 +150,11 @@ fun TampilanKalender() {
                 text = "Ringkasan",
                 style = Typography.bodySmall,
                 color = WhiteSavvy,
+                modifier = Modifier.clickable(onClick = {
+                    navController.navigate("ringkasanKalender")
+                })
 
-
-                )
+            )
 
         }
         // Card di bagian bawah
@@ -156,8 +170,9 @@ fun TampilanKalender() {
                     .padding(top = 15.dp)
             )
             {
-                Spacer(modifier = Modifier
-                    .width(45.dp)
+                Spacer(
+                    modifier = Modifier
+                        .width(45.dp)
                 )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -175,13 +190,14 @@ fun TampilanKalender() {
                     )
                 }
 
-                Spacer(modifier = Modifier
-                    .width(45.dp)
+                Spacer(
+                    modifier = Modifier
+                        .width(45.dp)
                 )
-                Column (
+                Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
-                ){
+                ) {
                     Text(
                         text = "Pengeluaran",
                         style = Typography.bodyMedium,
@@ -194,8 +210,9 @@ fun TampilanKalender() {
                     )
                 }
 
-                Spacer(modifier = Modifier
-                    .width(45.dp)
+                Spacer(
+                    modifier = Modifier
+                        .width(45.dp)
                 )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -219,7 +236,7 @@ fun TampilanKalender() {
             Row {
 
             }
-            SimpleCalendar()
+            SimpleCalendar(navController = navController)
             /*Icon(imageVector = Icons.Default.AddCircle,
                 contentDescription = "add",
                 modifier = Modifier
@@ -234,7 +251,7 @@ fun TampilanKalender() {
 }
 
 @Composable
-fun hari(){
+fun hari() {
     Card(
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
@@ -243,7 +260,7 @@ fun hari(){
             .padding(horizontal = 24.dp)
             .padding(top = 5.dp),
         colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
-    ){
+    ) {
         Row(
             modifier = Modifier
                 .padding(vertical = 5.dp)
@@ -304,9 +321,53 @@ fun hari(){
         }
     }
 }
+
 @Composable
-fun SimpleCalendar() {
-    val days = listOf(26, 27, 28, 29, 30, 31, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 1, 2, 3, 4, 5, 6)
+fun SimpleCalendar(navController: NavController) {
+    val days = listOf(
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+    )
     Box(modifier = Modifier.fillMaxSize()) {
         Column {
             for (week in days.chunked(7)) {
@@ -336,19 +397,14 @@ fun SimpleCalendar() {
             contentDescription = "add",
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = (-16).dp, y = 430.dp)
+                .offset(x = (-16).dp, y = 320.dp)
                 .width(60.dp)
                 .height(60.dp)
-                .zIndex(1f), // Ikon berada di atas kotak kalender
+                .zIndex(1f)// Ikon berada di atas kotak kalender
+                .clickable(onClick =
+                { navController.navigate("pengeluaranKalender") }),
             tint = Pinkeu
         )
     }
 }
 
-
-
-@Preview(showBackground = true)
-@Composable
-fun TampilanKalenderPreview() {
-    TampilanKalender()
-}
