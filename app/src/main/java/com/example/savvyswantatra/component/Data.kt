@@ -21,29 +21,50 @@ data class Anggaran(val nama: String, val jumlah: Double, val imageResources: In
 object AnggaranData {
     val anggaranList = mutableStateListOf<Anggaran>()
 }
-
-data class KategoriAnggaran(val id: Int, val nama: String,val imageResources: Int)
+data class KategoriAnggaran(val id: Int, val nama: String, val imageResources: Int, val batas_anggaran: Double?)
 object KategoriAnggaranData{
-    val kategoriList = listOf(
+    val kategoriList = mutableListOf(
         KategoriAnggaran(
             id = 1,
             nama = "Makanan dan Minuman",
             imageResources = R.drawable.makan,
+            batas_anggaran = null
         ),
         KategoriAnggaran(
             id = 2,
             nama = "Belanja",
             imageResources = R.drawable.belanja,
+            batas_anggaran = null
         ),
         KategoriAnggaran(
             id = 3,
             nama = "Kesehatan",
             imageResources = R.drawable.kesehatan,
+            batas_anggaran = null
         ),
         KategoriAnggaran(
             id = 4,
             nama = "Travel",
-           imageResources = R.drawable.travel
+           imageResources = R.drawable.travel,
+            batas_anggaran = null
         ),
     )
+}
+val months = listOf(
+    "Januari",
+    "Februari", "Maret"
+    , "April", "Mei"
+    , "Juni", "Juli"
+    , "Agustus"
+    , "September", "Oktober"
+    , "November", "Desember"
+)
+
+data class Transaksi(
+    val nama: String,
+    val jumlah: Double,
+    val tanggal: String
+)
+object TransaksiData{
+    val transaksiList = mutableStateListOf<Transaksi>()
 }

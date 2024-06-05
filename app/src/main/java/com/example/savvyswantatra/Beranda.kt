@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,6 +46,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.savvyswantatra.component.AnggaranData
+import com.example.savvyswantatra.component.Detail_kategori_card
+import com.example.savvyswantatra.component.KategoriAnggaran
 import com.example.savvyswantatra.component.MainCard
 import com.example.savvyswantatra.component.TampilAnggaran
 import com.example.savvyswantatra.component.Transaksi
@@ -57,7 +60,8 @@ import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 
 @Composable
-fun BerandaScreen(navController: NavController) {
+fun BerandaScreen(navController: NavController,addedCategories: MutableList<KategoriAnggaran>) {
+
     Row(
         modifier = Modifier
             .padding(20.dp)
@@ -111,17 +115,18 @@ fun BerandaScreen(navController: NavController) {
         }
         LazyRow(
             Modifier
-                .padding(top = 20.dp)
                 .padding(bottom = 4.dp, end = 2.dp) ,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            item {
-                TampilAnggaran(imageResource = R.drawable.makan, keterangan = "Makanan", jumlah_saldo = 490.000/700.000)
+            items(addedCategories) { kategori ->
+                TampilAnggaran(
+                    imageResource = kategori.imageResources,
+                    keterangan = kategori.nama,
+                    jumlah_saldo = "0",
+                    batas_anggaran = kategori.batas_anggaran ?: 0.0,
+                    navController = navController
+                )
             }
-            item {
-                TampilAnggaran(imageResource = R.drawable.makan, keterangan = "Makanan", jumlah_saldo = 490.000/700.000)
-            }
-
         }
     }
 }

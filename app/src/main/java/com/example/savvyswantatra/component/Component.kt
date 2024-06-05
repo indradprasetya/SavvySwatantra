@@ -312,7 +312,9 @@ fun SubSaldo(
 fun TampilAnggaran(
     imageResource: Int,
     keterangan: String,
-    jumlah_saldo: Double
+    jumlah_saldo: String,
+    batas_anggaran: Double,
+    navController: NavController
 ){
     val progress = remember { mutableStateOf(0.5f) }
     Column {
@@ -327,7 +329,8 @@ fun TampilAnggaran(
                 modifier = Modifier
                     .padding(start = 24.dp, top = 5.dp)
                     .width(215.dp) // Set the width of the card to 318.dp
-                    .height(100.dp), // Set the height of the card to 141.dp
+                    .height(100.dp)
+                    .clickable { navController.navigate(Screen.anggaran.route) }, // Set the height of the card to 141.dp
                 colors = CardDefaults.cardColors(containerColor = PinkSavvy)
             ){
                 Column {
@@ -345,7 +348,13 @@ fun TampilAnggaran(
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
                             Text(text = keterangan, style = Typography.bodyMedium, color = PurpleSavvy1)
-                            Text(text = "Rp.$jumlah_saldo",style = Typography.bodySmall,color = PurpleSavvy1)
+                            Row {
+                                val formatter = NumberFormat.getNumberInstance()
+                                val nominalFormatted = formatter.format(jumlah_saldo.toDoubleOrNull() ?: 0.0)
+                                val nominalFormatted1 = formatter.format(batas_anggaran)
+                                Text(text = "Rp.$nominalFormatted / ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
+                                Text(text = "Rp.$nominalFormatted1 ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
+                            }
                         }
                     }
                     Box(
@@ -476,9 +485,6 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: ()
         }
     }
 }
-
-
-
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun BankList(selectedImage: MutableState<Int>){
@@ -524,13 +530,38 @@ fun BankList(selectedImage: MutableState<Int>){
 fun Detail_kategori_card(
     imageResource: Int,
     keterangan: String,
-    jumlah_saldo: String
-){
-    val progress = remember { mutableStateOf(0.5f) }
+    jumlah_saldo: String,
+    batas_anggaran: Double,
+    onDelete: () -> Unit,
+    onAddTransactionClick: () -> Unit
+) {
+    val progress = remember { mutableStateOf(0.0f) }
+    val openDialog = remember { mutableStateOf(false) }
+
+    if (openDialog.value) {
+        AlertDialog(
+            onDismissRequest = { openDialog.value = false },
+            title = { Text(text = "Konfirmasi Penghapusan") },
+            text = { Text(text = "Apakah Anda ingin menghapus anggaran ini?") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onDelete()
+                        openDialog.value = false
+                    }
+                ) {
+                    Text("Hapus")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { openDialog.value = false }) {
+                    Text("Batal")
+                }
+            }
+        )
+    }
     Column {
         Row(
-//            Modifier
-//                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Card(
@@ -540,15 +571,21 @@ fun Detail_kategori_card(
                     .width(320.dp) // Set the width of the card to 318.dp
                     .height(155.dp), // Set the height of the card to 141.dp
                 colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
-            ){
+            ) {
                 Column {
-                    Row(verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(16.dp)) { // Menambahkan Row untuk menampilkan Image dan Column bersamaan
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(16.dp)
+                    ) {
                         val image: Painter = painterResource(id = imageResource)
                         Box(
                             modifier = Modifier
                                 .size(50.dp)
-                                .shadow(elevation = 4.dp, shape = RoundedCornerShape(10.dp), clip = false)
+                                .shadow(
+                                    elevation = 4.dp,
+                                    shape = RoundedCornerShape(10.dp),
+                                    clip = false
+                                )
                                 .background(Color.White, shape = RoundedCornerShape(10.dp))
                                 .border(
                                     width = 1.dp,
@@ -569,24 +606,35 @@ fun Detail_kategori_card(
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
                             Text(text = keterangan, style = Typography.displayMedium, color = WhiteSavvy)
-                            Text(text = "Rp.$jumlah_saldo",style = Typography.bodyMedium,color = WhiteSavvy, fontWeight = FontWeight.Normal)
+                            Row {
+                                val formatter = NumberFormat.getNumberInstance()
+                                val nominalFormatted = formatter.format(jumlah_saldo.toDoubleOrNull() ?: 0.0)
+                                val nominalFormatted1 = formatter.format(batas_anggaran)
+                                Text(text = "Rp.$nominalFormatted / ", style = Typography.bodyMedium, color = WhiteSavvy, fontWeight = FontWeight.Normal)
+                                Text(text = "Rp.$nominalFormatted1 ", style = Typography.bodyMedium, color = WhiteSavvy, fontWeight = FontWeight.Normal)
+                            }
                         }
-                        Spacer(modifier = Modifier.width(130.dp))
-                            IconButton(onClick = { /*TODO*/ }) {
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            IconButton(onClick = { openDialog.value = true}) {
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = null,
                                     modifier = Modifier.size(18.dp)
                                 )
                             }
+                        }
                     }
-                    Row (
+                    Row(
                         modifier = Modifier
-                            .offset(y=(-20).dp)
+                            .offset(y = (-20).dp)
                             .padding(start = 4.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                    ){
-                        IconButton(onClick = { /*TODO*/ }) {
+                    ) {
+                        IconButton(onClick = { onAddTransactionClick() }) {
                             Icon(
                                 Icons.Default.AddCircle,
                                 contentDescription = null,
@@ -598,7 +646,7 @@ fun Detail_kategori_card(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .offset(y = (-10).dp),// Fill the parent
+                            .offset(y = (-20).dp), // Fill the parent
                         contentAlignment = Alignment.Center // Center the content
                     ) {
                         Box(
@@ -619,20 +667,8 @@ fun Detail_kategori_card(
                             )
                         }
                     }
-
                 }
             }
         }
-    }
-}
-
-@Composable
-fun BottomSheetContent(onDismiss: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        Text("Tambah Kategori Baru", style = Typography.bodyMedium)
     }
 }
