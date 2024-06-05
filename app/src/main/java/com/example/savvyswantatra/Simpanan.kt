@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.GraySavvy1
@@ -107,6 +108,8 @@ fun tambahSimpanan(navController: NavController) {
 
     ) {
 //        Title
+        var selectedIndex by remember { mutableStateOf(0) }
+        val itemsList = listOf("Harian", "Mingguan", "Bulanan")
         Text(
             text = "TAMBAH TABUNGAN",
             style = Typography.bodyLarge,
@@ -127,9 +130,6 @@ fun tambahSimpanan(navController: NavController) {
             ) {
 
                 val cornerRadius = 16.dp
-                var selectedIndex by remember { mutableStateOf(-1) }
-
-                val itemsList = listOf("Harian", "Mingguan", "Bulanan")
                 itemsList.forEachIndexed { index, item ->
 
                     Button(
@@ -192,18 +192,17 @@ fun tambahSimpanan(navController: NavController) {
                 }
             }
 //      Form
-//      Jumlah
-            var jumlahState by remember { mutableStateOf("") }
+//      Total
+            var totalState by remember { mutableStateOf("") }
             Row(
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(35.dp),
+                horizontalArrangement = Arrangement.spacedBy(47.dp),
             ) {
-                Text(text = "Jumlah(Rp)", style = Typography.bodyMedium, color = PurpleSavvy2)
+                Text(text = "Total(Rp)", style = Typography.bodyMedium, color = PurpleSavvy2)
                 TextField(
-
                     singleLine = true,
-                    value = jumlahState,
-                    onValueChange = { jumlahState = it },
+                    value = totalState,
+                    onValueChange = { if (it.isDigitsOnly()) totalState = it },
                     textStyle = Typography.bodyMedium,
                     modifier = Modifier
                         .size(width = 200.dp, height = 46.dp),
@@ -249,7 +248,7 @@ fun tambahSimpanan(navController: NavController) {
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(22.dp),
             ) {
-                Text(text = "Tanggal Mulai", style = Typography.bodyMedium, color = PurpleSavvy2)
+                Text(text = "Tanggal Akhir", style = Typography.bodyMedium, color = PurpleSavvy2)
                 TextField(
                     singleLine = true,
                     value = kalenderState1,
@@ -266,7 +265,10 @@ fun tambahSimpanan(navController: NavController) {
                         unfocusedPlaceholderColor = Color(0xFF686D76),
                     ),
                     onValueChange = {
-                        if (it.length <= maxChar) kalenderState1 = it
+                        if (it.isDigitsOnly()) {
+                            if (it.length <= maxChar) kalenderState1 = it
+                        }
+
                     },
                     visualTransformation = DateTransformation(),
                     placeholder = { Text("DD/MM/YYYY", style = Typography.bodyMedium) }
@@ -288,7 +290,6 @@ fun tambahSimpanan(navController: NavController) {
                         .size(width = 200.dp, height = 46.dp),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     colors = androidx.compose.material3.TextFieldDefaults.colors(
-
                         unfocusedContainerColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
                         cursorColor = PurpleSavvy2,
@@ -297,10 +298,43 @@ fun tambahSimpanan(navController: NavController) {
                         unfocusedPlaceholderColor = Color(0xFF686D76),
                     ),
                     onValueChange = {
-                        if (it.length <= maxChar) kalenderState2 = it
+                        if (it.isDigitsOnly()) {
+                            if (it.length <= maxChar) kalenderState2 = it
+                        }
                     },
                     visualTransformation = DateTransformation(),
                     placeholder = { Text("DD/MM/YYYY", style = Typography.bodyMedium) }
+                )
+            }
+//      Nominal per hari/minggu/bulan
+            var nominalState by remember { mutableStateOf("") }
+            Row(
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(62.dp),
+            ) {
+                Text(text = "Nominal", style = Typography.bodyMedium, color = PurpleSavvy2)
+                TextField(
+                    singleLine = true,
+                    value = nominalState,
+                    onValueChange = { if (it.isDigitsOnly()) nominalState = it },
+                    textStyle = Typography.bodyMedium,
+                    modifier = Modifier
+                        .size(width = 200.dp, height = 46.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    colors = androidx.compose.material3.TextFieldDefaults.colors(
+                        unfocusedContainerColor = Color.Transparent,
+                        focusedContainerColor = Color.Transparent,
+                        cursorColor = PurpleSavvy2,
+                        unfocusedTextColor = PurpleSavvy2,
+                        focusedTextColor = PurpleSavvy2,
+                        unfocusedPlaceholderColor = Color(0xFF686D76),
+                    ),
+                    placeholder = {
+                        Text(
+                            "Nominal " + itemsList[selectedIndex],
+                            style = Typography.bodyMedium
+                        )
+                    }
                 )
             }
         }
