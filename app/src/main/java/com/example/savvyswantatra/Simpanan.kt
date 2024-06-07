@@ -73,6 +73,7 @@ fun SimpananScreen(navController: NavController) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(30.dp),
             modifier = Modifier.padding(top = 20.dp)
+
         ) {
             Column {
                 Text(
