@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.example.savvyswantatra.component.kalenderbar
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.Pink40
 import com.example.savvyswantatra.ui.theme.Pinkeu
@@ -55,36 +56,9 @@ import java.time.YearMonth
 
 @Composable
 fun TampilanKalender(navController: NavController) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleSavvy1)
 
-    )
-    {
-        Text(
-            text = "Transaksi",
-            style = Typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 70.dp)
-
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "Mei 2024",
-            style = Typography.bodySmall,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 110.dp)
-
-        )
-        Row(
+        kalenderbar(navController)
+/*        Row(
             modifier = Modifier
                 .padding(vertical = 155.dp)
         ) {
@@ -157,96 +131,100 @@ fun TampilanKalender(navController: NavController) {
             )
 
         }
-        // Card di bagian bawah
-        Card(
-            shape = RectangleShape,
+
+ */
+
+    Card(
+        shape = RectangleShape,
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(top = 180.dp),
+        colors = CardDefaults.cardColors(containerColor = WhiteSavvy)
+
+
+    ) {
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(top = 180.dp)
-        ) {
-            Row(
+                .padding(top = 15.dp)
+        )
+        {
+            Spacer(
                 modifier = Modifier
-                    .padding(top = 15.dp)
+                    .width(45.dp)
             )
-            {
-                Spacer(
-                    modifier = Modifier
-                        .width(45.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = "Pemasukan",
+                    style = Typography.bodyMedium,
+                    color = PurpleSavvy3,
                 )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "Pemasukan",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                    Text(
-                        text = "Rp4,586,089",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .width(45.dp)
+                Text(
+                    text = "Rp4,586,089",
+                    style = Typography.bodyMedium,
+                    color = PurpleSavvy3,
                 )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "Pengeluaran",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                    Text(
-                        text = "Rp4,586,089",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                }
-
-                Spacer(
-                    modifier = Modifier
-                        .width(45.dp)
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "Total",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy2,
-                    )
-                    Text(
-                        text = "Rp605,964",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy2,
-                    )
-                }
             }
-            Spacer(modifier = Modifier.height(10.dp))
-            hari()
-            Spacer(modifier = Modifier.height(16.dp))
-            Row {
 
-            }
-            SimpleCalendar(navController = navController)
-            /*Icon(imageVector = Icons.Default.AddCircle,
-                contentDescription = "add",
+            Spacer(
                 modifier = Modifier
-                    .padding(start = 335.dp)
-                    .width(54.dp)
-                    .height(54.dp)
-                    ,
-                tint = Pink40
-            )*/
+                    .width(45.dp)
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = "Pengeluaran",
+                    style = Typography.bodyMedium,
+                    color = PurpleSavvy3,
+                )
+                Text(
+                    text = "Rp4,586,089",
+                    style = Typography.bodyMedium,
+                    color = PurpleSavvy3,
+                )
+            }
+
+            Spacer(
+                modifier = Modifier
+                    .width(45.dp)
+            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Text(
+                    text = "Total",
+                    style = Typography.bodyMedium,
+                    color = PurpleSavvy2,
+                )
+                Text(
+                    text = "Rp605,964",
+                    style = Typography.bodyMedium,
+                    color = PurpleSavvy2,
+                )
+            }
         }
+        Spacer(modifier = Modifier.height(10.dp))
+        hari()
+        Spacer(modifier = Modifier.height(16.dp))
+        Row {
+
+        }
+        SimpleCalendar(navController = navController)
+        /*Icon(imageVector = Icons.Default.AddCircle,
+            contentDescription = "add",
+            modifier = Modifier
+                .padding(start = 335.dp)
+                .width(54.dp)
+                .height(54.dp)
+                ,
+            tint = Pink40
+        )*/
     }
 }
 

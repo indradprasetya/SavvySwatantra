@@ -170,6 +170,38 @@ fun NavigationApp() {
                 TampilanKalender(navController)
             }
         }
+        composable(Screen.bulananKalender.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                MonthlyScreen(navController)
+            }
+        }
+        composable(Screen.ringkasanKalender.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                RingkasanScreen(navController)
+            }
+        }
+        composable(Screen.harianKalender.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                HarianKalender(navController)
+            }
+        }
+        composable(Screen.mingguanKalender.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                KalenderMingguan(navController)
+            }
+        }
         composable(Screen.anggaran.route) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

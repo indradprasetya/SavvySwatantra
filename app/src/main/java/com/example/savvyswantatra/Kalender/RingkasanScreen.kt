@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
@@ -34,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.component.kalenderbar
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PieChartTheme
 import com.example.savvyswantatra.ui.theme.Pink80
@@ -53,96 +55,16 @@ data class PieChartData(val color: Color, val fraction: Float, val label: String
 
 @Composable
 fun RingkasanScreen (navController: NavController){
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleSavvy1)
-
-    )
-    {
-        Text(
-            text = "Transaksi",
-            style = Typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 70.dp)
-
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "Mei 2024",
-            style = Typography.bodySmall,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 110.dp)
-
-        )
-        Row (
-            modifier = Modifier
-                .padding(vertical = 155.dp)
-        ){
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Kalender",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Harian",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Mingguan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Bulanan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Column {
-                Text(
-                    text = "Ringkasan",
-                    style = Typography.bodySmall,
-                    color = WhiteSavvy,
-
-                    )
-                Spacer(modifier = Modifier.height(5.dp))
-                Divider(modifier = Modifier
-                    .width(60.dp),
-                    thickness = 4.dp,
-                    color = OrangeSavvy
-                )
-            }
-
-        }
+    kalenderbar(navController)
         // Card di bagian bawah
         Card(
             shape = RectangleShape,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(top = 180.dp)
-                .background(WhiteSavvy)
+                .padding(top = 180.dp),
+            colors = CardDefaults.cardColors(containerColor = WhiteSavvy)
+
         ){
             Row (modifier = Modifier
                 .padding(top = 15.dp))
@@ -305,7 +227,6 @@ fun RingkasanScreen (navController: NavController){
         }
 
     }
-}
 
 @Composable
 fun PieChart(

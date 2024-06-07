@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.component.kalenderbar
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
@@ -41,89 +42,7 @@ import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 
 @Composable
 fun MonthlyScreen(navController: NavController) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleSavvy1)
-
-    )
-    {
-        Text(
-            text = "Transaksi",
-            style = Typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 70.dp)
-
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "Mei 2024",
-            style = Typography.bodySmall,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 110.dp)
-
-        )
-        Row (
-            modifier = Modifier
-                .padding(vertical = 155.dp)
-        ){
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Kalender",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-            )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Harian",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Mingguan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Column {
-                Text(
-                    text = "Bulanan",
-                    style = Typography.bodySmall,
-                    color = WhiteSavvy,
-
-
-                    )
-                Spacer(modifier = Modifier.height(5.dp))
-                Divider(modifier = Modifier
-                    .width(45.dp),
-                    thickness = 4.dp,
-                    color = OrangeSavvy
-                )
-            }
-
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Ringkasan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-                )
-
-        }
+        kalenderbar(navController)
         // Card di bagian bawah
         Card(
             shape = RectangleShape,
@@ -288,7 +207,6 @@ fun MonthlyScreen(navController: NavController) {
         }
 
     }
-}
 
 @Composable
 fun MeiCard(){
