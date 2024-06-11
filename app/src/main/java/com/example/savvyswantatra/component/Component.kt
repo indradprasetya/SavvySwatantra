@@ -48,7 +48,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -314,9 +316,11 @@ fun TampilAnggaran(
     keterangan: String,
     jumlah_saldo: String,
     batas_anggaran: Double,
-    navController: NavController
+    navController: NavController,
 ){
-    val progress = remember { mutableStateOf(0.5f) }
+
+    val persentase = ((jumlah_saldo.toDoubleOrNull() ?: 0.0) / batas_anggaran)
+    val progress = remember { mutableStateOf(persentase.toFloat()) }
     Column {
         Row(
             Modifier
@@ -355,6 +359,7 @@ fun TampilAnggaran(
                                 Text(text = "Rp.$nominalFormatted / ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
                                 Text(text = "Rp.$nominalFormatted1 ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
                             }
+                            Text(text = "", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.SemiBold)
                         }
                     }
                     Box(
@@ -378,7 +383,16 @@ fun TampilAnggaran(
                                     .height(8.dp)
                                     .clip(RoundedCornerShape(4.dp)) // Clip the Box with rounded corners
                                     .background(PurpleSavvy1)
-                            )
+                            ){
+                                Text(
+                                    text = "${(persentase * 100).toInt()}%",
+                                    style = Typography.bodyMedium,
+                                    color = PurpleSavvy2,
+                                    modifier = Modifier
+                                        .padding(end = 5.dp)
+                                        .align(Alignment.CenterEnd)
+                                )
+                            }
                         }
                     }
 
@@ -440,13 +454,15 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: ()
                     Text(
                         text = "Saldo Total",
                         style = Typography.labelSmall,
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        color = WhiteSavvy
                     )
                     IconButton(onClick = { openDialog.value = true }) {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(18.dp),
+                            tint = WhiteSavvy
                         )
                     }
                 }
@@ -533,10 +549,16 @@ fun Detail_kategori_card(
     jumlah_saldo: String,
     batas_anggaran: Double,
     onDelete: () -> Unit,
-    onAddTransactionClick: () -> Unit
+    onAddTransactionClick: () -> Unit,
+    onCardClick: () -> Unit
 ) {
-    val progress = remember { mutableStateOf(0.0f) }
+    val persentase = ((jumlah_saldo.toDoubleOrNull() ?: 0.0) / batas_anggaran)
+    val progress = remember { mutableStateOf(persentase.toFloat()) }
     val openDialog = remember { mutableStateOf(false) }
+
+    LaunchedEffect(jumlah_saldo) {
+        progress.value = persentase.toFloat()
+    }
 
     if (openDialog.value) {
         AlertDialog(
@@ -544,7 +566,7 @@ fun Detail_kategori_card(
             title = { Text(text = "Konfirmasi Penghapusan") },
             text = { Text(text = "Apakah Anda ingin menghapus anggaran ini?") },
             confirmButton = {
-                Button(
+                TextButton(
                     onClick = {
                         onDelete()
                         openDialog.value = false
@@ -554,12 +576,13 @@ fun Detail_kategori_card(
                 }
             },
             dismissButton = {
-                Button(onClick = { openDialog.value = false }) {
+                TextButton(onClick = { openDialog.value = false }) {
                     Text("Batal")
                 }
             }
         )
     }
+
     Column {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -568,8 +591,9 @@ fun Detail_kategori_card(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .padding(start = 36.dp, top = 5.dp)
-                    .width(320.dp) // Set the width of the card to 318.dp
-                    .height(155.dp), // Set the height of the card to 141.dp
+                    .width(320.dp)
+                    .height(155.dp)
+                    .clickable(onClick = onCardClick),
                 colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
             ) {
                 Column {
@@ -619,7 +643,7 @@ fun Detail_kategori_card(
                             modifier = Modifier.fillMaxWidth(),
                             contentAlignment = Alignment.CenterEnd
                         ) {
-                            IconButton(onClick = { openDialog.value = true}) {
+                            IconButton(onClick = { openDialog.value = true }) {
                                 Icon(
                                     Icons.Default.Delete,
                                     contentDescription = null,
@@ -646,25 +670,34 @@ fun Detail_kategori_card(
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .offset(y = (-20).dp), // Fill the parent
-                        contentAlignment = Alignment.Center // Center the content
+                            .offset(y = (-20).dp),
+                        contentAlignment = Alignment.Center
                     ) {
                         Box(
                             modifier = Modifier
                                 .width(240.dp)
                                 .height(12.dp)
-                                .clip(RoundedCornerShape(8.dp)) // Clip the Box with rounded corners
+                                .clip(RoundedCornerShape(8.dp))
                                 .background(Color.White)
-                                .border(1.dp, Color.Transparent, RoundedCornerShape(4.dp)), // Add a border with rounded corners
+                                .border(1.dp, Color.Transparent, RoundedCornerShape(4.dp)),
                             contentAlignment = Alignment.CenterStart
                         ) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth(progress.value)
                                     .height(12.dp)
-                                    .clip(RoundedCornerShape(8.dp)) // Clip the Box with rounded corners
+                                    .clip(RoundedCornerShape(8.dp))
                                     .background(OrangeSavvy)
-                            )
+                            ) {
+                                Text(
+                                    text = "${(persentase * 100).toInt()}%",
+                                    style = Typography.bodyMedium,
+                                    color = PurpleSavvy2,
+                                    modifier = Modifier
+                                        .padding(end = 5.dp)
+                                        .align(Alignment.CenterEnd)
+                                )
+                            }
                         }
                     }
                 }

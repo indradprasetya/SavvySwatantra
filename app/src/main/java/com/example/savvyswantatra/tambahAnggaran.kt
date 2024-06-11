@@ -3,6 +3,7 @@ package com.example.savvyswantatra
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,6 +46,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.navigation.NavController
 import com.example.savvyswantatra.component.Anggaran
 import com.example.savvyswantatra.component.AnggaranData
@@ -62,178 +65,184 @@ fun AddAnggaranScreen(
     navController: NavController,
 ) {
     val textNama = remember { mutableStateOf("") }
-    val textJumlah = remember { mutableStateOf("") }  // Ubah ini menjadi String
-    val selectedImage = remember { mutableStateOf(0) }  // Ubah ini menjadi Int
+    val textJumlah = remember { mutableStateOf("") }
+    val selectedImage = remember { mutableStateOf(0) }
     val context = LocalContext.current
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = WhiteSavvy
-    ) {
-        Column(modifier = Modifier.background(color = WhiteSavvy)) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    modifier = Modifier.padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            Icons.Filled.ArrowBack,
-                            contentDescription = "Kembali",
-                            tint = Color.Black
-                        )
-                    }
-                    Text(
-                        text = "TAMBAH ANGGARAN",
-                        style = Typography.displayMedium,
-                        color = PurpleSavvy1
-                    )
-                }
-            }
-            Column {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 30.dp)
-                ) {
-                    Text(
-                        text = "Nama Anggaran   : ",
-                        style = Typography.displaySmall,
-                        color = PurpleSavvy1,
-                        fontSize = 14.sp
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    TextField(
-                        value = textNama.value,
-                        onValueChange = { newText ->
-                            textNama.value = newText
-                        },
-                        label = {
-                            Text(
-                                text = "",
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset(y = (-8).dp),
-                        colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy),
-                        textStyle = TextStyle(color = PurpleSavvy1, fontFamily = poppinsFontFamily,)
-                    )
 
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 30.dp)
-                ) {
-                    Text(
-                        text = "Jumlah Saldo(Rp): ",
-                        style = Typography.displayMedium,
-                        fontSize = 14.sp,
-                        color = PurpleSavvy1
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    TextField(
-                        value = textJumlah.value,
-                        onValueChange = { newText ->
-                            textJumlah.value = newText
-                        },
-                        label = {
-                            Text(
-                                text = "",  // Ubah ini menjadi String kosong
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .offset(y = (-8).dp),
-                        colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy),
-                        textStyle = TextStyle(
-                            color = PurpleSavvy1,
-                            fontFamily = poppinsFontFamily
-                        )
-                    )
-                }
-                Text(
-                    text = "Pilih Icon dibawah",
-                    color = PurpleSavvy1,
-                    style = Typography.bodyMedium,
-                    fontWeight = FontWeight.Normal,
-                    modifier = Modifier.padding(30.dp)
-                )
-                BankList(selectedImage)
+    BoxWithConstraints {
+        val screenWidth = constraints.maxWidth.toFloat()
+        val screenHeight = constraints.maxHeight.toFloat()
+
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = WhiteSavvy
+        ) {
+            Column(modifier = Modifier.background(color = WhiteSavvy)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 50.dp)
-                        .padding(top = 50.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(end = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(
-                        onClick = {
-                            val jumlah = textJumlah.value.toDoubleOrNull()
-                            if (textNama.value.isBlank()) {
-                                Toast.makeText(
-                                    context,
-                                    "Nama anggaran tidak boleh kosong",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else if (jumlah == null) {
-                                Toast.makeText(
-                                    context,
-                                    "Jumlah saldo harus berupa angka",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                val imageResId = Image.bankList.getOrNull(selectedImage.value)
-                                    ?: R.drawable.ic_launcher_background
-                                AnggaranData.anggaranList.add(
-                                    Anggaran(
-                                        nama = textNama.value,
-                                        jumlah = jumlah,
-                                        imageResources = imageResId
-                                    )
-                                )
-                                navController.popBackStack()
-                            }
-                        },
-                        shape = RoundedCornerShape(5.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xffeb7f63)),
-                        modifier = Modifier
-                            .requiredWidth(width = 140.dp)
-                            .requiredHeight(height = 35.dp)
-                    )
-                    {
+                    Row(
+                        modifier = Modifier.padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.Filled.ArrowBack,
+                                contentDescription = "Kembali",
+                                tint = Color.Black
+                            )
+                        }
                         Text(
-                            text = "Tambah",
-                            style = Typography.bodyMedium
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            textNama.value = ""
-                            textJumlah.value = ""  // Ubah ini menjadi String kosong
-                            selectedImage.value = 0
-                        },
-                        shape = RoundedCornerShape(5.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xffEBE7E7)),
-                        modifier = Modifier
-                            .requiredWidth(width = 140.dp)
-                            .requiredHeight(height = 35.dp)
-                    )
-                    {
-                        Text(
-                            text = "Pulihkan",
-                            style = Typography.bodyMedium,
-                            color = OrangeSavvy
+                            text = "TAMBAH ANGGARAN",
+                            style = Typography.displayMedium,
+                            color = PurpleSavvy1
                         )
                     }
                 }
-
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(horizontal = screenWidth * 0.04.dp)  // Ubah ini menjadi persentase dari lebar layar
+                    ) {
+                        Text(
+                            text = "Nama Anggaran   : ",
+                            style = Typography.displaySmall,
+                            color = PurpleSavvy1,
+                            fontSize = 14.sp
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        TextField(
+                            value = textNama.value,
+                            onValueChange = { newText ->
+                                textNama.value = newText
+                            },
+                            label = {
+                                Text(
+                                    text = "",
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset(y = (-8).dp),
+                            colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy),
+                            textStyle = TextStyle(color = PurpleSavvy1, fontFamily = poppinsFontFamily,)
+                        )
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = screenWidth * 0.04.dp)  // Ubah ini menjadi persentase dari lebar layar
+                    ) {
+                        Text(
+                            text = "Jumlah Saldo(Rp): ",
+                            style = Typography.displayMedium,
+                            fontSize = 14.sp,
+                            color = PurpleSavvy1
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        TextField(
+                            value = textJumlah.value,
+                            onValueChange = { newText ->
+                                textJumlah.value = newText
+                            },
+                            label = {
+                                Text(
+                                    text = "",  // Ubah ini menjadi String kosong
+                                )
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .offset(y = (-8).dp),
+                            colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy),
+                            textStyle = TextStyle(
+                                color = PurpleSavvy1,
+                                fontFamily = poppinsFontFamily
+                            )
+                        )
+                    }
+                    Text(
+                        text = "Pilih Icon dibawah",
+                        color = PurpleSavvy1,
+                        style = Typography.bodyMedium,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier
+                            .padding(horizontal = screenWidth * 0.04.dp)
+                            .padding(top = screenWidth * 0.03.dp)// Ubah ini menjadi persentase dari lebar layar
+                    )
+                    BankList(selectedImage)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = screenWidth * 0.045.dp)  // Ubah ini menjadi persentase dari lebar layar
+                            .padding(top = screenWidth * 0.03.dp),  // Ubah ini menjadi persentase dari lebar layar
+                        horizontalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                val jumlah = textJumlah.value.toDoubleOrNull()
+                                if (textNama.value.isBlank()) {
+                                    Toast.makeText(
+                                        context,
+                                        "Nama anggaran tidak boleh kosong",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else if (jumlah == null) {
+                                    Toast.makeText(
+                                        context,
+                                        "Jumlah saldo harus berupa angka",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    val imageResId = Image.bankList.getOrNull(selectedImage.value)
+                                        ?: R.drawable.ic_launcher_background
+                                    AnggaranData.anggaranList.add(
+                                        Anggaran(
+                                            nama = textNama.value,
+                                            jumlah = jumlah,
+                                            imageResources = imageResId
+                                        )
+                                    )
+                                    navController.popBackStack()
+                                }
+                            },
+                            shape = RoundedCornerShape(5.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffeb7f63)),
+                            modifier = Modifier
+                                .size(width = 140.dp, height = 46.dp)
+                        )
+                        {
+                            Text(
+                                text = "Tambah",
+                                style = Typography.bodyMedium
+                            )
+                        }
+//
+                        Button(
+                            onClick = {
+                                textNama.value = ""
+                                textJumlah.value = ""  // Ubah ini menjadi String kosong
+                                selectedImage.value = 0
+                            },
+                            shape = RoundedCornerShape(5.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffEBE7E7)),
+                            modifier = Modifier
+                                .size(width = 140.dp, height = 46.dp)
+                        )
+                        {
+                            Text(
+                                text = "Pulihkan",
+                                style = Typography.bodyMedium,
+                                color = OrangeSavvy
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
+

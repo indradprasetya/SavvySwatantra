@@ -49,8 +49,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.savvyswantatra.component.AnggaranData
 import com.example.savvyswantatra.component.Transaksi
 import com.example.savvyswantatra.component.TransaksiData
+
 import com.example.savvyswantatra.component.months
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
@@ -62,21 +64,35 @@ import java.text.NumberFormat
 
 
 @Composable
-fun RiwayatAnggaranScreen(navController: NavController) {
-    var year by remember { mutableStateOf(2024)}
+fun RiwayatAnggaranScreen(
+    navController: NavController,
+    namaKategori: String,
+    namaAnggaran: String,
+    iconKategori : Int,
+    jumlahSaldo : Double,
+    batasAnggaran : Double
+
+) {
+    var year by remember { mutableStateOf(2024) }
     var selectedMonth by remember { mutableStateOf("") }
+
+
+    // Filter the transactions based on the passed category and budget names
+    val filteredTransactions = TransaksiData.transaksiList.filter {
+        it.namaKategori == namaKategori && it.namaAnggaran == namaAnggaran
+    }
+    val anggaran = AnggaranData.anggaranList.firstOrNull { it.nama == namaAnggaran }
+
     Column(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
             modifier = Modifier
-                .requiredWidth(width = 400.dp)
-                .requiredHeight(height = 158.dp)
-                .background(color = PurpleSavvy1)
-        )
-        {
+                .requiredWidth(400.dp)
+                .requiredHeight(158.dp)
+                .background(PurpleSavvy1)
+        ) {
             Column {
                 Row(
                     modifier = Modifier.padding(16.dp),
@@ -95,12 +111,12 @@ fun RiwayatAnggaranScreen(navController: NavController) {
                         .fillMaxWidth()
                         .offset(y = (-25).dp)
                 ) {
-                    IconButton(onClick = { year -- }) {
+                    IconButton(onClick = { year-- }) {
                         Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = "", tint = Color.White)
                     }
-                    Text(text = "$year",style = Typography.displayMedium, color = Color.White)
-                    IconButton(onClick = { year ++ }) {
-                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription ="", tint = Color.White )
+                    Text(text = "$year", style = Typography.displayMedium, color = Color.White)
+                    IconButton(onClick = { year++ }) {
+                        Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "", tint = Color.White)
                     }
                 }
                 val scrollState = rememberLazyListState()
@@ -142,8 +158,8 @@ fun RiwayatAnggaranScreen(navController: NavController) {
             Box(
                 modifier = Modifier
                     .size(50.dp)
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(10.dp), clip = false)
-                    .background(Color.White, shape = RoundedCornerShape(10.dp))
+                    .shadow(4.dp, RoundedCornerShape(10.dp), clip = false)
+                    .background(Color.White, RoundedCornerShape(10.dp))
                     .border(
                         width = 1.dp,
                         color = Color.Transparent,
@@ -152,54 +168,68 @@ fun RiwayatAnggaranScreen(navController: NavController) {
                     .padding(5.dp)
             ) {
                 Image(
-                    painterResource(id = R.drawable.kesehatan),
-                    contentDescription = "",
+                    painterResource(id = iconKategori),
+                    contentDescription = "$iconKategori",
                     modifier = Modifier.size(50.dp)
                 )
             }
             Column {
-                Text(text = "Kesehatan", style = Typography.displaySmall, color = PurpleSavvy1)
+                Text(text = namaKategori, style = Typography.displaySmall, color = PurpleSavvy1)
                 Row {
-                    Text(text = "Rp.100.000 / ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
-                    Text(text = "Rp.500.000 ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
+                    val formatter = NumberFormat.getNumberInstance()
+                    val jumlahSaldoFormatted = formatter.format(jumlahSaldo)
+                    val batasAnggaranFormatted = formatter.format(batasAnggaran)
+                    Text(text = "Rp. $jumlahSaldoFormatted / ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
+                    Text(text = "Rp. $batasAnggaranFormatted", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
                 }
             }
         }
         LazyColumn {
-            items(TransaksiData.transaksiList) { transaksi ->
-                RiwayatAnggaranCard(transaksi = transaksi,navController= navController, onDelete = {TransaksiData.transaksiList.remove(transaksi)})
+            items(filteredTransactions) { transaksi ->
+                RiwayatAnggaranCard(
+                    transaksi = transaksi,
+                    navController = navController,
+                    onDelete = {
+                        TransaksiData.transaksiList.remove(transaksi)
+                        anggaran!!.jumlah+= transaksi.jumlah
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun RiwayatAnggaranCard(transaksi: Transaksi,navController: NavController,onDelete: () -> Unit) {
+fun RiwayatAnggaranCard(
+    transaksi: Transaksi,
+    navController: NavController,
+    onDelete: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 20.dp)
-            .padding(horizontal = 30.dp)
-            .clickable {
-                navController.navigate(Screen.riwayatAnggaran.route) },
-
-            horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(vertical = 20.dp, horizontal = 30.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            modifier = Modifier.weight(1f), // Use a flexible weight to align labels
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                modifier = Modifier.weight(1f), // Use a flexible weight to align labels
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = transaksi.nama, color = PurpleSavvy1, style = Typography.displayMedium)
-                Column {
-                    val formatter = NumberFormat.getNumberInstance()
-                    val nominalFormatted = formatter.format(transaksi.jumlah)
-                    Text(text = "Rp. $nominalFormatted", color = PurpleSavvy1, style = Typography.bodyMedium)
-                    Text(text = transaksi.tanggal, color = PurpleSavvy1, style = Typography.bodyMedium, fontWeight = FontWeight.Normal)
-                }
+            Text(text = transaksi.nama, color = PurpleSavvy1, style = Typography.displayMedium)
+            Column {
+                val formatter = NumberFormat.getNumberInstance()
+                val nominalFormatted = formatter.format(transaksi.jumlah)
+                Text(text = "Rp. $nominalFormatted", color = PurpleSavvy1, style = Typography.bodyMedium)
+                Text(text = transaksi.tanggal, color = PurpleSavvy1, style = Typography.bodyMedium, fontWeight = FontWeight.Normal)
             }
-        IconButton(onClick = { onDelete() }, modifier = Modifier.weight(0.1f)) { Icon(Icons.Default.Delete, contentDescription = "", tint = OrangeSavvy, modifier = Modifier.size(24.dp))
+        }
+        IconButton(onClick = {
+            onDelete()
+        }, modifier = Modifier.weight(0.1f)) {
+            Icon(Icons.Default.Delete, contentDescription = "", tint = OrangeSavvy, modifier = Modifier.size(24.dp))
         }
     }
 }
+

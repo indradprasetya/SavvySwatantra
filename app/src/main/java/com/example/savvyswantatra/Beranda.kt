@@ -53,6 +53,7 @@ import com.example.savvyswantatra.component.MainCard
 import com.example.savvyswantatra.component.TampilAnggaran
 import com.example.savvyswantatra.component.Transaksi
 import androidx.navigation.compose.rememberNavController
+import com.example.savvyswantatra.component.TransaksiData
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PinkSavvy
@@ -62,8 +63,7 @@ import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 
 @Composable
-fun BerandaScreen(navController: NavController,addedCategories: MutableList<KategoriAnggaran>) {
-
+fun BerandaScreen(navController: NavController, addedCategories: MutableList<KategoriAnggaran>) {
     Row(
         modifier = Modifier
             .padding(20.dp)
@@ -72,10 +72,9 @@ fun BerandaScreen(navController: NavController,addedCategories: MutableList<Kate
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically, // Menata elemen secara vertikal di tengah
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier.padding(start = 5.dp)
-
         ) {
             val image: Painter = painterResource(id = R.drawable.zhaolusi)
             Image(
@@ -94,7 +93,7 @@ fun BerandaScreen(navController: NavController,addedCategories: MutableList<Kate
             )
         }
         Spacer(modifier = Modifier.width(205.dp))
-        IconButton(onClick ={} ) {
+        IconButton(onClick = {} ) {
             Icon(
                 Icons.Default.Notifications,
                 contentDescription = null,
@@ -117,16 +116,16 @@ fun BerandaScreen(navController: NavController,addedCategories: MutableList<Kate
         }
         LazyRow(
             Modifier
-                .padding(bottom = 4.dp, end = 2.dp) ,
+                .padding(bottom = 4.dp, end = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             items(addedCategories) { kategori ->
                 TampilAnggaran(
                     imageResource = kategori.imageResources,
                     keterangan = kategori.nama,
-                    jumlah_saldo = "0",
+                    jumlah_saldo = "",
                     batas_anggaran = kategori.batas_anggaran ?: 0.0,
-                    navController = navController
+                    navController = navController,
                 )
             }
         }

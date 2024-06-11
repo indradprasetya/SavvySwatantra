@@ -1,6 +1,7 @@
 package com.example.savvyswantatra
 
 import android.app.DatePickerDialog
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,11 +40,14 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,6 +72,7 @@ import com.example.savvyswantatra.component.KategoriAnggaranData
 import com.example.savvyswantatra.component.KategoriAnggaranData.kategoriList
 import com.example.savvyswantatra.component.Transaksi
 import com.example.savvyswantatra.component.TransaksiData
+import com.example.savvyswantatra.component.TransaksiData.transaksiList
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
@@ -76,6 +80,7 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
+import kotlinx.coroutines.CoroutineScope
 
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -85,10 +90,10 @@ import java.util.Calendar
 @Composable
 fun DetailScreen(navController: NavController, namaAnggaran: String, addedCategories: MutableList<KategoriAnggaran>) {
     val anggaran = anggaranList.firstOrNull { it.nama == namaAnggaran }
-
     if (anggaran != null) {
         val coroutineScope = rememberCoroutineScope()
         val bottomScaffoldState = rememberBottomSheetScaffoldState()
+        val (showBottomSheetContent, setShowBottomSheetContent) = remember { mutableStateOf(false) }
         val (showSecondBottomSheet, setShowSecondBottomSheet) = remember { mutableStateOf(false) }
         val (selectedCategory, setSelectedCategory) = remember { mutableStateOf("") }
         val (showTransactionSheet, setShowTransactionSheet) = remember { mutableStateOf(false) }
@@ -101,25 +106,22 @@ fun DetailScreen(navController: NavController, namaAnggaran: String, addedCatego
                         .background(Color.White)
                 ) {
                     if (showSecondBottomSheet) {
-                        SecondBottomSheetContent(selectedCategory, onBackClick = {
+                        SecondBottomSheetContent(selectedCategory = selectedCategory, onBackClick = {
                             setShowSecondBottomSheet(false)
                             setShowTransactionSheet(false)
-                        }) { category, saldo ->
-                            val selectedKategori = KategoriAnggaranData.kategoriList.first { it.id.toString() == category }
-                            val newCategory = selectedKategori.copy(batas_anggaran = saldo.toDoubleOrNull())
+                        }, anggaran = anggaran.nama) { category, saldo, namaAnggaran ->
+                            val selectedKategori = KategoriAnggaranData.kategoriList.first { it.nama.toString() == category }
+                            val newCategory = selectedKategori.copy(batas_anggaran = saldo.toDoubleOrNull(), namaAnggaran = namaAnggaran, nama = selectedKategori.nama)
                             addedCategories.add(newCategory)
                             setShowSecondBottomSheet(false)
                         }
-                    }else if (showTransactionSheet) {
-                        TransaksiBottomSheet(onBackClick = {
-                            setShowTransactionSheet(false)
-                        }, navController = navController)
-                        setShowSecondBottomSheet(false)
-                    }
-                    else {
+                    } else if (showTransactionSheet) {
+                        // Kode untuk transaksi sheet
+                    } else {
                         BottomSheetContent(onAddClick = { category ->
                             setSelectedCategory(category)
                             setShowSecondBottomSheet(true)
+                            setShowBottomSheetContent(false)
                         })
                     }
                 }
@@ -212,25 +214,51 @@ fun DetailScreen(navController: NavController, namaAnggaran: String, addedCatego
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(addedCategories) { kategori ->
-                            Detail_kategori_card(
-                                imageResource = kategori.imageResources,
-                                keterangan = kategori.nama,
-                                jumlah_saldo = "0",
-                                batas_anggaran = kategori.batas_anggaran ?: 0.0,
-                                onDelete = {addedCategories.remove(kategori)},
-                                onAddTransactionClick = {
-                                    coroutineScope.launch { bottomScaffoldState.bottomSheetState.expand() }
-                                    setShowTransactionSheet(true)
-                                    setShowSecondBottomSheet(false)
+                            val transaksiForThisKategori = transaksiList.filter { it.namaKategori == kategori.nama && it.namaAnggaran == anggaran.nama }
+                            val totalJumlahForThisKategori = transaksiForThisKategori.sumByDouble { it.jumlah }
+                            val scope = rememberCoroutineScope()
+                            val showTransaksiBottomSheet = remember { mutableStateOf(false) }
+
+                            if (kategori.namaAnggaran == anggaran.nama) {
+                                Detail_kategori_card(
+                                    imageResource = kategori.imageResources,
+                                    keterangan = kategori.nama,
+                                    jumlah_saldo = totalJumlahForThisKategori.toString(),
+                                    batas_anggaran = kategori.batas_anggaran ?: 0.0,
+                                    onDelete = { addedCategories.remove(kategori) },
+                                    onAddTransactionClick = {
+                                        scope.launch {
+                                            bottomScaffoldState.bottomSheetState.expand()
+                                            setShowSecondBottomSheet(false)
+                                            setShowBottomSheetContent(false)
+                                            showTransaksiBottomSheet.value = true
+                                        }
+                                    },
+                                    onCardClick = {
+                                        navController.navigate("${Screen.riwayatAnggaran.route}/${kategori.nama}/${anggaran.nama}/${kategori.imageResources}/${totalJumlahForThisKategori}/${kategori.batas_anggaran ?: 0.0}")
+                                    }
+                                )
+                                if (showTransaksiBottomSheet.value) {
+                                    TransaksiBottomSheet(
+                                        onBackClick = {
+                                            setShowTransactionSheet(false)
+                                            showTransaksiBottomSheet.value = false
+                                        },
+                                        navController = navController,
+                                        namaAnggaran = namaAnggaran,
+                                        namaKategori = kategori.nama,
+                                        updateAnggaran = { updatedAmount ->
+                                            anggaran.jumlah = (anggaran.jumlah ?: 0.0) - updatedAmount // Update total anggaran
+                                        }
+                                    )
                                 }
-                            )
+                            }
                         }
                     }
                 }
             }
         }
     } else {
-        // Handle kasus ketika anggaran tidak ditemukan
         Text("Anggaran tidak ditemukan", color = Color.Red)
     }
 }
@@ -277,7 +305,7 @@ fun BottomSheetContent(onAddClick: (String) -> Unit) {
                         .weight(1f)
                         .padding(start = 12.dp)
                 )
-                IconButton(onClick = { onAddClick(kategori.id.toString()) }) {
+                IconButton(onClick = { onAddClick(kategori.nama.toString()) }) {
                     Icon(Icons.Default.AddCircle, contentDescription = "", tint = OrangeSavvy)
                 }
             }
@@ -287,8 +315,8 @@ fun BottomSheetContent(onAddClick: (String) -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SecondBottomSheetContent(selectedCategory: String, onBackClick: () -> Unit, onAddCategory: (String, String) -> Unit) {
-    val selectedKategori = KategoriAnggaranData.kategoriList.first { it.id.toString() == selectedCategory }
+fun SecondBottomSheetContent(selectedCategory: String, anggaran: String, onBackClick: () -> Unit,   onAddCategory: (String, String, String) -> Unit) {
+    val selectedKategori = KategoriAnggaranData.kategoriList.first { it.nama.toString() == selectedCategory }
     val context = LocalContext.current
     val textJumlah = remember { mutableStateOf("") }
     Column {
@@ -381,8 +409,9 @@ fun SecondBottomSheetContent(selectedCategory: String, onBackClick: () -> Unit, 
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
-                        onAddCategory(selectedCategory, textJumlah.value)
+                        onAddCategory(selectedCategory, textJumlah.value, anggaran)
                         textJumlah.value = ""
+                        Log.d("SecondBottomSheetContent", "Added Successfully, $anggaran")
                     }
                 },
                 shape = RoundedCornerShape(5.dp),
@@ -415,28 +444,23 @@ fun SecondBottomSheetContent(selectedCategory: String, onBackClick: () -> Unit, 
         }
     }
 }
-//class TransaksiViewModel : ViewModel() {
-//    private val _transaksiList = mutableStateListOf<Transaksi>()
-//    val transaksiList: SnapshotStateList<Transaksi> = _transaksiList
-//    fun addTransaksi(transaksi: Transaksi) {
-//        _transaksiList.add(transaksi)
-//    }
-//    fun deleteTransaksi(transaksi: Transaksi) {
-//        _transaksiList.remove(transaksi)
-//    }
-//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransaksiBottomSheet(
     onBackClick: () -> Unit,
     navController: NavController,
-//    transaksiViewModel: TransaksiViewModel = viewModel()
+    namaAnggaran: String,
+    namaKategori: String,
+    updateAnggaran: (Double) -> Unit
 ) {
     val textNama = remember { mutableStateOf("") }
     val textJumlah = remember { mutableStateOf("") }
     val context = LocalContext.current
     val selectedDate = remember { mutableStateOf("") }
+    val anggaran = anggaranList.find { it.nama == namaAnggaran }
+
+
     Column {
         Row(
             modifier = Modifier
@@ -501,7 +525,7 @@ fun TransaksiBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .offset(y = (-8).dp),
-                colors = TextFieldDefaults.textFieldColors(containerColor = Color.White),
+                colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy),
                 textStyle = TextStyle(color = PurpleSavvy1, fontFamily = poppinsFontFamily,)
             )
 
@@ -530,7 +554,7 @@ fun TransaksiBottomSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .offset(y = (-8).dp),
-                colors = TextFieldDefaults.textFieldColors(containerColor = Color.White),
+                colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy),
                 textStyle = TextStyle(
                     color = PurpleSavvy1,
                     fontFamily = poppinsFontFamily
@@ -568,11 +592,12 @@ fun TransaksiBottomSheet(
                             Transaksi(
                                 nama = textNama.value,
                                 jumlah = jumlah,
-                                tanggal = selectedDate.value
+                                tanggal = selectedDate.value,
+                                namaKategori =namaKategori,
+                                namaAnggaran = anggaran!!.nama,
                             )
                         )
-                        navController.popBackStack()
-                        navController.navigate(Screen.riwayatAnggaran.route)
+                        updateAnggaran(+jumlah)
                     }
                 },
                 shape = RoundedCornerShape(5.dp),
@@ -607,5 +632,3 @@ fun TransaksiBottomSheet(
         }
     }
 }
-
-
