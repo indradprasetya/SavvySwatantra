@@ -2,6 +2,7 @@ package com.example.savvyswantatra.Kalender
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,23 +13,31 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.savvyswantatra.R
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
@@ -36,8 +45,37 @@ import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 
 
+
 @Composable
 fun FormExpense(navController: NavController) {
+    var expanded by remember { mutableStateOf(false) }
+    val akun = listOf("Cash", "Bank Mandiri", "Bank BCA")
+    val kategori = listOf("Makanan dan Minuman", "Kesehatan", "Belanja", "Travel")
+
+    var selectedText by remember { mutableStateOf("") }
+    var textfieldSize by remember { mutableStateOf(Size.Zero)}
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+    Row(
+        modifier = Modifier.padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(Icons.Filled.ArrowBack,
+            contentDescription = "ke kalender",
+            tint = PurpleSavvy1,
+            modifier = Modifier
+                .clickable(onClick =
+                { navController.navigate("kalender") })
+        )
+        Spacer(modifier = Modifier.width(15.dp))
+        Text(
+            text = "Transaksi",
+            style = Typography.displayMedium,
+            color = PurpleSavvy1
+        )
+    }
     Row (modifier = Modifier
         .fillMaxSize()
         .padding(top = 100.dp)
@@ -46,7 +84,7 @@ fun FormExpense(navController: NavController) {
 
     ){
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {navController.navigate("pemasukanKalender")},
             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
             shape = RoundedCornerShape(8.dp),
             border = BorderStroke(2.dp, color = PurpleSavvy1),
@@ -250,7 +288,7 @@ fun FormExpense(navController: NavController) {
         }
         Row(
             modifier = Modifier
-                .padding(top=70.dp)
+                .padding(top = 70.dp)
                 .padding(start = 20.dp)
         ) {
             Button(
@@ -288,6 +326,24 @@ fun FormExpense(navController: NavController) {
 
 @Composable
 fun FormIncome(navController: NavController) {
+    Row(
+        modifier = Modifier.padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(Icons.Filled.ArrowBack,
+            contentDescription = "ke kalender",
+            tint = PurpleSavvy1,
+            modifier = Modifier
+                .clickable(onClick =
+                { navController.navigate("kalender") })
+        )
+        Spacer(modifier = Modifier.width(15.dp))
+        Text(
+            text = "Transaksi",
+            style = Typography.displayMedium,
+            color = PurpleSavvy1
+        )
+    }
     Row (modifier = Modifier
         .fillMaxSize()
         .padding(top = 100.dp)
@@ -295,6 +351,7 @@ fun FormIncome(navController: NavController) {
         .background(WhiteSavvy)
 
     ){
+
         Button(
             onClick = { /*TODO*/ },
             colors = ButtonDefaults.buttonColors(containerColor = PurpleSavvy1),
@@ -310,7 +367,7 @@ fun FormIncome(navController: NavController) {
         }
         Spacer(modifier = Modifier.width(5.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate("pengeluaranKalender") },
             colors = ButtonDefaults.buttonColors(containerColor = WhiteSavvy),
             border = BorderStroke(2.dp, color = PurpleSavvy1),
             shape = RoundedCornerShape(8.dp),
@@ -469,7 +526,7 @@ fun FormIncome(navController: NavController) {
         }
         Row(
             modifier = Modifier
-                .padding(top=70.dp)
+                .padding(top = 70.dp)
                 .padding(start = 20.dp)
         ) {
             Button(
@@ -543,3 +600,13 @@ fun AkunAndaDropdown() {
     }
 }
 */
+
+
+/*@Composable
+@Preview (showBackground = true)
+fun FormIncomePreview() {
+    val navController = rememberNavController()
+    FormIncome(navController = navController)
+}
+
+ */

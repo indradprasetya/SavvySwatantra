@@ -1,5 +1,6 @@
 package com.example.savvyswantatra.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,8 +37,10 @@ import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 @Composable
 fun kalenderbar(navController: NavController) {
     // MutableState untuk mengontrol item yang dipilih
-    val (selectedItem, setSelectedItem) = rememberSaveable { mutableStateOf("Kalender") }
 
+    var (selectedItem, setSelectedItem) = rememberSaveable { mutableStateOf("Kalender") }
+
+    Log.d("KalenderBar", "Recompose with selectedItem: $selectedItem")
 
     // Fungsi untuk menampilkan Divider di bawah item yang dipilih
     fun isItemSelected(item: String): Boolean {
@@ -83,8 +86,8 @@ fun kalenderbar(navController: NavController) {
                         text = "Kalender",
                         style = Typography.bodySmall,
                         color = Color.White,
-                        modifier = Modifier.clickable (onClick =
-                        { navController.navigate("kalender") })
+                        modifier = Modifier.clickable { setSelectedItem("Kalender")
+                            navController.navigate("kalender")}
                     )
                     if (isItemSelected("Kalender")) {
                         Column {
@@ -103,8 +106,8 @@ fun kalenderbar(navController: NavController) {
                         text = "Harian",
                         style = Typography.bodySmall,
                         color = Color.White,
-                        modifier = Modifier.clickable(onClick =
-                        { navController.navigate("harianKalender") })
+                        modifier = Modifier.clickable {setSelectedItem("Harian")
+                            navController.navigate("harianKalender") }
                     )
                     if (isItemSelected("Harian")) {
                         Column {
@@ -124,8 +127,9 @@ fun kalenderbar(navController: NavController) {
                         text = "Mingguan",
                         style = Typography.bodySmall,
                         color = Color.White,
-                        modifier = Modifier.clickable (onClick =
-                        { navController.navigate("mingguanKalender") })
+                        modifier = Modifier.clickable
+                        { setSelectedItem("Mingguan")
+                            navController.navigate("mingguanKalender") }
                     )
                     if (isItemSelected("Mingguan")) {
                         Column {
@@ -145,8 +149,9 @@ fun kalenderbar(navController: NavController) {
                         text = "Bulanan",
                         style = Typography.bodySmall,
                         color = Color.White,
-                        modifier = Modifier.clickable (onClick =
-                        { navController.navigate("bulananKalender") })
+                        modifier = Modifier.clickable
+                        {setSelectedItem("bulananKalender")
+                            navController.navigate("bulananKalender") }
                     )
                     if (isItemSelected("bulananKalender")) {
                         Column {
@@ -167,7 +172,9 @@ fun kalenderbar(navController: NavController) {
                         style = Typography.bodySmall,
                         color = Color.White,
                         modifier = Modifier.clickable  { setSelectedItem("Ringkasan")
-                                navController.navigate("ringkasanKalender")}
+                                navController.navigate("ringkasanKalender")
+                            Log.d("KalenderBar", "Ringkasan clicked")
+                        }
                     )
                     if (isItemSelected("Ringkasan")) {
                         Column {

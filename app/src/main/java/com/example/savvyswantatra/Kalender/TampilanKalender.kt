@@ -57,83 +57,7 @@ import java.time.YearMonth
 @Composable
 fun TampilanKalender(navController: NavController) {
 
-        kalenderbar(navController)
-/*        Row(
-            modifier = Modifier
-                .padding(vertical = 155.dp)
-        ) {
-            Spacer(modifier = Modifier.width(25.dp))
-            Column {
-                Text(
-                    text = "Kalender",
-                    style = Typography.bodySmall,
-                    color = WhiteSavvy,
-                    modifier = Modifier.clickable(onClick = {
-                        navController.navigate("kalender")
-                    })
-
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-                Divider(
-                    modifier = Modifier
-                        .width(50.dp),
-                    thickness = 4.dp,
-                    color = OrangeSavvy
-                )
-            }
-
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Harian",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-                modifier = Modifier.clickable(onClick = {
-                    navController.navigate("harianKalender")
-                })
-
-
-            )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Mingguan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-                modifier = Modifier.clickable(onClick = {
-                    navController.navigate("mingguanKalender")
-                })
-
-
-            )
-            Spacer(modifier = Modifier.width(25.dp))
-            Column {
-                Text(
-                    text = "Bulanan",
-                    style = Typography.bodySmall,
-                    color = WhiteSavvy,
-                    modifier = Modifier.clickable(onClick = {
-                        navController.navigate("bulananKalender")
-                    }
-                    )
-                )
-                Spacer(modifier = Modifier.height(5.dp))
-
-            }
-
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Ringkasan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-                modifier = Modifier.clickable(onClick = {
-                    navController.navigate("ringkasanKalender")
-                })
-
-            )
-
-        }
-
- */
-
+    kalenderbar(navController)
     Card(
         shape = RectangleShape,
         modifier = Modifier
@@ -359,6 +283,7 @@ fun SimpleCalendar(navController: NavController) {
                         Text(
                             text = "$day",
                             style = Typography.bodySmall,
+                            color = PurpleSavvy1,
                             modifier = Modifier
                                 .width(40.dp)
                                 .height(70.dp)
