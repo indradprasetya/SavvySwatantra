@@ -47,6 +47,7 @@ import com.example.savvyswantatra.Wt2_screen
 import com.example.savvyswantatra.Wt3_screen
 import com.example.savvyswantatra.component.Anggaran
 import com.example.savvyswantatra.component.AnggaranData
+
 import com.example.savvyswantatra.component.KategoriAnggaran
 import com.example.savvyswantatra.component.TampilAnggaran
 import com.example.savvyswantatra.pengaturan.SyaratKet
@@ -128,8 +129,7 @@ fun NavigationApp() {
             RingkasanScreen(navController = navController)
         }
         composable(Screen.harianKalender.route){
-            HarianKalender(navController = navController)
-        }
+            HarianKalender(navController = navController)}
         composable(Screen.mingguanKalender.route){
             KalenderMingguan(navController = navController)
         }
@@ -138,6 +138,9 @@ fun NavigationApp() {
         }
         composable(Screen.pengeluaranKalender.route){
             FormExpense(navController = navController)
+        }
+        composable(Screen.tampilanKalender.route){
+            TampilanKalender(navController = navController)
         }
 
 
@@ -187,13 +190,17 @@ fun NavigationApp() {
             }
         }
         composable(Screen.harianKalender.route) {
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                bottomBar = { BottomNavigationBar(navController) }
-            ) {
-                HarianKalender(navController)
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { BottomNavigationBar(navController) }
+                ) {
+                    HarianKalender(
+                        navController = navController,
+                    )
+                }
             }
-        }
+
+
         composable(Screen.mingguanKalender.route) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),

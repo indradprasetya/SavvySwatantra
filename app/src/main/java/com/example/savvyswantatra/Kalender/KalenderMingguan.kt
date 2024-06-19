@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -34,10 +35,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.component.kalenderbar
+import com.example.savvyswantatra.model.DummyData
+import com.example.savvyswantatra.model.DummyData2
+import com.example.savvyswantatra.model.KalenderData
+import com.example.savvyswantatra.model.TanggalitemData
 import com.example.savvyswantatra.model.TransaksiKalender
 import com.example.savvyswantatra.ui.theme.PinkSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
+import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 import java.time.DayOfWeek
@@ -48,631 +55,152 @@ import java.util.*
 
 
 @Composable
-fun KalenderMingguan(navController: NavController) {
+fun KalenderMingguan(navController: NavController,
+                     listDataTanggal : List<TanggalitemData> = DummyData2.TanggalList,
+) {
     var isKalenderSelected by remember { mutableStateOf(false) }
     var ambilKalender by remember { mutableStateOf(value = false) }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(PurpleSavvy1)
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+        kalenderbar(navController)
+        Card(
+            shape = RectangleShape,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(top = 180.dp)
         ) {
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 40.dp, bottom = 0.dp)
-                    .background(color = Color.Transparent)
-                    .height(50.dp)
+                    .background(Color.White)
+                    .padding(10.dp)
             ) {
-                Text(
-                    text = "Transaksi",
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily.Monospace,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center),
-                    color = Color.White
-
-
-                )
-
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "Edit Icon",
-                    tint = Color.White,
-
+                Row(
                     modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 10.dp, top = 5.dp)
-                        .size(40.dp)
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.Transparent)
-                    .padding(vertical = 0.dp)
-            ) {
-                KalenderView(
-
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp)
-                    .background(color = PurpleSavvy1)
-                    .padding(vertical = 0.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-
-                    ) {
-                    Text(
-                        text = "Kalender",
-                        fontSize = 10.sp,
-                        color = if (isKalenderSelected) Color.White else Color.Gray, // Change color based on selection
-                        fontFamily = poppinsFontFamily,
-                        modifier = Modifier.run {
-                            clickable {
-                                // Toggle the selection state
-                                isKalenderSelected = !isKalenderSelected
-                            }
-                                .padding(0.dp, 0.dp, 0.dp, 0.dp)
-                                .border(
-                                    BorderStroke(
-                                        1.dp,
-                                        if (isKalenderSelected) Color(
-                                            255,
-                                            229,
-                                            180
-                                        ) else Color.Transparent
-                                    ),
-                                    shape = RoundedCornerShape(0.dp),
-                                    // Set border style to Dashed
-                                )
-                        }
-                    )
-                    Text(
-                        text = "Harian",
-                        fontSize = 10.sp,
-                        fontFamily = poppinsFontFamily,
-                        color = Color.White, // Mengatur warna teks menjadi putih
-                        modifier = Modifier.clickable {
-
-                        }
-                    )
-                    Text(
-                        text = "Mingguan",
-                        fontFamily = poppinsFontFamily,
-                        fontSize = 10.sp,
-                        color = Color.White, // Mengatur warna teks menjadi putih
-                        modifier = Modifier.clickable {
-                            // Code untuk navigasi saat teks diklik
-                        }
-                    )
-                    Text(
-                        text = "Bulanan",
-                        fontFamily = poppinsFontFamily,
-                        fontSize = 10.sp,
-                        color = Color.White, // Mengatur warna teks menjadi putih
-                        modifier = Modifier.clickable {
-                            // Code untuk navigasi saat teks diklik
-                        }
-                    )
-                    Text(
-                        text = "Ringkasan",
-                        fontSize = 10.sp,
-                        fontFamily = poppinsFontFamily,
-
-                        color = Color.White, // Mengatur warna teks menjadi putih
-                        modifier = Modifier.clickable {
-                            // Code untuk navigasi saat teks diklik
-                        }
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(70.dp)
-                    .background(color = Color.White)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            "Pemasukan",
-                            color = PurpleSavvy2
-                        )
-                        Text(
-                            "Rp0",
-                            color = PurpleSavvy2
-                        )
-
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Pemasukan", color = PurpleSavvy2, style = Typography.bodyMedium)
+                        Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
                     }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            "Pengeluaran",
-                            color = PurpleSavvy2
-                        )
-                        Text(
-                            "Rp0",
-                            color = PurpleSavvy2
-                        )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Pengeluaran", color = PurpleSavvy2, style = Typography.bodyMedium)
+                        Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
                     }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             "Total",
                             fontWeight = FontWeight.Bold,
-                            color = PurpleSavvy1
+                            color = PurpleSavvy1,
+                            style = Typography.bodyMedium
                         )
                         Text(
                             "Rp0",
                             fontWeight = FontWeight.Bold,
-                            color = PurpleSavvy1
+                            color = PurpleSavvy1,
+                            style = Typography.bodyMedium
                         )
                     }
-
                 }
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .background(color = Color.White)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .background(Color.White)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(width = 100.dp, height = 50.dp)
-                            .background(color = Color.White)
-                            .align(alignment = Alignment.TopStart)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+
+                LazyColumn {
+                    val groupedItems = TanggalitemData.groupBy { it.date }
+                    groupedItems.forEach { (date, items) ->
+                        // Parse tanggal untuk mendapatkan tahun dan bulan
+                        val year = items.firstOrNull()?.date?.substring(0, 4)?.toIntOrNull() ?: 0
+                        val month = items.firstOrNull()?.date?.substring(5, 7)?.toIntOrNull() ?: 0
+
+                        // Tampilkan judul tanggal, tahun, bulan di atas item-item
+                        item {
                             Text(
-                                text = "17",
-                                fontFamily = poppinsFontFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
-                            )
-
-                        }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 30.dp)
-                        ) {
-                            Text(
-                                text = "Senin",
-                                textAlign = TextAlign.Justify,
-                                color = PurpleSavvy1
-                            )
-                            Text(
-                                text = "Juni 2024",
-                                textAlign = TextAlign.Justify,
-                                color = PurpleSavvy1
-                            )
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(width = 81.dp, height = 28.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(color = PurpleSavvy1)
-                            .align(alignment = Alignment.TopEnd)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-
-                        ) {
-                            Text(
-                                text = "Rp22,000",
-                                textAlign = TextAlign.Center,
-                                color = Color.White
-                            )
-                        }
-
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 70.dp, start = 10.dp, end = 10.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = Color.White)
-                                .height(70.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .align(alignment = Alignment.CenterStart)
-                                    .background(color = PinkSavvy)
-                                    .clip(RoundedCornerShape(10.dp))
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.makan),
-                                    contentDescription = "makanan",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .requiredSize(60.dp)
-                                        .clip(RoundedCornerShape(20.dp))
-                                )
-                            }
-                                Image(
-                                    painter = painterResource(id = R.drawable.pengeluaran),
-                                    contentDescription = "Pengeluaran Icon",
-                                    modifier = Modifier
-                                        .offset(x = 50.dp, y = 45.dp)
-                                        .size(20.dp)
-                                )
-
-                            Column(
-                                modifier = Modifier.padding(start = 70.dp, top = 8.dp)
-
-                            ) {
-                                Text(
-                                    text = "Makanan & Minuman",
-                                    color = Color.Black,
+                                text = "Date: ${formatDate(date)}",
+                                style = TextStyle(
                                     fontWeight = FontWeight.Bold,
-                                    fontFamily = poppinsFontFamily
-                                )
-                                Row {
-                                    Text(
-                                        text = "Nasi Ayam",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-                                    )
-
-                                    Text(
-                                        modifier = Modifier.padding(start = 145.dp),
-                                        text = "Rp10,000",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-
-                                    )
-                                }
-                            }
-                        }
-
-                    }
-                    Spacer(modifier = Modifier.height(30.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 160.dp, start = 10.dp, end = 10.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = Color.White)
-                                .height(70.dp)
-                        ) {
-                            Box(
+                                    fontSize = 20.sp,
+                                    color = Color.Black
+                                ),
                                 modifier = Modifier
-                                    .align(alignment = Alignment.CenterStart)
-                                    .background(color = PinkSavvy)
-                                    .clip(RoundedCornerShape(10.dp))
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.income),
-                                    contentDescription = "akun",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .requiredSize(60.dp)
-                                        .clip(RoundedCornerShape(20.dp))
-                                )
-                            }
-                                Image(
-                                    painter = painterResource(id = R.drawable.pemasukan),
-                                    contentDescription = "Pemasukan Icon",
-                                    modifier = Modifier
-                                        .offset(x = 50.dp, y = 45.dp)
-                                        .size(20.dp)
-                                )
+                                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                            )
+                        }
 
-                            Column(
-                                modifier = Modifier.padding(start = 70.dp, top = 8.dp)
-
-                            ) {
+                        // Tampilkan item-item di dalam grup tanggal, tahun, bulan ini
+                        items.forEach { item ->
+                            item {
                                 Text(
-                                    text = "Mandiri",
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = poppinsFontFamily
-                                )
-                                Row {
-                                    Text(
-                                        text = "Transfer dari Alfred",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-                                    )
-
-                                    Text(
-                                        modifier = Modifier.padding(start = 95.dp),
-                                        text = "Rp12,000",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(width = 100.dp, height = 50.dp)
-                            .background(color = Color.White)
-                            .align(alignment = Alignment.CenterStart)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "18",
-                                fontFamily = poppinsFontFamily,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 24.sp,
-                            )
-
-                        }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 30.dp)
-                        ) {
-                            Text(
-                                text = "Selasa",
-                                textAlign = TextAlign.Justify,
-                                color = PurpleSavvy1
-                            )
-                            Text(
-                                text = "Juni 2024",
-                                textAlign = TextAlign.Justify,
-                                color = PurpleSavvy1
-                            )
-                        }
-                    }
-                    Box(
-                        modifier = Modifier
-                            .size(width = 81.dp, height = 28.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(color = PurpleSavvy1)
-                            .align(alignment = Alignment.CenterEnd)
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-
-                        ) {
-                            Text(
-                                text = "Rp27,000",
-                                textAlign = TextAlign.Center,
-                                color = Color.White
-                            )
-                        }
-
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 330.dp, start = 10.dp, end = 10.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = Color.White)
-                                .height(70.dp)
-                        ) {
-                            Box (
-                                modifier = Modifier
-                                    .align(alignment = Alignment.CenterStart)
-
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.kesehatanicon),
-                                    contentDescription = "kesehatan",
-                                    contentScale = ContentScale.Crop,
+                                    text = item.name,
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        color = Color.Gray
+                                    ),
                                     modifier = Modifier
-                                        .requiredSize(60.dp)
-                                        .clip(RoundedCornerShape(10.dp))
+                                        .padding(horizontal = 32.dp, vertical = 4.dp)
                                 )
-                                Image(
-                                    painter = painterResource(id = R.drawable.pengeluaran),
-                                    contentDescription = "Pengeluaran Icon",
-                                    modifier = Modifier
-                                        .offset(x = 40.dp, y = 42.dp)
-                                        .size(20.dp)
-                                )
-                            }
-                            Column(
-                                modifier = Modifier.padding(start = 70.dp, top = 8.dp)
-
-                            ) {
-                                Text(
-                                    text = "Kesehatan",
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = poppinsFontFamily
-                                )
-                                Row {
-                                    Text(
-                                        text = "Panadol",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-                                    )
-
-                                    Text(
-                                        modifier = Modifier.padding(start = 160.dp),
-                                        text = "Rp12,000",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(top = 425.dp, start = 10.dp, end = 10.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = Color.White)
-                                .height(70.dp)
-                                .clip(RoundedCornerShape(5.dp))
-                        ) {
-                            Box (
-                                modifier = Modifier
-                                    .align(alignment = Alignment.CenterStart)
-                                    .background(color = PinkSavvy)
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.income),
-                                    contentDescription = "akun",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier
-                                        .requiredSize(60.dp)
-                                        .clip(RoundedCornerShape(20.dp))
-                                )
-                                Image(
-                                    painter = painterResource(id = R.drawable.pemasukan),
-                                    contentDescription = "Pemasukan Icon",
-                                    modifier = Modifier
-                                        .offset(x = 45.dp, y = 42.dp)
-                                        .size(20.dp)
-                                )
-                            }
-                            Column(
-                                modifier = Modifier.padding(start = 70.dp, top = 8.dp)
-
-                            ) {
-                                Text(
-                                    text = "Mandiri",
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold,
-                                    fontFamily = poppinsFontFamily
-                                )
-                                Row {
-                                    Text(
-                                        text = "THR dari Paman",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-                                    )
-
-                                    Text(
-                                        modifier = Modifier.padding(start = 115.dp),
-                                        text = "Rp12,000",
-                                        fontFamily = poppinsFontFamily,
-                                        fontWeight = FontWeight.SemiBold,
-                                        fontSize = 12.sp,
-                                        color = PurpleSavvy2
-
-                                    )
-                                }
                             }
                         }
                     }
                 }
             }
-
-        }
-
-    }
-
-}
-
-
-
-
-@Composable
-fun KalenderView() {
-    var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            IconButton(onClick = {
-                currentYearMonth = currentYearMonth.minusMonths(1)
-            }) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Previous Month", tint = Color.White)
             }
 
-            Text(
-                text = "${currentYearMonth.month.getDisplayName(TextStyle.FULL, Locale.getDefault())} ${currentYearMonth.year}",
-                fontSize = 13.sp,
-                fontFamily = poppinsFontFamily,
-                textAlign = TextAlign.Center,
-                color = Color.White,
-                fontWeight = FontWeight.Thin
-            )
-            IconButton(onClick = {
-                currentYearMonth = currentYearMonth.plusMonths(1)
-            }) {
-                Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "Next Month", tint = Color.White)
+
+
+//                @Composable
+//                fun KalenderView() {
+//                    var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
+//
+//                    Column(
+//                        horizontalAlignment = Alignment.CenterHorizontally,
+//                        modifier = Modifier.fillMaxWidth()
+//                    ) {
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            horizontalArrangement = Arrangement.SpaceBetween,
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .padding(horizontal = 16.dp)
+//                        ) {
+//                            IconButton(onClick = {
+//                                currentYearMonth = currentYearMonth.minusMonths(1)
+//                            }) {
+//                                Icon(
+//                                    imageVector = Icons.Default.ArrowBack,
+//                                    contentDescription = "Previous Month",
+//                                    tint = Color.White
+//                                )
+//                            }
+//
+//                            Text(
+//                                text = "${
+//                                    currentYearMonth.month.getDisplayName(
+//                                        TextStyle.FULL,
+//                                        Locale.getDefault()
+//                                    )
+//                                } ${currentYearMonth.year}",
+//                                fontSize = 13.sp,
+//                                fontFamily = poppinsFontFamily,
+//                                textAlign = TextAlign.Center,
+//                                color = Color.White,
+//                                fontWeight = FontWeight.Thin
+//                            )
+//                            IconButton(onClick = {
+//                                currentYearMonth = currentYearMonth.plusMonths(1)
+//                            }) {
+//                                Icon(
+//                                    imageVector = Icons.Default.ArrowForward,
+//                                    contentDescription = "Next Month",
+//                                    tint = Color.White
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
     }

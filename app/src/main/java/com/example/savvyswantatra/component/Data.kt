@@ -68,3 +68,4 @@ data class Transaksi(
 object TransaksiData{
     val transaksiList = mutableStateListOf<Transaksi>()
 }
+
