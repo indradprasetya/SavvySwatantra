@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -159,12 +160,26 @@ fun OtpCode(navController: NavController) {
             color = PinkSavvy
         )
 //        Form
-        TextField(
-            value = "",
-            onValueChange = {},
+        Spacer(modifier = Modifier.height(30.dp))
+        var otpCodeState by remember { mutableStateOf("") }
+        OutlinedTextField(
+            singleLine = true,
+            value = otpCodeState,
+            onValueChange = { if (it.isDigitsOnly()){
+                if (it.length <= 4) otpCodeState = it
+            } },
+            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center, fontStyle = Typography.bodyLarge.fontStyle),
+            modifier = Modifier.requiredWidth(186.dp).align(Alignment.CenterHorizontally),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.offset(y = 30.dp)
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = WhiteSavvy,
+                focusedContainerColor = WhiteSavvy,
+                cursorColor = PurpleSavvy2,
+                unfocusedTextColor = PurpleSavvy2,
+                focusedTextColor = PurpleSavvy2,
+            ),
         )
+
 //        Button
         Button(
             onClick = { navController.navigate(Screen.verifsucceed.route)},
@@ -174,7 +189,7 @@ fun OtpCode(navController: NavController) {
                 .size(width = 186.dp, height = 46.dp)
                 .offset(y = 420.dp)
         ) {
-            Text(text = "Verifikasi", style = Typography.displayMedium)
+            Text(text = "Verifikasi", style = Typography.displayMedium, color = WhiteSavvy)
         }
     }
 }
