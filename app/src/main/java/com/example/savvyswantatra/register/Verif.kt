@@ -21,7 +21,12 @@ import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +35,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
 import com.example.savvyswantatra.R
 import com.example.savvyswantatra.navigation.Screen
@@ -76,7 +82,7 @@ fun Verif(navController: NavController) {
                 .size(width = 186.dp, height = 46.dp)
                 .offset(y = 220.dp)
         ) {
-            Text(text = "Lanjut", style = Typography.displayMedium)
+            Text(text = "Lanjut", style = Typography.displayMedium, color = WhiteSavvy)
         }
     }
 }
@@ -100,12 +106,26 @@ fun OtpPhoneNumber(navController: NavController) {
             color = PinkSavvy
         )
 //        Form
-        TextField(
-            value = "",
-            onValueChange = {},
+        Spacer(modifier = Modifier.height(30.dp))
+        var otpPhoneNumberState by remember { mutableStateOf("") }
+        OutlinedTextField(
+            singleLine = true,
+            value = otpPhoneNumberState,
+            onValueChange = { if (it.isDigitsOnly()){
+                if (it.length <= 13) otpPhoneNumberState = it
+            } },
+            textStyle = Typography.bodyMedium,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-            modifier = Modifier.offset(y = 30.dp)
-            )
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = WhiteSavvy,
+                focusedContainerColor = WhiteSavvy,
+                cursorColor = PurpleSavvy2,
+                unfocusedTextColor = PurpleSavvy2,
+                focusedTextColor = PurpleSavvy2,
+            ),
+            placeholder = { Text("08xxxxxxxxxx", style = Typography.bodyMedium) },
+        )
+
 //        Button
             Button(
                 onClick = { navController.navigate(Screen.otpcode.route) },
@@ -115,7 +135,7 @@ fun OtpPhoneNumber(navController: NavController) {
                     .size(width = 186.dp, height = 46.dp)
                     .offset(y = 420.dp)
             ) {
-                Text(text = "Kirim Kode OTP", style = Typography.displayMedium)
+                Text(text = "Kirim Kode OTP", style = Typography.displayMedium, color = WhiteSavvy)
             }
     }
 }
