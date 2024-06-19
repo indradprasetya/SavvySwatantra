@@ -229,7 +229,7 @@ fun VerifSucceed(navController: NavController) {
                 .size(width = 186.dp, height = 46.dp)
                 .offset(y = 220.dp)
         ) {
-            Text(text = "Lanjut", style = Typography.displayMedium)
+            Text(text = "Lanjut", style = Typography.displayMedium, color = WhiteSavvy)
         }
     }
 }
