@@ -17,6 +17,7 @@ object Image {
     )
 
 }
+//Anggaran
 data class Anggaran(val nama: String, val jumlah: Double, val imageResources: Int)
 object AnggaranData {
     val anggaranList = mutableStateListOf<Anggaran>()
@@ -60,6 +61,10 @@ val months = listOf(
     , "November", "Desember"
 )
 
+val typeOption = listOf(
+    "Harian", "Mingguan", "Bulanan"
+)
+
 data class Transaksi(
     val nama: String,
     val jumlah: Double,
@@ -67,4 +72,10 @@ data class Transaksi(
 )
 object TransaksiData{
     val transaksiList = mutableStateListOf<Transaksi>()
+}
+
+//Simpanan
+data class Simpanan(val type: Int, val total: Int, val tujuan: String, val tanggalmulai: String, val tanggalakhir:String, val nominal: Int, val imageResources: Int)
+object SimpananData {
+    val simpananList = mutableStateListOf<Simpanan>()
 }

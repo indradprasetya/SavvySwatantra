@@ -164,7 +164,7 @@ fun AddAnggaranScreen(
                     fontWeight = FontWeight.Normal,
                     modifier = Modifier.padding(30.dp)
                 )
-                BankList(selectedImage)
+                BankList(selectedImage, 38)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

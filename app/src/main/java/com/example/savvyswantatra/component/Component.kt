@@ -487,7 +487,7 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: ()
 }
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
-fun BankList(selectedImage: MutableState<Int>){
+fun BankList(selectedImage: MutableState<Int>, padding:Int){
     val pagerState = rememberPagerState(pageCount = { bankList.size })
 
     HorizontalPager(state = pagerState) { page ->
@@ -496,7 +496,7 @@ fun BankList(selectedImage: MutableState<Int>){
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .padding(horizontal = 38.dp)
+                .padding(horizontal = padding.dp)
         ) {
             bankList.chunked(4).forEachIndexed { rowIndex, banks ->
                 banks.forEachIndexed { columnIndex, bank ->
@@ -671,4 +671,9 @@ fun Detail_kategori_card(
             }
         }
     }
+}
+
+@Composable
+fun simpananCard() {
+    Text(text = "Kosong")
 }
