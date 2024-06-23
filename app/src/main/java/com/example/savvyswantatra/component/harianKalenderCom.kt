@@ -37,6 +37,7 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
 import com.example.savvyswantatra.model.KalenderData
+import java.text.NumberFormat
 
 
 @Composable
@@ -98,7 +99,7 @@ Row(
                         color = PurpleSavvy2
                     )
                     Text(
-                        text = kalender1.harga,
+                        text = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(kalender1.harga),
                         fontFamily = poppinsFontFamily,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp,

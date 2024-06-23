@@ -37,18 +37,26 @@
     import com.example.savvyswantatra.navigation.Screen
     import com.example.savvyswantatra.ui.theme.*
     import com.example.savvyswantatra.component.HarianKalenderItem
+    import com.example.savvyswantatra.component.MingguanKalenderItem
     import com.example.savvyswantatra.component.kalenderbar
+    import com.example.savvyswantatra.model.DummyDataMingguan
     import com.example.savvyswantatra.model.KalenderData
+    import com.example.savvyswantatra.model.mingguanData
+    import java.text.NumberFormat
+    import java.time.LocalDate
     import java.time.YearMonth
+    import java.time.format.DateTimeFormatter
     import java.time.format.TextStyle
     import java.util.*
 
     @Composable
     fun HarianKalender(
         navController: NavController,
-        listData : List<KalenderData> = DummyData.KalenderList,
+        itemList: List<KalenderData> = DummyData.KalenderList,
         modifier: Modifier = Modifier,
     ) {
+        val groupedByDate = itemList.groupBy { it.dateDataHarian }
+
         kalenderbar(navController)
         Card(
             shape = RectangleShape,
@@ -92,132 +100,105 @@
                     }
                 }
 
-                Row(
-                    modifier = Modifier
-                        .padding(start = 10.dp, bottom = 10.dp, top = 5.dp, end = 18.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "19",
-                        fontSize = 20.sp,
-                        color = PurpleSavvy1,
-                        style = Typography.bodyMedium,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                    )
-
-                    Spacer(modifier = Modifier.width(5.dp))
-
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(
-                            text = "Rabu",
-                            fontSize = 10.sp,
-                            color = PurpleSavvy1,
-                            style = Typography.bodyMedium,
-                            modifier = Modifier
-                        )
-
-                        Text(
-                            text = "Juni 2024",
-                            color = PurpleSavvy1,
-                            style = Typography.bodyMedium,
-                            modifier = Modifier
-                        )
-                    }
-
-                    Text(
-                        text = "Rp49000",
-                        color = Color.White,
-                        style = Typography.bodyMedium,
-                        fontSize = 10.sp,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .background(color = PurpleSavvy2,
-                                shape = RoundedCornerShape(5.dp))
-                            .padding(7.dp)
-
-                    )
-                }
-
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .fillMaxHeight() // Pastikan LazyColumn dapat memenuhi ruang yang tersedia
+                    modifier = modifier
+                        .fillMaxHeight()
                         .background(Color.White)
                 ) {
-                    items(listData, key = { it.id }) {
-                        HarianKalenderItem(
-                            kalender1 = it,
-                            modifier = Modifier.padding(horizontal = 5.dp)
-                        )
-                        if (listData.indexOf(it) < listData.size - 1) {
-                            Divider(
-                                color = PurpleSavvy2,
-                                thickness = 2.dp,
-                                modifier = Modifier.padding(
-                                    horizontal = 16.dp,
-                                    vertical = 15.dp
-                                )
+                    groupedByDate.forEach { (date, items) ->
+                        val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                        val totalHarga = items.sumOf { it.harga }
+                        val formattedTotal =
+                            NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(totalHarga)
+
+                        item {
+                            DateHeaderHarian(date = formattedDate, total = formattedTotal)
+                        }
+                        items(items = items) { item ->
+                            HarianKalenderItem(
+                                kalender1 = item,
+                                modifier = Modifier.padding(horizontal = 5.dp)
                             )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            HorizontalDivider(color = PurpleSavvy2, thickness = 2.dp)
+
                         }
                     }
+
+
                 }
             }
         }
     }
 
-
-        @Composable
-        fun CalendarView() {
-            var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+    @Composable
+    fun DateHeaderHarian(date: String, total: String, modifier: Modifier = Modifier) {
+        val localDate =
+            LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val dayOfMonth = localDate.dayOfMonth.toString()
+        val dayOfWeek = localDate.dayOfWeek.getDisplayName(
+            java.time.format.TextStyle.FULL,
+            Locale("id", "ID")
+        )
+        val monthYear = localDate.format(
+            DateTimeFormatter.ofPattern(
+                "MMMM yyyy",
+                Locale("id", "ID")
+            )
+        )
+        Card(
+            shape = RectangleShape,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .background(Color.White)
+                    .padding(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
+                Text(
+                    text = dayOfMonth,
+                    color = PurpleSavvy2,
+                    style = Typography.bodyLarge
+                )
+                Spacer(modifier = Modifier.width(5.dp))
+
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    IconButton(onClick = { currentYearMonth = currentYearMonth.minusMonths(1) }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Previous Month",
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
                     Text(
-                        text = "${
-                            currentYearMonth.month.getDisplayName(
-                                TextStyle.FULL,
-                                Locale.getDefault()
-                            )
-                        } ${currentYearMonth.year}",
+                        text = dayOfWeek,
+                        fontSize = 10.sp,
+                        color = PurpleSavvy2,
                         style = Typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontWeight = FontWeight.Thin
                     )
-                    IconButton(onClick = { currentYearMonth = currentYearMonth.plusMonths(1) }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Next Month",
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+
+                    Text(
+                        text = monthYear,
+                        color = PurpleSavvy2,
+                        style = Typography.bodyMedium,
+                    )
                 }
+
+                Text(
+                    text = total,
+                    color = Color.White,
+                    style = Typography.bodyMedium,
+                    fontSize = 10.sp,
+                    modifier = Modifier
+                        .background(
+                            color = PurpleSavvy2,
+                            shape = RoundedCornerShape(5.dp)
+                        )
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                )
             }
-
         }
-
+    }
     @Preview(showBackground = true)
     @Composable
     fun PreviewHarianKalender() {

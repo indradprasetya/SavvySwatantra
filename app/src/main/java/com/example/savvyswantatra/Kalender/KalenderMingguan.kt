@@ -52,7 +52,7 @@ fun MingguanKalender(
     itemList: List<mingguanData> = DummyDataMingguan.TanggalList,
     modifier: Modifier = Modifier,
 ) {
-    val groupedByDate = itemList.groupBy { it.date }
+    val groupedByDate = itemList.groupBy { it.dateDataMingguan }
 
     kalenderbar(navController)
     Card(
@@ -97,60 +97,6 @@ fun MingguanKalender(
                 }
             }
 
-//            Row(
-//                modifier = Modifier
-//                    .padding(start = 10.dp, bottom = 10.dp, top = 5.dp, end = 18.dp)
-//                    .fillMaxWidth(),
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                Text(
-//                    text = "19",
-//                    fontSize = 20.sp,
-//                    color = PurpleSavvy1,
-//                    style = Typography.bodyMedium,
-//                    modifier = Modifier
-//                        .align(Alignment.CenterVertically)
-//                )
-//
-//                Spacer(modifier = Modifier.width(5.dp))
-//
-//                Column(
-//                    modifier = Modifier.weight(1f)
-//                ) {
-//                    Text(
-//                        text = "Rabu",
-//                        fontSize = 10.sp,
-//                        color = PurpleSavvy1,
-//                        style = Typography.bodyMedium,
-//                        modifier = Modifier
-//                    )
-//
-//                    Text(
-//                        text = "Juni 2024",
-//                        color = PurpleSavvy1,
-//                        style = Typography.bodyMedium,
-//                        modifier = Modifier
-//                    )
-//                }
-//
-//                Text(
-//                    text = "Rp49000",
-//                    color = Color.White,
-//                    style = Typography.bodyMedium,
-//                    fontSize = 10.sp,
-//                    modifier = Modifier
-//                        .align(Alignment.CenterVertically)
-//                        .background(color = PurpleSavvy2,
-//                            shape = RoundedCornerShape(5.dp)
-//                        )
-//                        .padding(7.dp)
-//
-//                )
-//            }
-//            val totalPriceByDate = groupedByDate.mapValues { (_, items) ->
-//                items.sumOf { it.harga }
-//            }
-//            val formattedTotal = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(totalPriceByDate) // Format ke dalam mata uang jika diperlukan
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -176,8 +122,6 @@ if(items.indexOf(item) < items.size - 1){
     HorizontalDivider(color = PurpleSavvy2, thickness = 2.dp)
 
 }
-                        Spacer(modifier = Modifier.height(8.dp)) // Spacer added here
-
                     }
                 }
             }
@@ -206,7 +150,7 @@ fun DateHeader(date: String, total: String, modifier: Modifier = Modifier) {
             Text(
                 text = dayOfMonth,
                 color = PurpleSavvy1,
-                style = Typography.bodyMedium,
+                style = Typography.bodyLarge,
             )
             Spacer(modifier = Modifier.width(5.dp))
 
@@ -243,45 +187,7 @@ fun DateHeader(date: String, total: String, modifier: Modifier = Modifier) {
     }
 }
 
-//@Composable
-//fun ListByDate(itemList: List<ListItemData>) {
-//    val groupedItems = itemList.groupBy { it.date }
-//
-//    LazyColumn {
-//        groupedItems.forEach { (date, items) ->
-//            val formattedDate = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-//
-//            // Tampilkan judul tanggal di atas item-item
-//            item {
-//                Text(
-//                    text = "Date: $formattedDate",
-//                    style = TextStyle(
-//                        fontWeight = FontWeight.Bold,
-//                        fontSize = 20.sp,
-//                        color = Color.Black
-//                    ),
-//                    modifier = Modifier
-//                        .padding(horizontal = 16.dp, vertical = 8.dp)
-//                )
-//            }
-//
-//            // Tampilkan item-item di dalam grup tanggal ini
-//            items.forEach { item ->
-//                item {
-//                    Text(
-//                        text = item.name,
-//                        style = TextStyle(
-//                            fontSize = 16.sp,
-//                            color = Color.Gray
-//                        ),
-//                        modifier = Modifier
-//                            .padding(horizontal = 32.dp, vertical = 4.dp)
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -291,10 +197,3 @@ fun PreviewMingguanKalender() {
 
     MingguanKalender(navController = navController, itemList = itemList)
 }
-//
-//@Composable
-//fun MyApp() {
-//    val itemList = createDummyData()
-//
-//    ListByDate(itemList = itemList)
-//}

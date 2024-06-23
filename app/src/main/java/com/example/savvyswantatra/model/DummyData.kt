@@ -8,117 +8,115 @@ import java.time.LocalDate
 object DummyData {
     val KalenderList = listOf(
         KalenderData(
-            id = 1,
+            dateDataHarian = LocalDate.of(2024, 5, 16),
             image = R.drawable.makan,
             icon = R.drawable.pengeluaran,
             kategori = "Makanan dan Minuman",
             deskripsi = "Makan Warteg",
-            harga = "Rp10,000"
+            harga = 10000
         ),
         KalenderData(
-            id = 2,
+            dateDataHarian = LocalDate.of(2024, 5, 16),
             image = R.drawable.kesehatanicon,
             icon = R.drawable.pengeluaran,
             kategori = "Kesehatan",
             deskripsi = "Panadol",
-            harga = "Rp15,000"
+            harga = 15000
         ),
         KalenderData(
-            id = 3,
+            dateDataHarian = LocalDate.of(2024, 5, 16),
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Transfer dari sepuh alfred",
-            harga = "Rp12,000"
+            harga = 12000
         ),
         KalenderData(
-            id = 4,
+            dateDataHarian = LocalDate.of(2024, 5, 16),
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Thr dari paman",
-            harga = "Rp12,000"
+            harga = 12000
         ),
         KalenderData(
-            id = 5,
+            dateDataHarian = LocalDate.of(2024, 5, 16),
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Thr dari paman",
-            harga = "Rp12,000"
+            harga = 12000
         ),
         KalenderData(
-            id = 6,
+            dateDataHarian = LocalDate.of(2024, 5, 16),
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Thr dari paman",
-            harga = "Rp12,000"
+            harga = 12000
         ),
         KalenderData(
-            id = 7,
-        image = R.drawable.income,
-        icon = R.drawable.pemasukan,
+        dateDataHarian = LocalDate.of(2024, 5, 16),
+        image = R.drawable.pengeluaran,
+        icon = R.drawable.pengeluaran,
         kategori = "Mandiri",
         deskripsi = "Thr dari paman",
-        harga = "Rp12,000"
-    )
+        harga = 12000
+    ),
     )
 }
 
 object DummyDataMingguan {
     val TanggalList = listOf(
         mingguanData(
-            date = LocalDate.of(2024, 5, 16),
-            id = 1,
+            dateDataMingguan = LocalDate.of(2024, 5, 16),
             image = R.drawable.makan,
             icon = R.drawable.pengeluaran,
             kategori = "Makanan dan Minuman",
             deskripsi = "Makan Warteg",
-            harga = 10000,
-            total = "99.000"
+            harga = 10000
         ),
         mingguanData(
-            date = LocalDate.of(2024, 5, 16),
-            id = 2,
+            dateDataMingguan = LocalDate.of(2024, 5, 16),
             image = R.drawable.kesehatanicon,
             icon = R.drawable.pengeluaran,
             kategori = "Kesehatan",
             deskripsi = "Panadol",
-            harga = 15000,
-            total = "99.000"
+            harga = 15000
         ),
         mingguanData(
-            date = LocalDate.of(2024, 5, 17),
-            id = 3,
+            dateDataMingguan = LocalDate.of(2024, 5, 16),
+            image = R.drawable.kesehatanicon,
+            icon = R.drawable.pengeluaran,
+            kategori = "Kesehatan",
+            deskripsi = "Panadol",
+            harga = 15000
+        ),
+        mingguanData(
+            dateDataMingguan = LocalDate.of(2024, 5, 17),
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Transfer dari sepuh alfred",
-            harga = 12000,
-            total = "99.000"
+            harga = 12000
 
         ),
         mingguanData(
-            date = LocalDate.of(2024, 5, 17),
-            id = 4,
+            dateDataMingguan = LocalDate.of(2024, 5, 17),
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Thr dari paman",
-            harga = 12000,
-            total = "99.000"
+            harga = 12000
 
         ),
         mingguanData(
-            date = LocalDate.of(2024, 5, 17),
-            id = 5,
+            dateDataMingguan = LocalDate.of(2024, 5, 17),
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Thr dari paman",
-            harga = 12000,
-            total = "99.000"
+            harga = 12000
         ),
 
     )
