@@ -17,7 +17,7 @@ object Image {
     )
 
 }
-data class Anggaran(val nama: String, var jumlah: Double, val imageResources: Int)
+data class Anggaran( val nama: String, var jumlah: Double, val imageResources: Int)
 object AnggaranData {
     val anggaranList = mutableStateListOf<Anggaran>()
 }
@@ -73,5 +73,4 @@ data class Transaksi(
 )
 object TransaksiData{
     val transaksiList = mutableStateListOf<Transaksi>()
-
 }

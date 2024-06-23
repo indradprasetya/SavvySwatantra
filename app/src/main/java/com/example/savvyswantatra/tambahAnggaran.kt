@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -32,6 +33,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,6 +47,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
@@ -58,16 +63,38 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
+import com.example.savvyswantatra.viewModel.AddAnggaranViewModel
+import java.text.NumberFormat
+import java.util.Locale
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import com.example.savvyswantatra.database.AppDatabase
+import com.example.savvyswantatra.viewModel.AddAnggaranViewModelFactory
+
+fun formatNumberWithCommas(input: String): String {
+    val number = input.replace(",", "").toDoubleOrNull()
+    return if (number != null) {
+        val format = NumberFormat.getNumberInstance(Locale.US)
+        format.format(number)
+    } else {
+        input
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddAnggaranScreen(
-    navController: NavController,
+    navController: NavController
 ) {
-    val textNama = remember { mutableStateOf("") }
-    val textJumlah = remember { mutableStateOf("") }
-    val selectedImage = remember { mutableStateOf(0) }
     val context = LocalContext.current
+    val anggaranDao = AppDatabase.getInstance(context).anggaranDao()
+    val viewModel: AddAnggaranViewModel = viewModel(
+        factory = AddAnggaranViewModelFactory(anggaranDao)
+    )
+
+    val textNama by viewModel.textNama
+    val textJumlah by viewModel.textJumlah
+    val selectedImage = viewModel.selectedImage
 
     BoxWithConstraints {
         val screenWidth = constraints.maxWidth.toFloat()
@@ -117,10 +144,8 @@ fun AddAnggaranScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         TextField(
-                            value = textNama.value,
-                            onValueChange = { newText ->
-                                textNama.value = newText
-                            },
+                            value = textNama,
+                            onValueChange = viewModel::onNamaChange,
                             label = {
                                 Text(
                                     text = "",
@@ -130,7 +155,8 @@ fun AddAnggaranScreen(
                                 .fillMaxWidth()
                                 .offset(y = (-8).dp),
                             colors = TextFieldDefaults.textFieldColors(containerColor = WhiteSavvy),
-                            textStyle = TextStyle(color = PurpleSavvy1, fontFamily = poppinsFontFamily,)
+                            textStyle = TextStyle(color = PurpleSavvy1, fontFamily = poppinsFontFamily,),
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done)
                         )
                     }
                     Row(
@@ -145,10 +171,8 @@ fun AddAnggaranScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         TextField(
-                            value = textJumlah.value,
-                            onValueChange = { newText ->
-                                textJumlah.value = newText
-                            },
+                            value = textJumlah,
+                            onValueChange = viewModel::onJumlahChange,
                             label = {
                                 Text(
                                     text = "",  // Ubah ini menjadi String kosong
@@ -161,7 +185,8 @@ fun AddAnggaranScreen(
                             textStyle = TextStyle(
                                 color = PurpleSavvy1,
                                 fontFamily = poppinsFontFamily
-                            )
+                            ),
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done, keyboardType = KeyboardType.Number) // Membatasi input hanya untuk angka
                         )
                     }
                     Text(
@@ -183,56 +208,35 @@ fun AddAnggaranScreen(
                     ) {
                         Button(
                             onClick = {
-                                val jumlah = textJumlah.value.toDoubleOrNull()
-                                if (textNama.value.isBlank()) {
-                                    Toast.makeText(
-                                        context,
-                                        "Nama anggaran tidak boleh kosong",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else if (jumlah == null) {
-                                    Toast.makeText(
-                                        context,
-                                        "Jumlah saldo harus berupa angka",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    val imageResId = Image.bankList.getOrNull(selectedImage.value)
-                                        ?: R.drawable.ic_launcher_background
-                                    AnggaranData.anggaranList.add(
-                                        Anggaran(
-                                            nama = textNama.value,
-                                            jumlah = jumlah,
-                                            imageResources = imageResId
-                                        )
-                                    )
+                                if (viewModel.tambahAnggaran()) {
                                     navController.popBackStack()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Nama anggaran tidak boleh kosong atau jumlah saldo harus berupa angka",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
                             },
                             shape = RoundedCornerShape(5.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xffeb7f63)),
                             modifier = Modifier
                                 .size(width = 140.dp, height = 46.dp)
-                        )
-                        {
+                        ) {
                             Text(
                                 text = "Tambah",
-                                style = Typography.bodyMedium
+                                style = Typography.bodyMedium,
+                                color = WhiteSavvy
                             )
                         }
-//
+
                         Button(
-                            onClick = {
-                                textNama.value = ""
-                                textJumlah.value = ""  // Ubah ini menjadi String kosong
-                                selectedImage.value = 0
-                            },
+                            onClick = viewModel::pulihkan,
                             shape = RoundedCornerShape(5.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(0xffEBE7E7)),
                             modifier = Modifier
                                 .size(width = 140.dp, height = 46.dp)
-                        )
-                        {
+                        ) {
                             Text(
                                 text = "Pulihkan",
                                 style = Typography.bodyMedium,
@@ -245,4 +249,3 @@ fun AddAnggaranScreen(
         }
     }
 }
-

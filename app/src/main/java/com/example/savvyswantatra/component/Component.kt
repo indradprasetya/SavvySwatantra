@@ -52,6 +52,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -63,32 +66,59 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.room.Transaction
 import com.example.savvyswantatra.R
 import com.example.savvyswantatra.component.Image.bankList
+import com.example.savvyswantatra.database.AppDatabase
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PinkSavvy
+import com.example.savvyswantatra.ui.theme.Purple80
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
+import com.example.savvyswantatra.ui.theme.poppinsFontFamily
+import com.example.savvyswantatra.viewModel.AnggaranViewModel
+import com.example.savvyswantatra.viewModel.AnggaranViewModelFactory
+import com.example.savvyswantatra.viewModel.DetailScreenViewModel
+import com.example.savvyswantatra.viewModel.DetailScreenViewModelFactory
 import java.text.NumberFormat
 
 @Composable
 fun MainCard(navController: NavController) {
-    val totalAnggaran = AnggaranData.anggaranList.sumOf { it.jumlah }
+    val context = LocalContext.current
+    val anggaranDao = AppDatabase.getInstance(context).anggaranDao()
+    val kategoriAnggaranDao = AppDatabase.getInstance(context).kategoriAnggaranDao()
+    val anggaranViewModel: AnggaranViewModel = viewModel(
+        factory = AnggaranViewModelFactory(anggaranDao,kategoriAnggaranDao)
+    )
+    val anggaranList by anggaranViewModel.anggaranList.observeAsState(emptyList())
+
+    // Menghitung total anggaran jika daftar tidak kosong
+    val totalAnggaran = if (anggaranList.isNotEmpty()) {
+        anggaranList.sumOf { it.jumlah }
+    } else {
+        0
+    }
+
+    val formatter = NumberFormat.getNumberInstance()
+    val nominalFormatted = formatter.format(totalAnggaran)
+
     Card(
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .padding(24.dp)
             .padding(top = 70.dp)
-            .width(350.dp) // Set the width of the card to 318.dp
-            .height(155.dp), // Set the height of the card to 141.dp
+            .width(350.dp)
+            .height(155.dp),
         colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
     ) {
         Column {
@@ -103,8 +133,6 @@ fun MainCard(navController: NavController) {
                         color = WhiteSavvy
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    val formatter = NumberFormat.getNumberInstance()
-                    val nominalFormatted = formatter.format(totalAnggaran)
                     Text(
                         text = "Rp. $nominalFormatted",
                         style = Typography.bodyLarge,
@@ -135,17 +163,17 @@ fun MainCard(navController: NavController) {
                         style = Typography.labelSmall
                     )
                 }
-
             }
+
             LazyRow(
                 Modifier
-                    .padding(bottom = 4.dp, end = 25.dp) // Menambahkan padding di akhir LazyRow
+                    .padding(bottom = 4.dp, end = 25.dp)
                     .offset(x = 22.dp)
                     .offset(y = (-10).dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (AnggaranData.anggaranList.isEmpty()) {
+                if (anggaranList.isEmpty()) {
                     item {
                         Box(
                             modifier = Modifier
@@ -160,15 +188,19 @@ fun MainCard(navController: NavController) {
                         }
                     }
                 } else {
-                    items(AnggaranData.anggaranList) { anggaran ->
-                        SubSaldo(imageResource = anggaran.imageResources, keterangan = anggaran.nama, jumlah_saldo = anggaran.jumlah)
+                    items(anggaranList) { anggaran ->
+                        SubSaldo(
+                            imageResource = anggaran.imageResources,
+                            keterangan = anggaran.nama,
+                            jumlah_saldo = anggaran.jumlah
+                        )
                     }
                 }
             }
-
         }
     }
 }
+
 @Composable
 fun Transaksi() {
     Row(
@@ -314,13 +346,17 @@ fun SubSaldo(
 fun TampilAnggaran(
     imageResource: Int,
     keterangan: String,
-    jumlah_saldo: String,
+    jumlah_saldo: Double,
     batas_anggaran: Double,
     navController: NavController,
-){
-
-    val persentase = ((jumlah_saldo.toDoubleOrNull() ?: 0.0) / batas_anggaran)
+    namaAnggaran: String,
+    jumlah: Double
+) {
+    val persentase = if (batas_anggaran > 0) (jumlah / batas_anggaran) else 0.0
     val progress = remember { mutableStateOf(persentase.toFloat()) }
+    LaunchedEffect(jumlah_saldo) {
+        progress.value = persentase.toFloat()
+    }
     Column {
         Row(
             Modifier
@@ -332,14 +368,16 @@ fun TampilAnggaran(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .padding(start = 24.dp, top = 5.dp)
-                    .width(215.dp) // Set the width of the card to 318.dp
+                    .width(215.dp)
                     .height(100.dp)
-                    .clickable { navController.navigate(Screen.anggaran.route) }, // Set the height of the card to 141.dp
+                    .clickable { navController.navigate(Screen.anggaran.route) },
                 colors = CardDefaults.cardColors(containerColor = PinkSavvy)
-            ){
+            ) {
                 Column {
-                    Row(verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(12.dp)) { // Menambahkan Row untuk menampilkan Image dan Column bersamaan
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(12.dp)
+                    ) {
                         val image: Painter = painterResource(id = imageResource)
                         Image(
                             painter = image,
@@ -351,39 +389,58 @@ fun TampilAnggaran(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
-                            Text(text = keterangan, style = Typography.bodyMedium, color = PurpleSavvy1)
+                            Text(
+                                text = keterangan,
+                                style = Typography.bodyMedium,
+                                color = PurpleSavvy1
+                            )
                             Row {
                                 val formatter = NumberFormat.getNumberInstance()
-                                val nominalFormatted = formatter.format(jumlah_saldo.toDoubleOrNull() ?: 0.0)
+                                val nominalFormatted = formatter.format(jumlah_saldo)
                                 val nominalFormatted1 = formatter.format(batas_anggaran)
-                                Text(text = "Rp.$nominalFormatted / ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
-                                Text(text = "Rp.$nominalFormatted1 ", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.Normal)
+                                Text(
+                                    text = "Rp.$nominalFormatted / ",
+                                    style = Typography.bodyMedium,
+                                    color = PurpleSavvy1,
+                                    fontWeight = FontWeight.Normal
+                                )
+                                Text(
+                                    text = "Rp.$nominalFormatted1 ",
+                                    style = Typography.bodyMedium,
+                                    color = PurpleSavvy1,
+                                    fontWeight = FontWeight.Normal
+                                )
                             }
-                            Text(text = "", style = Typography.bodyMedium, color = PurpleSavvy1, fontWeight = FontWeight.SemiBold)
+                            Text(
+                                text = namaAnggaran,
+                                style = Typography.bodyMedium,
+                                color = PurpleSavvy1,
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
                     }
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(bottom = 10.dp), // Fill the parent
-                        contentAlignment = Alignment.Center // Center the content
+                            .padding(bottom = 10.dp),
+                        contentAlignment = Alignment.Center
                     ) {
                         Box(
                             modifier = Modifier
                                 .width(180.dp)
                                 .height(8.dp)
-                                .clip(RoundedCornerShape(4.dp)) // Clip the Box with rounded corners
+                                .clip(RoundedCornerShape(4.dp))
                                 .background(Color.White)
-                                .border(1.dp, Color.Transparent, RoundedCornerShape(4.dp)), // Add a border with rounded corners
+                                .border(1.dp, Color.Transparent, RoundedCornerShape(4.dp)),
                             contentAlignment = Alignment.CenterStart
                         ) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth(progress.value)
                                     .height(8.dp)
-                                    .clip(RoundedCornerShape(4.dp)) // Clip the Box with rounded corners
+                                    .clip(RoundedCornerShape(4.dp))
                                     .background(PurpleSavvy1)
-                            ){
+                            ) {
                                 Text(
                                     text = "${(persentase * 100).toInt()}%",
                                     style = Typography.bodyMedium,
@@ -395,40 +452,47 @@ fun TampilAnggaran(
                             }
                         }
                     }
-
                 }
             }
         }
     }
 }
 
-
 @Composable
 fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: () -> Unit, onCardClick: () -> Unit) {
     val openDialog = remember { mutableStateOf(false) }
 
     if (openDialog.value) {
-        AlertDialog(
-            onDismissRequest = { openDialog.value = false },
-            title = { Text(text = "Konfirmasi Penghapusan") },
-            text = { Text(text = "Apakah Anda ingin menghapus anggaran ini?") },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        onDelete()
-                        openDialog.value = false
+        Surface(color = WhiteSavvy) {
+            AlertDialog(
+                onDismissRequest = { openDialog.value = false },
+                title = { Text(text = "Konfirmasi Penghapusan", fontFamily = poppinsFontFamily) },
+                text = { Text(text = "Apakah Anda ingin menghapus anggaran ini?") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            onDelete()
+                            openDialog.value = false
+                        },
+                        colors = ButtonDefaults.textButtonColors(contentColor = PurpleSavvy1)
+                    ) {
+                        Text("Ya, Hapus",fontFamily = poppinsFontFamily)
                     }
-                ) {
-                    Text("Hapus")
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { openDialog.value = false },
+                        colors = ButtonDefaults.textButtonColors(contentColor = PurpleSavvy1),
+
+                    ) {
+                        Text("Tidak, Batal",
+                            fontFamily = poppinsFontFamily)
+                    }
                 }
-            },
-            dismissButton = {
-                Button(onClick = { openDialog.value = false }) {
-                    Text("Batal")
-                }
-            }
-        )
+            )
+        }
     }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -486,7 +550,8 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: ()
                         Text(
                             text = label,
                             style = Typography.labelSmall,
-                            modifier = Modifier.padding(start = 16.dp)
+                            modifier = Modifier.padding(start = 16.dp),
+                            color = Color.White
                         )
                     }
                     val formatter = NumberFormat.getNumberInstance()
@@ -550,9 +615,19 @@ fun Detail_kategori_card(
     batas_anggaran: Double,
     onDelete: () -> Unit,
     onAddTransactionClick: () -> Unit,
-    onCardClick: () -> Unit
+    onCardClick: () -> Unit,
+    jumlah: Double
 ) {
-    val persentase = ((jumlah_saldo.toDoubleOrNull() ?: 0.0) / batas_anggaran)
+    val context = LocalContext.current
+    val anggaranDao = AppDatabase.getInstance(context).anggaranDao()
+    val kategoriAnggaranDao = AppDatabase.getInstance(context).kategoriAnggaranDao()
+    val transaksiDao = AppDatabase.getInstance(context).transaksiDao()
+    val viewModel: DetailScreenViewModel = viewModel(
+        factory = DetailScreenViewModelFactory(kategoriAnggaranDao, transaksiDao)
+    )
+
+    val transaksiList by viewModel.transactions.observeAsState(emptyList())
+    val persentase = (jumlah / batas_anggaran)
     val progress = remember { mutableStateOf(persentase.toFloat()) }
     val openDialog = remember { mutableStateOf(false) }
 

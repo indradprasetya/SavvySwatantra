@@ -49,9 +49,8 @@ import com.example.savvyswantatra.Wt1_screen
 import com.example.savvyswantatra.Wt2_screen
 import com.example.savvyswantatra.Wt3_screen
 import com.example.savvyswantatra.component.AnggaranData
-import com.example.savvyswantatra.component.KategoriAnggaran
+import com.example.savvyswantatra.model.KategoriAnggaran
 import com.example.savvyswantatra.component.KategoriAnggaranData
-import com.example.savvyswantatra.model.DetailViewModel
 import com.example.savvyswantatra.pengaturan.SyaratKet
 import com.example.savvyswantatra.pengaturan.ubahSandi
 import com.example.savvyswantatra.register.Login
@@ -167,20 +166,6 @@ fun NavigationApp() {
             FormExpense(navController = navController)
         }
 
-//        composable(
-//            route = "detailAnggaran/{idAnggaran}",
-//            arguments = listOf(
-//                navArgument("idAnggaran") { type = NavType.IntType },
-//            )
-//        ) { navBackStackEntry ->
-//            val idAnggaran = navBackStackEntry.arguments?.getInt("idAnggaran")
-//            val detailViewModel: DetailViewModel = viewModel()
-//            if (idAnggaran != null) {
-//                DetailScreen(navController = navController, idAnggaran = idAnggaran,viewModel = detailViewModel)
-//            } else {
-//
-//            }
-//        }
 
         composable(
             route = "detailAnggaran/{namaAnggaran}",
@@ -190,7 +175,7 @@ fun NavigationApp() {
         ) { backStackEntry ->
             val namaAnggaran = backStackEntry.arguments?.getString("namaAnggaran")
             if (namaAnggaran != null) {
-                DetailScreen(navController = navController, namaAnggaran = namaAnggaran, addedCategories)
+                DetailScreen(navController = navController, namaAnggaran = namaAnggaran)
             } else {
                 // Handle error, namaAnggaran or idKategori is null
             }
@@ -203,7 +188,7 @@ fun NavigationApp() {
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { BottomNavigationBar(navController) },
             ) {
-                BerandaScreen(navController = navController, namaAnggaran = namaAnggaran, addedCategories = addedCategories)
+                BerandaScreen(navController = navController)
             }
         }
         composable(Screen.kalender.route) {
