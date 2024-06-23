@@ -18,22 +18,33 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.savvyswantatra.component.kalenderbar
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.Pink40
@@ -50,14 +62,45 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.PurpleSavvy3
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalContext
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun TampilanKalender(navController: NavController) {
+    var currentMonth by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    var currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
 
-    kalenderbar(navController)
+    val calendar = Calendar.getInstance()
+    calendar.set(Calendar.MONTH, currentMonth)
+    calendar.set(Calendar.YEAR, currentYear)
+
+    kalenderbar(navController = navController,
+        currentMonth = currentMonth,
+        currentYear = currentYear,
+        onPreviousMonth = {
+            if (currentMonth == 0) {
+                currentMonth = 11
+                currentYear--
+            } else {
+                currentMonth--
+            }
+        },
+        onNextMonth = {
+            if (currentMonth == 11) {
+                currentMonth = 0
+                currentYear++
+            } else {
+                currentMonth++
+            }
+        })
     Card(
         shape = RectangleShape,
         modifier = Modifier
@@ -134,24 +177,14 @@ fun TampilanKalender(navController: NavController) {
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
-        hari()
-        Spacer(modifier = Modifier.height(16.dp))
-        Row {
+        //hari()
 
-        }
-        SimpleCalendar(navController = navController)
-        /*Icon(imageVector = Icons.Default.AddCircle,
-            contentDescription = "add",
-            modifier = Modifier
-                .padding(start = 335.dp)
-                .width(54.dp)
-                .height(54.dp)
-                ,
-            tint = Pink40
-        )*/
+        SimpleCalendar(currentMonth, currentYear, navController)
+
+
     }
 }
-
+/*
 @Composable
 fun hari() {
     Card(
@@ -222,92 +255,87 @@ fun hari() {
 
         }
     }
-}
+}*/
 
 @Composable
-fun SimpleCalendar(navController: NavController) {
-    val days = listOf(
-        26,
-        27,
-        28,
-        29,
-        30,
-        31,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-    )
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column {
-            for (week in days.chunked(7)) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    for (day in week) {
-                        Text(
-                            text = "$day",
-                            style = Typography.bodySmall,
-                            color = PurpleSavvy1,
-                            modifier = Modifier
-                                .width(40.dp)
-                                .height(70.dp)
-                                .background(Color.Transparent)
-                                .padding(8.dp),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            }
-        }
-        Icon(
-            imageVector = Icons.Default.AddCircle,
-            contentDescription = "add",
+fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
+    val calendar = Calendar.getInstance()
+    calendar.set(Calendar.MONTH, month)
+    calendar.set(Calendar.YEAR, year)
+    calendar.set(Calendar.DAY_OF_MONTH, 1)
+
+    val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+    val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
+
+    val weeks = (daysInMonth + firstDayOfWeek + 6) / 7
+    val icons = listOf(Icons.Default.AddCircle)
+
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+    ) {
+
+        Row(
             modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset(x = (-16).dp, y = 320.dp)
-                .width(60.dp)
-                .height(60.dp)
-                .zIndex(1f)// Ikon berada di atas kotak kalender
-                .clickable(onClick =
-                { navController.navigate("pengeluaranKalender") }),
-            tint = Pinkeu
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .background(PurpleSavvy1),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            val daysOfWeek = listOf("Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab")
+            for (day in daysOfWeek) {
+                Text(
+                    text = day,
+                    style = Typography.bodySmall,
+                    color = WhiteSavvy,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(vertical = 5.dp)
+                )
+            }
+
+        }
+
+        }
+
+
+        LazyVerticalGrid(
+            modifier = Modifier
+                .offset(y=(1).dp),
+            columns = GridCells.Fixed(7),
+            contentPadding = PaddingValues(4.dp),
+
         )
+        {
+            items(firstDayOfWeek) {
+                Box(modifier = Modifier.size(40.dp)) { /* Empty box for padding */ }
+            }
+            items(daysInMonth) { day ->
+                Box(
+                    modifier = Modifier
+                        .size(70.dp)
+                        .padding(4.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = (day + 1).toString(),
+                        style = Typography.bodySmall,
+                        color = PurpleSavvy1,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+
+            }
+
+        }
+
     }
-}
+
+
+
+
 

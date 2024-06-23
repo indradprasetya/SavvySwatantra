@@ -105,7 +105,7 @@ fun NavigationApp() {
             VerifSucceed(navController = navController)
         }
         composable(Screen.syaratket.route) {
-            SyaratKet()
+            SyaratKet(navControler = navController)
         }
         composable(Screen.ubahsandi.route) {
             ubahSandi(navController = navController)

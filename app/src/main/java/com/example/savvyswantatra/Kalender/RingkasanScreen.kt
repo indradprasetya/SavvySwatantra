@@ -22,6 +22,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
@@ -46,6 +50,7 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy3
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
+import java.util.Calendar
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -55,7 +60,27 @@ data class PieChartData(val color: Color, val fraction: Float, val label: String
 
 @Composable
 fun RingkasanScreen (navController: NavController){
-    kalenderbar(navController)
+    var currentMonth by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    var currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
+
+    val onPreviousMonth: () -> Unit = {
+        if (currentMonth == 0) {
+            currentMonth = 11
+            currentYear--
+        } else {
+            currentMonth--
+        }
+    }
+
+    val onNextMonth: () -> Unit = {
+        if (currentMonth == 11) {
+            currentMonth = 0
+            currentYear++
+        } else {
+            currentMonth++
+        }
+    }
+    kalenderbar(navController, currentMonth, currentYear, onPreviousMonth, onNextMonth)
         // Card di bagian bawah
         Card(
             shape = RectangleShape,

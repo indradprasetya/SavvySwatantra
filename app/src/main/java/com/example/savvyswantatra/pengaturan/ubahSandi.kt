@@ -1,8 +1,10 @@
 package com.example.savvyswantatra.pengaturan
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
@@ -62,20 +66,31 @@ fun ubahSandi(navController: NavController) {
     val confirmPasswordVisibility = remember { mutableStateOf(false) }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
         modifier = Modifier
             .fillMaxSize()
             .background(PurpleSavvy1)
             .padding(50.dp)
     ) {
+        Row{
+            Icon(
+                Icons.Filled.ArrowBack,
+                contentDescription = "ke pengaturan",
+                tint = WhiteSavvy,
+                modifier = Modifier
+                    .clickable(onClick =
+                    { navController.navigate("pengaturan") })
+            )
+
+        }
         Spacer(modifier = Modifier.height(100.dp))
         Text(
             text = "Ubah Kata Sandi",
             style = Typography.titleLarge,
             color = WhiteSavvy,
             fontFamily = poppinsFontFamily,
-            textAlign = TextAlign.Center
+            modifier = Modifier
+                .align(alignment = Alignment.CenterHorizontally)
         )
 
         Spacer(modifier = Modifier.height(20.dp))
@@ -206,4 +221,10 @@ fun ubahSandi(navController: NavController) {
             Text(text = "Ubah Kata Sandi", style = Typography.displayMedium)
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ubahSandiPreview() {
+    ubahSandi(navController = rememberNavController())
 }

@@ -11,20 +11,34 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
@@ -32,11 +46,18 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 @Composable
-fun kalenderbar(navController: NavController) {
+fun kalenderbar(navController: NavController, currentMonth: Int,
+                currentYear: Int,
+                onPreviousMonth: () -> Unit,
+                onNextMonth: () -> Unit) {
     // MutableState untuk mengontrol item yang dipilih
+
 
     var (selectedItem, setSelectedItem) = rememberSaveable { mutableStateOf("Kalender") }
 
@@ -65,29 +86,55 @@ fun kalenderbar(navController: NavController) {
                 .padding(vertical = 70.dp)
 
         )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "Mei 2024",
-            style = Typography.bodySmall,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 110.dp)
-
-        )
+        Spacer(modifier = Modifier.height(20.dp))
         Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                    .padding(vertical = 155.dp)
+                .padding(top = 100.dp)
+                .padding(start = 15.dp)
+                .padding(end = 15.dp)
+                .align(Alignment.TopCenter)
+
+
         ) {
+            Spacer(modifier = Modifier.width(15.dp))
+            IconButton(onClick = onPreviousMonth) {
+                Icon(
+                    Icons.Filled.KeyboardArrowLeft,
+                    contentDescription = "Previous Month",
+                    tint = WhiteSavvy
+                )
+            }
+            Text(
+                text = "${getMonthName(currentMonth)} $currentYear",
+                style = Typography.bodySmall,
+                color = WhiteSavvy
+            )
+            IconButton(onClick = onNextMonth) {
+                Icon(
+                    Icons.Filled.KeyboardArrowRight,
+                    contentDescription = "Next Month",
+                    tint = WhiteSavvy
+                )
+            }
+            Spacer(modifier = Modifier.width(15.dp))
+
+        }
+            Row(
+                modifier = Modifier
+                    .padding(vertical = 155.dp)
+            ) {
                 Spacer(modifier = Modifier.width(25.dp))
                 Column {
                     Text(
                         text = "Kalender",
                         style = Typography.bodySmall,
                         color = Color.White,
-                        modifier = Modifier.clickable { setSelectedItem("Kalender")
-                            navController.navigate("kalender")}
+                        modifier = Modifier.clickable {
+                            setSelectedItem("Kalender")
+                            navController.navigate("kalender")
+                        }
                     )
                     if (isItemSelected("Kalender")) {
                         Column {
@@ -106,8 +153,10 @@ fun kalenderbar(navController: NavController) {
                         text = "Harian",
                         style = Typography.bodySmall,
                         color = Color.White,
-                        modifier = Modifier.clickable {setSelectedItem("Harian")
-                            navController.navigate("harianKalender") }
+                        modifier = Modifier.clickable {
+                            setSelectedItem("Harian")
+                            navController.navigate("harianKalender")
+                        }
                     )
                     if (isItemSelected("Harian")) {
                         Column {
@@ -128,8 +177,10 @@ fun kalenderbar(navController: NavController) {
                         style = Typography.bodySmall,
                         color = Color.White,
                         modifier = Modifier.clickable
-                        { setSelectedItem("Mingguan")
-                            navController.navigate("mingguanKalender") }
+                        {
+                            setSelectedItem("Mingguan")
+                            navController.navigate("mingguanKalender")
+                        }
                     )
                     if (isItemSelected("Mingguan")) {
                         Column {
@@ -150,8 +201,10 @@ fun kalenderbar(navController: NavController) {
                         style = Typography.bodySmall,
                         color = Color.White,
                         modifier = Modifier.clickable
-                        {setSelectedItem("bulananKalender")
-                            navController.navigate("bulananKalender") }
+                        {
+                            setSelectedItem("bulananKalender")
+                            navController.navigate("bulananKalender")
+                        }
                     )
                     if (isItemSelected("bulananKalender")) {
                         Column {
@@ -171,8 +224,9 @@ fun kalenderbar(navController: NavController) {
                         text = "Ringkasan",
                         style = Typography.bodySmall,
                         color = Color.White,
-                        modifier = Modifier.clickable  { setSelectedItem("Ringkasan")
-                                navController.navigate("ringkasanKalender")
+                        modifier = Modifier.clickable {
+                            setSelectedItem("Ringkasan")
+                            navController.navigate("ringkasanKalender")
                             Log.d("KalenderBar", "Ringkasan clicked")
                         }
                     )
@@ -193,6 +247,12 @@ fun kalenderbar(navController: NavController) {
             }
         }
     }
+
+fun getMonthName(month: Int): String {
+    return SimpleDateFormat("MMMM", Locale("id", "ID")).format(Calendar.getInstance().apply {
+        set(Calendar.MONTH, month)
+    }.time)
+}
 
 
 
