@@ -166,7 +166,7 @@ fun kalenderbar(navController: NavController) {
                             fontSize = 10.sp,
                             fontFamily = poppinsFontFamily,
                             color = Color.White,
-                            modifier = Modifier.clickable (onClick = { navController.navigate("harianKalender") })
+                            modifier = Modifier.clickable (onClick = { navController.navigate("mingguanKalender") })
                         )
 
                         Text(

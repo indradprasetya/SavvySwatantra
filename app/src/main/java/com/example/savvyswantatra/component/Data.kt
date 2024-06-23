@@ -2,6 +2,8 @@ package com.example.savvyswantatra.component
 
 import androidx.compose.runtime.mutableStateListOf
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.model.KalenderData
+
 
 object Image {
     val bankList = listOf(
@@ -67,5 +69,66 @@ data class Transaksi(
 )
 object TransaksiData{
     val transaksiList = mutableStateListOf<Transaksi>()
+}
+
+object DummyData {
+    val KalenderList = listOf(
+        KalenderData(
+            id = 1,
+            image = R.drawable.makan,
+            icon = R.drawable.pengeluaran,
+            kategori = "Makanan dan Minuman",
+            deskripsi = "Makan Warteg",
+            harga = "Rp10,000"
+        ),
+        KalenderData(
+            id = 2,
+            image = R.drawable.kesehatanicon,
+            icon = R.drawable.pengeluaran,
+            kategori = "Kesehatan",
+            deskripsi = "Panadol",
+            harga = "Rp15,000"
+        ),
+        KalenderData(
+            id = 3,
+            image = R.drawable.income,
+            icon = R.drawable.pemasukan,
+            kategori = "Mandiri",
+            deskripsi = "Transfer dari sepuh alfred",
+            harga = "Rp12,000"
+        ),
+        KalenderData(
+            id = 4,
+            image = R.drawable.income,
+            icon = R.drawable.pemasukan,
+            kategori = "Mandiri",
+            deskripsi = "Thr dari paman",
+            harga = "Rp12,000"
+        ),
+        KalenderData(
+            id = 5,
+            image = R.drawable.income,
+            icon = R.drawable.pemasukan,
+            kategori = "Mandiri",
+            deskripsi = "Thr dari paman",
+            harga = "Rp12,000"
+        ),
+        KalenderData(
+            id = 6,
+            image = R.drawable.income,
+            icon = R.drawable.pemasukan,
+            kategori = "Mandiri",
+            deskripsi = "Thr dari paman",
+            harga = "Rp12,000"
+        ),
+        KalenderData(
+            id = 7,
+            image = R.drawable.income,
+            icon = R.drawable.pemasukan,
+            kategori = "Mandiri",
+            deskripsi = "Thr dari paman",
+            harga = "Rp12,000"
+        )
+    )
 }
 

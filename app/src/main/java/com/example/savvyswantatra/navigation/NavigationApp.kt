@@ -33,7 +33,7 @@ import com.example.savvyswantatra.DetailScreen
 import com.example.savvyswantatra.Kalender.FormExpense
 import com.example.savvyswantatra.Kalender.FormIncome
 import com.example.savvyswantatra.Kalender.HarianKalender
-import com.example.savvyswantatra.Kalender.KalenderMingguan
+import com.example.savvyswantatra.Kalender.MingguanKalender
 import com.example.savvyswantatra.Kalender.MonthlyScreen
 import com.example.savvyswantatra.Kalender.RingkasanScreen
 import com.example.savvyswantatra.Kalender.TampilanKalender
@@ -131,7 +131,7 @@ fun NavigationApp() {
         composable(Screen.harianKalender.route){
             HarianKalender(navController = navController)}
         composable(Screen.mingguanKalender.route){
-            KalenderMingguan(navController = navController)
+            MingguanKalender(navController = navController)
         }
         composable(Screen.pemasukanKalender.route){
             FormIncome(navController = navController)
@@ -200,13 +200,12 @@ fun NavigationApp() {
                 }
             }
 
-
         composable(Screen.mingguanKalender.route) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = { BottomNavigationBar(navController) }
             ) {
-                KalenderMingguan(navController)
+                MingguanKalender(navController = navController,)
             }
         }
         composable(Screen.anggaran.route) {

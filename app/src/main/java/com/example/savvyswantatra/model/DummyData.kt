@@ -3,6 +3,7 @@ package com.example.savvyswantatra.model
 import com.example.savvyswantatra.R
 import com.example.savvyswantatra.model.KalenderData
 import androidx.compose.runtime.mutableStateListOf
+import java.time.LocalDate
 
 object DummyData {
     val KalenderList = listOf(
@@ -65,52 +66,59 @@ object DummyData {
     )
 }
 
-object DummyData2 {
+object DummyDataMingguan {
     val TanggalList = listOf(
-        TanggalitemData(
-            date = "2024-06-15",
+        mingguanData(
+            date = LocalDate.of(2024, 5, 16),
             id = 1,
             image = R.drawable.makan,
             icon = R.drawable.pengeluaran,
             kategori = "Makanan dan Minuman",
             deskripsi = "Makan Warteg",
-            harga = "Rp10,000"
+            harga = 10000,
+            total = "99.000"
         ),
-        TanggalitemData(
-            date = "2024-06-15",
+        mingguanData(
+            date = LocalDate.of(2024, 5, 16),
             id = 2,
             image = R.drawable.kesehatanicon,
             icon = R.drawable.pengeluaran,
             kategori = "Kesehatan",
             deskripsi = "Panadol",
-            harga = "Rp15,000"
+            harga = 15000,
+            total = "99.000"
         ),
-        TanggalitemData(
-            date = "2024-06-16",
+        mingguanData(
+            date = LocalDate.of(2024, 5, 17),
             id = 3,
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Transfer dari sepuh alfred",
-            harga = "Rp12,000"
+            harga = 12000,
+            total = "99.000"
+
         ),
-        TanggalitemData(
-            date = "2024=06-17",
+        mingguanData(
+            date = LocalDate.of(2024, 5, 17),
             id = 4,
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Thr dari paman",
-            harga = "Rp12,000"
+            harga = 12000,
+            total = "99.000"
+
         ),
-        TanggalitemData(
-            date = "2024-06-17",
+        mingguanData(
+            date = LocalDate.of(2024, 5, 17),
             id = 5,
             image = R.drawable.income,
             icon = R.drawable.pemasukan,
             kategori = "Mandiri",
             deskripsi = "Thr dari paman",
-            harga = "Rp12,000"
+            harga = 12000,
+            total = "99.000"
         ),
 
     )
