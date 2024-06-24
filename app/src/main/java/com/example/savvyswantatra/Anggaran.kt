@@ -1,60 +1,56 @@
 package com.example.savvyswantatra
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.savvyswantatra.component.Anggaran
 import com.example.savvyswantatra.component.AnggaranData
 import com.example.savvyswantatra.component.Anggaran_card
 import com.example.savvyswantatra.navigation.Screen
-import com.example.savvyswantatra.ui.theme.OrangeSavvy
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.Typography
-import com.example.savvyswantatra.ui.theme.WhiteSavvy
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
+import com.example.savvyswantatra.database.AppDatabase
+import com.example.savvyswantatra.viewModel.AddAnggaranViewModel
+import com.example.savvyswantatra.viewModel.AddAnggaranViewModelFactory
+import com.example.savvyswantatra.viewModel.AnggaranViewModel
+import com.example.savvyswantatra.viewModel.AnggaranViewModelFactory
 
 
 @Composable
 fun AnggaranScreen(navController: NavController) {
+    val context = LocalContext.current
+    val anggaranDao = AppDatabase.getInstance(context).anggaranDao()
+    val kategoriAnggaranDao = AppDatabase.getInstance(context).kategoriAnggaranDao()
+    val anggaranViewModel: AnggaranViewModel = viewModel(
+        factory = AnggaranViewModelFactory(anggaranDao,kategoriAnggaranDao)
+    )
+    val anggaranList by anggaranViewModel.anggaranList.observeAsState(emptyList())
+
     Column {
         Row(
             modifier = Modifier
@@ -92,7 +88,7 @@ fun AnggaranScreen(navController: NavController) {
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            if (AnggaranData.anggaranList.isEmpty()) {
+            if (anggaranList.isEmpty()) {
                 item {
                     Column(
                         modifier = Modifier
@@ -110,17 +106,16 @@ fun AnggaranScreen(navController: NavController) {
                     }
                 }
             } else {
-                items(AnggaranData.anggaranList) { anggaran ->
+                items(anggaranList) { anggaran ->
                     Anggaran_card(
                         imageResources = anggaran.imageResources,
                         label = anggaran.nama,
                         nominal = anggaran.jumlah,
-                        onDelete = { AnggaranData.anggaranList.remove(anggaran) },
-                        onCardClick = {navController.navigate("detailAnggaran/${anggaran.nama}")}
+                        onDelete = { anggaranViewModel.removeAnggaran(anggaran) },
+                        onCardClick = { navController.navigate("detailAnggaran/${anggaran.nama}") }
                     )
                 }
             }
         }
-
     }
 }
