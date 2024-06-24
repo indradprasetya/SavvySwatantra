@@ -62,7 +62,6 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
-import com.google.android.material.datepicker.MaterialDatePicker
 import androidx.compose.ui.platform.LocalContext
 import java.util.Calendar
 
