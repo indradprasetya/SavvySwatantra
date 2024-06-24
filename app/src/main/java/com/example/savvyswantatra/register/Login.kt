@@ -19,9 +19,15 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -53,14 +59,39 @@ fun Login(navController: NavController) {
         )
         Spacer(modifier = Modifier.height(70.dp))
 //        Form
+
+        var emailLoginState by remember { mutableStateOf("") }
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            label = { Text("E-mail", fontFamily = poppinsFontFamily) })
+            singleLine = true,
+            value = emailLoginState,
+            onValueChange = { emailLoginState = it },
+            textStyle = Typography.bodyMedium,
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                cursorColor = PurpleSavvy2,
+                unfocusedTextColor = PurpleSavvy2,
+                focusedTextColor = PurpleSavvy2,
+            ),
+            label = { Text("Masukkan Email", style = Typography.bodyMedium) }
+        )
+
+        var passLoginState by remember { mutableStateOf("") }
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
-            label = { Text("Password", fontFamily = poppinsFontFamily) })
+            singleLine = true,
+            value = passLoginState,
+            onValueChange = { passLoginState = it },
+            textStyle = Typography.bodyMedium,
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.Transparent,
+                focusedContainerColor = Color.Transparent,
+                cursorColor = PurpleSavvy2,
+                unfocusedTextColor = PurpleSavvy2,
+                focusedTextColor = PurpleSavvy2,
+            ),
+            label = { Text("Masukkan Password", style = Typography.bodyMedium) }
+        )
+
         Row(modifier = Modifier.offset(y = 10.dp)) {
             Text(text = "Lupa Kata Sandi?", style = Typography.bodyMedium, color = PurpleSavvy1)
             Text(

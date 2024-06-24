@@ -1,5 +1,7 @@
 package com.example.savvyswantatra
 
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -8,21 +10,27 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -37,6 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -49,6 +58,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.core.text.isDigitsOnly
 import androidx.navigation.NavController
+import com.example.savvyswantatra.component.AnggaranData
+import com.example.savvyswantatra.component.BankList
+import com.example.savvyswantatra.component.Simpanan
+import com.example.savvyswantatra.component.SimpananData
+import com.example.savvyswantatra.component.simpananCard
+import com.example.savvyswantatra.component.typeOption
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.GraySavvy1
 import com.example.savvyswantatra.ui.theme.GraySavvy2
@@ -58,6 +73,7 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
+import androidx.compose.foundation.lazy.LazyRow as LazyRow
 
 @Composable
 fun SimpananScreen(navController: NavController) {
@@ -73,6 +89,7 @@ fun SimpananScreen(navController: NavController) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(30.dp),
             modifier = Modifier.padding(top = 20.dp)
+
         ) {
             Column {
                 Text(
@@ -97,19 +114,69 @@ fun SimpananScreen(navController: NavController) {
                     }
                     ))
         }
+        Spacer(modifier = Modifier.height(20.dp))
+        LazyColumn(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            if (SimpananData.simpananList.isEmpty()) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .offset(y = 200.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Image(
+                            painterResource(id = R.drawable.notfound),
+                            contentDescription = "",
+                            modifier = Modifier.size(200.dp)
+                        )
+                        Text(
+                            text = "Tidak ada tabungan",
+                            style = Typography.bodyMedium,
+                            color = Color.LightGray,
+                            modifier = Modifier.offset(y = (-20).dp)
+                        )
+                    }
+                }
+            } else {
+                items(SimpananData.simpananList) { simpanan ->
+                    val total = simpanan.total.toString()
+                    val nominal = simpanan.nominal.toString()
+                    simpananCard(
+                        simpanan.type,
+                        simpanan.tujuan,
+                        simpanan.tanggalmulai,
+                        simpanan.tanggalakhir,
+                        simpanan.terkumpul,
+                        nominal,
+                        total,
+                        navController
+                    )
+                }
+            }
+        }
     }
 }
 
 @Composable
 fun tambahSimpanan(navController: NavController) {
+    var selectedIndex by remember { mutableStateOf(0) }
+    var totalState by remember { mutableStateOf("") }
+    var tujuanState by remember { mutableStateOf("") }
+    var kalenderState1 by remember { mutableStateOf("") }
+    var kalenderState2 by remember { mutableStateOf("") }
+    var nominalState by remember { mutableStateOf("") }
+    val selectedImage = remember { mutableStateOf(0) }
+    val context = LocalContext.current
     Column(
         verticalArrangement = Arrangement.Top,
         modifier = Modifier.padding(top = 20.dp)
 
     ) {
 //        Title
-        var selectedIndex by remember { mutableStateOf(0) }
-        val itemsList = listOf("Harian", "Mingguan", "Bulanan")
         Text(
             text = "TAMBAH TABUNGAN",
             style = Typography.bodyLarge,
@@ -128,9 +195,8 @@ fun tambahSimpanan(navController: NavController) {
             )
             Row(
             ) {
-
                 val cornerRadius = 16.dp
-                itemsList.forEachIndexed { index, item ->
+                typeOption.forEachIndexed { index, item ->
 
                     Button(
                         onClick = { selectedIndex = index },
@@ -153,7 +219,7 @@ fun tambahSimpanan(navController: NavController) {
                                 bottomEnd = 0.dp
                             )
 
-                            itemsList.size - 1 -> RoundedCornerShape(
+                            typeOption.size - 1 -> RoundedCornerShape(
                                 topStart = 0.dp,
                                 topEnd = cornerRadius,
                                 bottomStart = 0.dp,
@@ -193,7 +259,6 @@ fun tambahSimpanan(navController: NavController) {
             }
 //      Form
 //      Total
-            var totalState by remember { mutableStateOf("") }
             Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(47.dp),
@@ -217,7 +282,6 @@ fun tambahSimpanan(navController: NavController) {
                 )
             }
 //        Tujuan
-            var tujuanState by remember { mutableStateOf("") }
             Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(67.dp),
@@ -242,7 +306,6 @@ fun tambahSimpanan(navController: NavController) {
             }
 
 //        Tanggal Mulai
-            var kalenderState1 by remember { mutableStateOf("") }
             val maxChar = 8
             Row(
                 verticalAlignment = Alignment.Bottom,
@@ -276,7 +339,6 @@ fun tambahSimpanan(navController: NavController) {
             }
 
 //        Tanggal Akhir
-            var kalenderState2 by remember { mutableStateOf("") }
             Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
@@ -306,8 +368,8 @@ fun tambahSimpanan(navController: NavController) {
                     placeholder = { Text("DD/MM/YYYY", style = Typography.bodyMedium) }
                 )
             }
+
 //      Nominal per hari/minggu/bulan
-            var nominalState by remember { mutableStateOf("") }
             Row(
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(62.dp),
@@ -331,14 +393,23 @@ fun tambahSimpanan(navController: NavController) {
                     ),
                     placeholder = {
                         Text(
-                            "Nominal " + itemsList[selectedIndex],
+                            "Nominal " + typeOption[selectedIndex],
                             style = Typography.bodyMedium
                         )
                     }
                 )
             }
-        }
 
+//            Mau Nabung darimana
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = "Mau nabung di mana nih",
+                style = Typography.bodyMedium,
+                color = PurpleSavvy2
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            BankList(selectedImage, 0)
+        }
 
 //        Button
         Spacer(modifier = Modifier.height(40.dp))
@@ -351,22 +422,82 @@ fun tambahSimpanan(navController: NavController) {
                 horizontalArrangement = Arrangement.spacedBy(15.dp),
             ) {
                 Button(
-                    onClick = { navController.navigate(Screen.beranda.route) },
                     colors = ButtonDefaults.buttonColors(containerColor = OrangeSavvy),
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
-                        .size(width = 140.dp, height = 46.dp)
+                        .size(width = 140.dp, height = 46.dp),
+                    onClick = {
+                        if (totalState.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                "Kolom total tidak boleh kosong",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else if (tujuanState.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                "Kolom tujuan tidak boleh kosong",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else if (kalenderState1.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                "Kolom tanggal mulai tidak boleh kosong",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else if (kalenderState2.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                "Kolom tanggal akhir tidak boleh kosong",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else if (nominalState.isBlank()) {
+                            Toast.makeText(
+                                context,
+                                "Kolom nominal tidak boleh kosong",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            val total = totalState.toInt()
+                            val nominal = nominalState.toInt()
+                            val imageResId =
+                                com.example.savvyswantatra.component.Image.bankList.getOrNull(
+                                    selectedImage.value
+                                )
+                                    ?: R.drawable.ic_launcher_background
+                            SimpananData.simpananList.add(
+                                Simpanan(
+                                    type = selectedIndex,
+                                    total = total,
+                                    tujuan = tujuanState,
+                                    tanggalmulai = kalenderState1,
+                                    tanggalakhir = kalenderState2,
+                                    nominal = nominal,
+                                    terkumpul = 0,
+                                    imageResources = imageResId
+                                )
+                            )
+                            navController.popBackStack()
+                        }
+                    }
                 ) {
                     Text(text = "Tambah", style = Typography.displayMedium, color = WhiteSavvy)
                 }
                 Button(
-                    onClick = { navController.navigate(Screen.beranda.route) },
                     colors = ButtonDefaults.buttonColors(containerColor = GraySavvy3),
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier
-                        .size(width = 140.dp, height = 46.dp)
+                        .size(width = 140.dp, height = 46.dp),
+                    onClick = {
+                        selectedIndex = 0
+                        totalState = ""
+                        tujuanState = ""
+                        kalenderState1 = ""
+                        nominalState = ""
+                        selectedImage.value = 0
+                    },
                 ) {
-                    Text(text = "Hapus", style = Typography.displayMedium, color = OrangeSavvy)
+                    Text(text = "Pulihkan", style = Typography.displayMedium, color = OrangeSavvy)
                 }
 
             }
