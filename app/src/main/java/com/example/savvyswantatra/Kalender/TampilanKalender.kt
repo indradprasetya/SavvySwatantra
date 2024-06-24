@@ -106,7 +106,8 @@ fun TampilanKalender(navController: NavController) {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(top = 180.dp),
+            .padding(top = 180.dp)
+            .padding(bottom = 40.dp),
         colors = CardDefaults.cardColors(containerColor = WhiteSavvy)
 
 
@@ -184,78 +185,6 @@ fun TampilanKalender(navController: NavController) {
 
     }
 }
-/*
-@Composable
-fun hari() {
-    Card(
-        shape = RoundedCornerShape(5.dp),
-        modifier = Modifier
-            .width(400.dp) // Set the width of the card to 318.dp
-            .height(30.dp)
-            .padding(horizontal = 24.dp)
-            .padding(top = 5.dp),
-        colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(vertical = 5.dp)
-                .padding(horizontal = 27.dp)
-        ) {
-
-            Text(
-                text = "Min",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-                )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "Sen",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-                )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "Sel",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "Rab",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "Kam",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-                )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "Jumat",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-                )
-            Spacer(modifier = Modifier.width(20.dp))
-            Text(
-                text = "Sabtu",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-                )
-
-        }
-    }
-}*/
 
 @Composable
 fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
@@ -268,7 +197,6 @@ fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
     val firstDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1
 
     val weeks = (daysInMonth + firstDayOfWeek + 6) / 7
-    val icons = listOf(Icons.Default.AddCircle)
 
 
     Column(
@@ -316,7 +244,7 @@ fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
             items(daysInMonth) { day ->
                 Box(
                     modifier = Modifier
-                        .size(70.dp)
+                        .size(67.dp)
                         .padding(4.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -336,7 +264,7 @@ fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
         imageVector = Icons.Default.AddCircle,
         contentDescription = "add",
         modifier = Modifier
-            .offset(x = (20).dp, y = 0.dp)
+            .offset(x = (320).dp)
             .width(60.dp)
             .height(60.dp)
             .zIndex(1f)// Ikon berada di atas kotak kalender
@@ -345,7 +273,7 @@ fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
         tint = Pinkeu
     )
 
-    }
+}
 
 @Preview(showBackground = true)
 @Composable

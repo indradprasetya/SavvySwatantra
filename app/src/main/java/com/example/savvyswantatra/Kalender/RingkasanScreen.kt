@@ -87,7 +87,8 @@ fun RingkasanScreen (navController: NavController){
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(top = 180.dp),
+                .padding(top = 180.dp)
+                .padding(bottom = 55.dp),
             colors = CardDefaults.cardColors(containerColor = WhiteSavvy)
 
         ){
