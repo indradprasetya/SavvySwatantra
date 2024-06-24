@@ -54,14 +54,27 @@ object KategoriAnggaranData{
         ),
     )
 }
+
 val months = listOf(
     "Januari",
-    "Februari", "Maret"
-    , "April", "Mei"
-    , "Juni", "Juli"
-    , "Agustus"
-    , "September", "Oktober"
-    , "November", "Desember"
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember"
+)
+
+val typeOption = listOf(
+    "Harian", "Mingguan", "Bulanan"
+)
+val typeOpt = listOf(
+    "Hari", "Minggu", "Bulan"
 )
 
 data class Transaksi(
@@ -71,6 +84,34 @@ data class Transaksi(
     val namaKategori: String,
     val namaAnggaran: String?
 )
-object TransaksiData{
+
+object TransaksiData {
     val transaksiList = mutableStateListOf<Transaksi>()
+}
+
+//Simpanan
+data class Simpanan(
+    val type: Int,
+    val total: Int,
+    val tujuan: String,
+    val tanggalmulai: String,
+    val tanggalakhir: String,
+    val nominal: Int,
+    val imageResources: Int,
+    val terkumpul : Int
+)
+
+object SimpananData {
+    val simpananList = mutableListOf(
+        Simpanan(
+            type = 0,
+            total = 2000000,
+            tujuan = "Makan ayam",
+            tanggalmulai = "20192000",
+            tanggalakhir = "20232200",
+            nominal = 5000,
+            imageResources = 2,
+            terkumpul = 1000000
+    )
+    )
 }

@@ -34,6 +34,8 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.DateRange
@@ -46,17 +48,21 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -85,12 +91,15 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
 import com.example.savvyswantatra.viewModel.AnggaranViewModel
 import com.example.savvyswantatra.viewModel.AnggaranViewModelFactory
 import com.example.savvyswantatra.viewModel.DetailScreenViewModel
 import com.example.savvyswantatra.viewModel.DetailScreenViewModelFactory
 import java.text.NumberFormat
+
 
 @Composable
 fun MainCard(navController: NavController) {
@@ -145,7 +154,7 @@ fun MainCard(navController: NavController) {
                         .padding(top = 10.dp)
                         .padding(start = 15.dp),
                 ) {
-                    IconButton(onClick ={
+                    IconButton(onClick = {
                         navController.navigate(Screen.anggaran.route)
                     }) {
                         Icon(
@@ -233,25 +242,25 @@ fun Transaksi() {
     }
     KatalogTransaksi(
         imageResource = R.drawable.makan,
-        keterangan ="Makan Warteg" ,
+        keterangan = "Makan Warteg",
         waktu = "07.20",
-        kategori = "Uang Tunai" ,
+        kategori = "Uang Tunai",
         jumlah_saldo = 10.000,
         warna = Color.Red
     )
     KatalogTransaksi(
         imageResource = R.drawable.income,
-        keterangan ="THR dari sepuh Indra" ,
+        keterangan = "THR dari sepuh Indra",
         waktu = "09.20",
-        kategori = "Bank BCA" ,
+        kategori = "Bank BCA",
         jumlah_saldo = 18.000,
         warna = Color(0xff039F00)
     )
     KatalogTransaksi(
         imageResource = R.drawable.makan,
-        keterangan ="Makan Mie" ,
+        keterangan = "Makan Mie",
         waktu = "09.20",
-        kategori = "Uang Tunai" ,
+        kategori = "Uang Tunai",
         jumlah_saldo = 12.000,
         warna = Color.Red
     )
@@ -261,8 +270,8 @@ fun Transaksi() {
 fun KatalogTransaksi(
     imageResource: Int,
     keterangan: String,
-    waktu:String,
-    kategori:String,
+    waktu: String,
+    kategori: String,
     jumlah_saldo: Double,
     warna: Color
 ) {
@@ -308,21 +317,22 @@ fun KatalogTransaksi(
         Column(
             modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)
         ) {
-            Text(text = kategori, style = Typography.bodySmall    , color = PurpleSavvy1)
+            Text(text = kategori, style = Typography.bodySmall, color = PurpleSavvy1)
             val formatter = NumberFormat.getNumberInstance()
             val nominalFormatted = formatter.format(jumlah_saldo)
-            Text(text =  "Rp.$nominalFormatted", style = Typography.bodyMedium, color = warna)
+            Text(text = "Rp.$nominalFormatted", style = Typography.bodyMedium, color = warna)
         }
     }
 
 }
+
 @Composable
 fun SubSaldo(
     imageResource: Int,
     keterangan: String,
     jumlah_saldo: Double
-){
-    Row(verticalAlignment = Alignment.CenterVertically,) {
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         val image: Painter = painterResource(id = imageResource)
         Image(
             painter = image,
@@ -338,7 +348,7 @@ fun SubSaldo(
         Text(text = keterangan, style = Typography.bodySmall, color = WhiteSavvy)
         val formatter = NumberFormat.getNumberInstance()
         val nominalFormatted = formatter.format(jumlah_saldo)
-        Text(text = "Rp.$nominalFormatted",style = Typography.bodyMedium,color = WhiteSavvy)
+        Text(text = "Rp.$nominalFormatted", style = Typography.bodyMedium, color = WhiteSavvy)
     }
 }
 
@@ -459,7 +469,13 @@ fun TampilAnggaran(
 }
 
 @Composable
-fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: () -> Unit, onCardClick: () -> Unit) {
+fun Anggaran_card(
+    imageResources: Int,
+    label: String,
+    nominal: Double,
+    onDelete: () -> Unit,
+    onCardClick: () -> Unit
+) {
     val openDialog = remember { mutableStateOf(false) }
 
     if (openDialog.value) {
@@ -505,7 +521,7 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: ()
                 .width(320.dp) // Set the width of the card to 318.dp
                 .height(110.dp), // Set the height of the card to 141.dp
             colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .padding(start = 20.dp)
@@ -541,7 +557,7 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: ()
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
-                            painterResource(id = imageResources) ,
+                            painterResource(id = imageResources),
                             contentDescription = "",
                             modifier = Modifier
                                 .requiredSize(40.dp)
@@ -566,9 +582,10 @@ fun Anggaran_card(imageResources: Int, label:String, nominal:Double,onDelete: ()
         }
     }
 }
+
 @OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
-fun BankList(selectedImage: MutableState<Int>){
+fun BankList(selectedImage: MutableState<Int>, padding: Int) {
     val pagerState = rememberPagerState(pageCount = { bankList.size })
 
     HorizontalPager(state = pagerState) { page ->
@@ -577,7 +594,7 @@ fun BankList(selectedImage: MutableState<Int>){
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier
-                .padding(horizontal = 38.dp)
+                .padding(horizontal = padding.dp)
         ) {
             bankList.chunked(4).forEachIndexed { rowIndex, banks ->
                 banks.forEachIndexed { columnIndex, bank ->
@@ -605,7 +622,6 @@ fun BankList(selectedImage: MutableState<Int>){
         }
     }
 }
-
 
 @Composable
 fun Detail_kategori_card(
@@ -704,13 +720,28 @@ fun Detail_kategori_card(
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Column {
-                            Text(text = keterangan, style = Typography.displayMedium, color = WhiteSavvy)
+                            Text(
+                                text = keterangan,
+                                style = Typography.displayMedium,
+                                color = WhiteSavvy
+                            )
                             Row {
                                 val formatter = NumberFormat.getNumberInstance()
-                                val nominalFormatted = formatter.format(jumlah_saldo.toDoubleOrNull() ?: 0.0)
+                                val nominalFormatted =
+                                    formatter.format(jumlah_saldo.toDoubleOrNull() ?: 0.0)
                                 val nominalFormatted1 = formatter.format(batas_anggaran)
-                                Text(text = "Rp.$nominalFormatted / ", style = Typography.bodyMedium, color = WhiteSavvy, fontWeight = FontWeight.Normal)
-                                Text(text = "Rp.$nominalFormatted1 ", style = Typography.bodyMedium, color = WhiteSavvy, fontWeight = FontWeight.Normal)
+                                Text(
+                                    text = "Rp.$nominalFormatted / ",
+                                    style = Typography.bodyMedium,
+                                    color = WhiteSavvy,
+                                    fontWeight = FontWeight.Normal
+                                )
+                                Text(
+                                    text = "Rp.$nominalFormatted1 ",
+                                    style = Typography.bodyMedium,
+                                    color = WhiteSavvy,
+                                    fontWeight = FontWeight.Normal
+                                )
                             }
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -740,7 +771,12 @@ fun Detail_kategori_card(
                                 tint = OrangeSavvy
                             )
                         }
-                        Text(text = "Tambah Transaksi", style = Typography.bodyMedium, color = WhiteSavvy, modifier = Modifier.offset(x = (-8).dp))
+                        Text(
+                            text = "Tambah Transaksi",
+                            style = Typography.bodyMedium,
+                            color = WhiteSavvy,
+                            modifier = Modifier.offset(x = (-8).dp)
+                        )
                     }
                     Box(
                         modifier = Modifier
@@ -780,3 +816,80 @@ fun Detail_kategori_card(
         }
     }
 }
+
+@Composable
+fun simpananCard(
+    type: Int,
+    tujuan: String,
+    tanggalmulai: String,
+    tanggalakhir: String,
+    terkumpul : Int,
+    nominal: String,
+    total: String,
+    navController: NavController
+) {
+    val percent = (terkumpul.toDouble() / total.toDouble())
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier
+            .width(350.dp) // Set the width of the card to 318.dp
+            .height(155.dp), // Set the height of the card to 141.dp
+        colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
+    ) {
+        Row(modifier = Modifier.padding(20.dp)) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(
+                    progress = percent.toFloat(),
+                    backgroundColor = WhiteSavvy,
+                    color = OrangeSavvy,
+                    modifier = Modifier.size(50.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+                Image(painter = painterResource(id = R.drawable.pluspink),
+                    contentDescription = "linkedin",
+                    modifier = Modifier
+                        .size(20.dp)
+                        .clickable(onClick = {
+                        }
+                        ))
+            }
+
+            Spacer(modifier = Modifier.width(20.dp))
+            Column() {
+                val harimulai = tanggalmulai.take(2)
+                val bulanmulai = tanggalmulai.substring(2, 4)
+                val tahunmulai = tanggalmulai.takeLast(4)
+                val hariakhir = tanggalakhir.take(2)
+                val bulanakhir = tanggalakhir.substring(2, 4)
+                val tahunakhir = tanggalakhir.takeLast(4)
+                Text(text = tujuan, color = OrangeSavvy)
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = "Tanggal Mulai:  " + harimulai + "/" + bulanmulai + "/" + tahunmulai,
+                    color = WhiteSavvy,
+                    style = Typography.displaySmall
+                )
+                Divider(
+                    thickness = 1.dp,
+                    color = WhiteSavvy,
+                    modifier = Modifier.padding(top = 5.dp, bottom = 5.dp)
+                )
+                Text(
+                    text = "Tanggal Akhir:  " + hariakhir + "/" + bulanakhir + "/" + tahunakhir,
+                    color = WhiteSavvy,
+                    style = Typography.displaySmall
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = "Terkumpul: " + terkumpul.toString(),
+                    color = WhiteSavvy,
+                    style = Typography.displayMedium
+                )
+            }
+        }
+    }
+}
+
+

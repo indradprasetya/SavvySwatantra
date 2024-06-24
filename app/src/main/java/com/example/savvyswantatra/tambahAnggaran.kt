@@ -142,13 +142,47 @@ fun AddAnggaranScreen(
                             color = PurpleSavvy1,
                             fontSize = 14.sp
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        TextField(
-                            value = textNama,
-                            onValueChange = viewModel::onNamaChange,
-                            label = {
-                                Text(
-                                    text = "",
+                    )
+                }
+                Text(
+                    text = "Pilih Icon dibawah",
+                    color = PurpleSavvy1,
+                    style = Typography.bodyMedium,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.padding(30.dp)
+                )
+                BankList(selectedImage, 38)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 50.dp)
+                        .padding(top = 50.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            val jumlah = textJumlah.value.toDoubleOrNull()
+                            if (textNama.value.isBlank()) {
+                                Toast.makeText(
+                                    context,
+                                    "Nama anggaran tidak boleh kosong",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else if (jumlah == null) {
+                                Toast.makeText(
+                                    context,
+                                    "Jumlah saldo harus berupa angka",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                val imageResId = Image.bankList.getOrNull(selectedImage.value)
+                                    ?: R.drawable.ic_launcher_background
+                                AnggaranData.anggaranList.add(
+                                    Anggaran(
+                                        nama = textNama.value,
+                                        jumlah = jumlah,
+                                        imageResources = imageResId
+                                    )
                                 )
                             },
                             modifier = Modifier
