@@ -92,85 +92,57 @@ fun RingkasanScreen (navController: NavController){
             colors = CardDefaults.cardColors(containerColor = WhiteSavvy)
 
         ){
-            Row (modifier = Modifier
-                .padding(top = 15.dp))
-
-            {
-                Spacer(modifier = Modifier
-                    .width(45.dp)
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "Pemasukan",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                    Text(
-                        text = "Rp4,586,089",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                }
-
-                Spacer(modifier = Modifier
-                    .width(45.dp)
-                )
-                Column (
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ){
-                    Text(
-                        text = "Pengeluaran",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                    Text(
-                        text = "Rp4,586,089",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                }
-
-                Spacer(modifier = Modifier
-                    .width(45.dp)
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "Total",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy2,
-                    )
-                    Text(
-                        text = "Rp605,964",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy2,
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(30.dp))
-            Text(
-                text = "Pengeluaran anda",
-                style = Typography.titleMedium,
-                fontFamily = poppinsFontFamily,
-                fontWeight = FontWeight.SemiBold,
-                color = PurpleSavvy1,
+            Column(
                 modifier = Modifier
-                    .padding(start=24.dp)
+                    .background(Color.White)
+                    .padding(10.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Pemasukan", color = Pinkeu, style = Typography.bodyMedium)
+                        Text("Rp0", color = Pinkeu, style = Typography.bodyMedium)
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text("Pengeluaran", color = PurpleSavvy2, style = Typography.bodyMedium)
+                        Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            "Total",
+                            fontWeight = FontWeight.Bold,
+                            color = PurpleSavvy1,
+                            style = Typography.bodyMedium
+                        )
+                        Text(
+                            "Rp0",
+                            fontWeight = FontWeight.Bold,
+                            color = PurpleSavvy1,
+                            style = Typography.bodyMedium
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(30.dp))
+                Text(
+                    text = "Pengeluaran anda",
+                    style = Typography.titleMedium,
+                    fontFamily = poppinsFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = PurpleSavvy1,
+                    modifier = Modifier
+                        .padding(start = 24.dp)
                 )
-            Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 PieChartTheme {
                     Surface(
                         modifier = Modifier
                             .padding(horizontal = 95.dp)
                             .height(200.dp)
-                            .width(200.dp)
-                            ,
+                            .width(200.dp),
                         color = Color.Transparent
                     ) {
                         PieChart(
@@ -180,74 +152,74 @@ fun RingkasanScreen (navController: NavController){
                         )
                     }
                 }
-            Text(
-                text = "Peringatan",
-                style = Typography.titleMedium,
-                fontFamily = poppinsFontFamily,
-                fontWeight = FontWeight.SemiBold,
-                color = PurpleSavvy1,
-                modifier = Modifier
-                    .padding(start=24.dp)
-            )
-            Box(
-                modifier = Modifier
-                    .padding(vertical = 5.dp)
-                    .padding(horizontal = 24.dp)
-                    .size(335.dp, 12.dp)
-                    .background((Pink80), shape = RoundedCornerShape(6.dp))
-            ) {
+                Text(
+                    text = "Peringatan",
+                    style = Typography.titleMedium,
+                    fontFamily = poppinsFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = PurpleSavvy1,
+                    modifier = Modifier
+                        .padding(start = 24.dp)
+                )
                 Box(
                     modifier = Modifier
-                        .size(260.dp, 12.dp)
-                        .background((OrangeSavvy), shape = RoundedCornerShape(6.dp))
-                )
-            }
-            Row {
-                Column (
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .padding(start = 24.dp)
-                ){
-                    Icon(
-                        painter = painterResource(id = R.drawable.makananminuman),
-                        contentDescription ="" ,
+                        .padding(vertical = 5.dp)
+                        .padding(horizontal = 24.dp)
+                        .size(335.dp, 12.dp)
+                        .background((Pink80), shape = RoundedCornerShape(6.dp))
+                ) {
+                    Box(
                         modifier = Modifier
-                            .size(50.dp),
-                        tint = Color.Unspecified
-                        )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Icon(
-                        painter = painterResource(id = R.drawable.shoppingicon),
-                        contentDescription ="" ,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .padding(start = 1.dp),
-                        tint = Color.Unspecified
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Icon(
-                        painter = painterResource(id = R.drawable.kesehatanicon),
-                        contentDescription ="" ,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .padding(start = 1.dp),
-                        tint = Color.Unspecified
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    Icon(
-                        painter = painterResource(id = R.drawable.travelicon),
-                        contentDescription ="" ,
-                        modifier = Modifier
-                            .size(50.dp)
-                            .padding(start = 1.dp),
-                        tint = Color.Unspecified
+                            .size(260.dp, 12.dp)
+                            .background((OrangeSavvy), shape = RoundedCornerShape(6.dp))
                     )
                 }
-                Spacer(modifier = Modifier.width(30.dp))
-                ProgressBarExample()
+                Row {
+                    Column(
+                        modifier = Modifier
+                            .padding(top = 20.dp)
+                            .padding(start = 24.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.makananminuman),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(50.dp),
+                            tint = Color.Unspecified
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.shoppingicon),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(50.dp)
+                                .padding(start = 1.dp),
+                            tint = Color.Unspecified
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.kesehatanicon),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(50.dp)
+                                .padding(start = 1.dp),
+                            tint = Color.Unspecified
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Icon(
+                            painter = painterResource(id = R.drawable.travelicon),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .size(50.dp)
+                                .padding(start = 1.dp),
+                            tint = Color.Unspecified
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(30.dp))
+                    ProgressBarExample()
+                }
+
             }
-
-
 
 
         }

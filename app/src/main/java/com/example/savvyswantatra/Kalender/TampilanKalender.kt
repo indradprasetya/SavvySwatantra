@@ -112,69 +112,39 @@ fun TampilanKalender(navController: NavController) {
 
 
     ) {
-        Row(
+        Column(
             modifier = Modifier
-                .padding(top = 15.dp)
-        )
-        {
-            Spacer(
+                .background(Color.White)
+                .padding(10.dp)
+        ) {
+            Row(
                 modifier = Modifier
-                    .width(45.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Text(
-                    text = "Pemasukan",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-                Text(
-                    text = "Rp4,586,089",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-            }
-
-            Spacer(
-                modifier = Modifier
-                    .width(45.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = "Pengeluaran",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-                Text(
-                    text = "Rp4,586,089",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-            }
-
-            Spacer(
-                modifier = Modifier
-                    .width(45.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = "Total",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy2,
-                )
-                Text(
-                    text = "Rp605,964",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy2,
-                )
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Pemasukan", color = Pinkeu, style = Typography.bodyMedium)
+                    Text("Rp0", color = Pinkeu, style = Typography.bodyMedium)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text("Pengeluaran", color = PurpleSavvy2, style = Typography.bodyMedium)
+                    Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
+                }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        "Total",
+                        fontWeight = FontWeight.Bold,
+                        color = PurpleSavvy1,
+                        style = Typography.bodyMedium
+                    )
+                    Text(
+                        "Rp0",
+                        fontWeight = FontWeight.Bold,
+                        color = PurpleSavvy1,
+                        style = Typography.bodyMedium
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
@@ -182,9 +152,9 @@ fun TampilanKalender(navController: NavController) {
 
         SimpleCalendar(currentMonth, currentYear, navController)
 
-
+        }
     }
-}
+
 
 @Composable
 fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
@@ -280,4 +250,3 @@ fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
 fun TampilanKalenderPreview() {
     TampilanKalender(navController = rememberNavController())
 }
-

@@ -31,6 +31,7 @@ sealed class Screen(val route: String) {
     data object mingguanKalender : Screen("mingguanKalender")
     data object pemasukanKalender : Screen("pemasukanKalender")
     data object pengeluaranKalender : Screen("pengeluaranKalender")
+    data object tampilanKalender : Screen("TampilanKalender")
 
 
 

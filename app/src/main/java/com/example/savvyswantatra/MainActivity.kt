@@ -3,34 +3,23 @@ package com.example.savvyswantatra
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.savvyswantatra.navigation.BottomNavigationBar
-import com.example.savvyswantatra.navigation.NavigationApp
-import com.example.savvyswantatra.ui.theme.Purple80
-import com.example.savvyswantatra.ui.theme.PurpleSavvy1
+import androidx.navigation.compose.rememberNavController
+import com.example.savvyswantatra.Kalender.HarianKalender
 import com.example.savvyswantatra.ui.theme.SavvySwantatraTheme
+import com.example.savvyswantatra.navigation.NavigationApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent{
+        setContent {
             SavvySwantatraTheme {
-                NavigationApp()
+                // A surface container using the 'background' color from the theme
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    NavigationApp()
+                    }
+                }
             }
         }
     }
-}
-
-//Gini ya cara manggil warnanya
-//Text(text = "Hello, World!", color = PurpleSavvy1)
-

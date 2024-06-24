@@ -3,6 +3,8 @@ package com.example.savvyswantatra.component
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.model.KalenderData
+
 
 object Image {
     val bankList = listOf(
@@ -211,3 +213,4 @@ fun getMonthIndex(month: String): String {
         else -> ""
     }
 }
+

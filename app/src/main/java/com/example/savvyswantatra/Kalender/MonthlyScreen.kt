@@ -3,6 +3,7 @@ package com.example.savvyswantatra.Kalender
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,6 +52,7 @@ import com.example.savvyswantatra.component.getMonthIndex
 import com.example.savvyswantatra.component.kalenderbar
 import com.example.savvyswantatra.component.monthNames
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
+import com.example.savvyswantatra.ui.theme.Pinkeu
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.PurpleSavvy3
@@ -67,138 +69,126 @@ fun MonthlyScreen(navController : NavController) {
     var currentMonth by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
     var currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
 
-    val onPreviousMonth: () -> Unit = {
-        if (currentMonth == 0) {
-            currentMonth = 11
-            currentYear--
-        } else {
-            currentMonth--
-        }
-    }
-
-    val onNextMonth: () -> Unit = {
-        if (currentMonth == 11) {
-            currentMonth = 0
-            currentYear++
-        } else {
-            currentMonth++
-        }
-    }
-    kalenderbar(navController, currentMonth, currentYear, onPreviousMonth, onNextMonth)
-    Card(
-        shape = RectangleShape,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(top = 180.dp)
-            .padding(bottom = 45.dp),
-        colors = CardDefaults.cardColors(containerColor = WhiteSavvy),
 
 
-        ) {
-        Row(
-            modifier = Modifier
-                .padding(top = 15.dp)
-        )
-        {
-            Spacer(
-                modifier = Modifier
-                    .width(45.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = "Pemasukan",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-                Text(
-                    text = "Rp4,586,089",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-            }
 
-            Spacer(
-                modifier = Modifier
-                    .width(45.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = "Pengeluaran",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-                Text(
-                    text = "Rp4,586,089",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy3,
-                )
-            }
-
-            Spacer(
-                modifier = Modifier
-                    .width(45.dp)
-            )
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Text(
-                    text = "Total",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy2,
-                )
-                Text(
-                    text = "Rp605,964",
-                    style = Typography.bodyMedium,
-                    color = PurpleSavvy2,
-                )
-            }
-        }
-
-        Column(modifier = Modifier
-            .padding(10.dp)
-            .navigationBarsPadding()
-        ) {
-            monthNames.forEach { month ->
-                LazyColumn(modifier = Modifier.padding(16.dp)) {
-                    items(monthNames) { month ->
-                        Text(
-                            text = month,
-                            style = Typography.titleMedium,
-                            color = PurpleSavvy1,
-                            modifier = Modifier
-                                .padding(vertical = 8.dp)
-                                .clickable { selectedMonth = month }
-                        )
-                        // Ketika bulan dipencet, tampilkan kartu transaksi untuk bulan tersebut
-                        if (selectedMonth == month) {
-                            MonthlyCard(
-                                month = month,
-                                transactions = TransaksibulananData[month] ?: emptyList()
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
+                    val onPreviousMonth: () -> Unit = {
+                        if (currentMonth == 0) {
+                            currentMonth = 11
+                            currentYear--
                         } else {
-                            // Tambahkan tombol atau cara lain untuk memilih bulan
-                            Divider(modifier = Modifier.fillMaxWidth(), color = PurpleSavvy1)
-                            Spacer(modifier = Modifier.height(20.dp))
+                            currentMonth--
+                        }
+                    }
 
+                    val onNextMonth: () -> Unit = {
+                        if (currentMonth == 11) {
+                            currentMonth = 0
+                            currentYear++
+                        } else {
+                            currentMonth++
+                        }
+                    }
+                    kalenderbar(
+                        navController,
+                        currentMonth,
+                        currentYear,
+                        onPreviousMonth,
+                        onNextMonth
+                    )
+
+                    // Card di bagian bawah
+                    Card(
+                        shape = RectangleShape,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(top = 180.dp)
+                            .padding(bottom = 45.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .background(Color.White)
+                                .padding(10.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text("Pemasukan", color = Pinkeu, style = Typography.bodyMedium)
+                                    Text("Rp0", color = Pinkeu, style = Typography.bodyMedium)
+                                }
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        "Pengeluaran",
+                                        color = PurpleSavvy2,
+                                        style = Typography.bodyMedium
+                                    )
+                                    Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
+                                }
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        "Total",
+                                        fontWeight = FontWeight.Bold,
+                                        color = PurpleSavvy1,
+                                        style = Typography.bodyMedium
+                                    )
+                                    Text(
+                                        "Rp0",
+                                        fontWeight = FontWeight.Bold,
+                                        color = PurpleSavvy1,
+                                        style = Typography.bodyMedium
+                                    )
+                                }
+                            }
+
+
+                            Column(
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .navigationBarsPadding()
+                            ) {
+                                monthNames.forEach { month ->
+                                    LazyColumn(modifier = Modifier.padding(16.dp)) {
+                                        items(monthNames) { month ->
+                                            Text(
+                                                text = month,
+                                                style = Typography.titleMedium,
+                                                color = PurpleSavvy1,
+                                                modifier = Modifier
+                                                    .padding(vertical = 8.dp)
+                                                    .clickable { selectedMonth = month }
+                                            )
+                                            // Ketika bulan dipencet, tampilkan kartu transaksi untuk bulan tersebut
+                                            if (selectedMonth == month) {
+                                                MonthlyCard(
+                                                    month = month,
+                                                    transactions = TransaksibulananData[month]
+                                                        ?: emptyList()
+                                                )
+                                                Spacer(modifier = Modifier.height(10.dp))
+                                            } else {
+                                                // Tambahkan tombol atau cara lain untuk memilih bulan
+                                                Divider(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    color = PurpleSavvy1
+                                                )
+                                                Spacer(modifier = Modifier.height(20.dp))
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    }
-}
 
 @Composable
-    fun MonthlyCard(month: String, transactions: List<TransaksiBulanan>) {
+fun MonthlyCard(month: String, transactions: List<TransaksiBulanan>) {
         Card(
             shape = RoundedCornerShape(5.dp),
             colors = CardDefaults.cardColors(containerColor = PurpleSavvy1),
