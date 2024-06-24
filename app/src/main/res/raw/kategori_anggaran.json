@@ -1,0 +1,32 @@
+{
+  "kategori_anggaran": [
+    {
+      "id": 1,
+      "nama": "Makanan dan Minuman",
+      "drawableResource": "R.drawable.makan",
+      "batas_anggaran": null,
+      "namaAnggaran": null
+    },
+    {
+      "id": 2,
+      "nama": "Belanja",
+      "drawableResource": "R.drawable.belanja",
+      "batas_anggaran": null,
+      "namaAnggaran": null
+    },
+    {
+      "id": 3,
+      "nama": "Kesehatan",
+      "drawableResource": "R.drawable.kesehatan",
+      "batas_anggaran": null,
+      "namaAnggaran": null
+    },
+    {
+      "id": 4,
+      "nama": "Travel",
+      "drawableResource": "R.drawable.travel",
+      "batas_anggaran": null,
+      "namaAnggaran": null
+    }
+  ]
+}
