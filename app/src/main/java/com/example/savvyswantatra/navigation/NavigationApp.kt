@@ -71,7 +71,7 @@ fun NavigationApp() {
     val addedCategories = remember { mutableStateListOf<KategoriAnggaran>() }
     NavHost(
         navController = navController,
-        startDestination = Screen.beranda.route
+        startDestination = Screen.Splash.route
     ) {
         composable(Screen.Splash.route) {
             SplashScreen(navController = navController)

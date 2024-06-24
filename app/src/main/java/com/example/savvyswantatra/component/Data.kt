@@ -102,16 +102,5 @@ data class Simpanan(
 )
 
 object SimpananData {
-    val simpananList = mutableListOf(
-        Simpanan(
-            type = 0,
-            total = 2000000,
-            tujuan = "Makan ayam",
-            tanggalmulai = "20192000",
-            tanggalakhir = "20232200",
-            nominal = 5000,
-            imageResources = 2,
-            terkumpul = 1000000
-    )
-    )
+        val simpananList = mutableListOf<Simpanan>()
 }
