@@ -1,5 +1,6 @@
 package com.example.savvyswantatra
 
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -21,11 +22,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
@@ -59,6 +62,7 @@ import com.example.savvyswantatra.component.AnggaranData
 import com.example.savvyswantatra.component.BankList
 import com.example.savvyswantatra.component.Simpanan
 import com.example.savvyswantatra.component.SimpananData
+import com.example.savvyswantatra.component.simpananCard
 import com.example.savvyswantatra.component.typeOption
 import com.example.savvyswantatra.navigation.Screen
 import com.example.savvyswantatra.ui.theme.GraySavvy1
@@ -110,6 +114,7 @@ fun SimpananScreen(navController: NavController) {
                     }
                     ))
         }
+        Spacer(modifier = Modifier.height(20.dp))
         LazyColumn(
             modifier = Modifier.fillMaxHeight(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -140,12 +145,16 @@ fun SimpananScreen(navController: NavController) {
                 items(SimpananData.simpananList) { simpanan ->
                     val total = simpanan.total.toString()
                     val nominal = simpanan.nominal.toString()
-                    Column {
-                        Text(text = total)
-                        Text(text = simpanan.tujuan)
-                        Text(text = simpanan.tanggalmulai)
-                        Text(text = simpanan.tanggalakhir)
-                    }
+                    simpananCard(
+                        simpanan.type,
+                        simpanan.tujuan,
+                        simpanan.tanggalmulai,
+                        simpanan.tanggalakhir,
+                        simpanan.terkumpul,
+                        nominal,
+                        total,
+                        navController
+                    )
                 }
             }
         }
@@ -464,6 +473,7 @@ fun tambahSimpanan(navController: NavController) {
                                     tanggalmulai = kalenderState1,
                                     tanggalakhir = kalenderState2,
                                     nominal = nominal,
+                                    terkumpul = 0,
                                     imageResources = imageResId
                                 )
                             )
