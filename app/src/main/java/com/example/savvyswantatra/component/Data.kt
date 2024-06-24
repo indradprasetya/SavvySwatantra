@@ -68,3 +68,55 @@ data class Transaksi(
 object TransaksiData{
     val transaksiList = mutableStateListOf<Transaksi>()
 }
+
+object AkunData {
+    data class Akun(val id: Int, val nama: String, val imageResources: Int)
+
+    val akunList = mutableListOf(
+        Akun(
+            id = 1,
+            nama = "Tunai",
+            imageResources = R.drawable.cash
+        ),
+        Akun(
+            id = 2,
+            nama = "BCA",
+            imageResources = R.drawable.bca
+        ),
+        Akun(
+            id = 3,
+            nama = "Bank Mandiri",
+            imageResources = R.drawable.mandiri
+        ),
+        Akun(
+            id = 4,
+            nama = "BNI",
+            imageResources = R.drawable.bni
+        ),
+        Akun(
+            id = 5,
+            nama = "BRI",
+            imageResources = R.drawable.bri
+        ),
+        Akun(
+            id = 6,
+            nama = "OVO",
+            imageResources = R.drawable.ovo
+        ),
+        Akun(
+            id = 7,
+            nama = "GoPay",
+            imageResources = R.drawable.gopay
+        ),
+        Akun(
+            id = 8,
+            nama = "ShopeePay",
+            imageResources = R.drawable.shopee
+        ),
+        Akun(
+            id = 9,
+            nama = "DANA",
+            imageResources = R.drawable.dana
+        )
+    )
+}

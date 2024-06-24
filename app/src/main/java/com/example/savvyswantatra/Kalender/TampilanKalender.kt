@@ -332,10 +332,24 @@ fun SimpleCalendar(month: Int, year: Int, navController : NavController) {
             }
 
         }
+    Icon(
+        imageVector = Icons.Default.AddCircle,
+        contentDescription = "add",
+        modifier = Modifier
+            .offset(x = (20).dp, y = 0.dp)
+            .width(60.dp)
+            .height(60.dp)
+            .zIndex(1f)// Ikon berada di atas kotak kalender
+            .clickable(onClick =
+            { navController.navigate("pengeluaranKalender") }),
+        tint = Pinkeu
+    )
 
     }
 
-
-
-
+@Preview(showBackground = true)
+@Composable
+fun TampilanKalenderPreview() {
+    TampilanKalender(navController = rememberNavController())
+}
 

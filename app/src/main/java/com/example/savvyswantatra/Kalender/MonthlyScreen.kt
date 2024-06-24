@@ -1,6 +1,7 @@
 package com.example.savvyswantatra.Kalender
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -475,9 +476,110 @@ fun MeiCard(){
 
     }
 }
+// Data class untuk representasi transaksi
+// Data class untuk representasi transaksi
+data class Transaksi(
+    val bulan: String,
+    val tanggal: String,
+    val kategori: String,
+    val namaTransaksi: String,
+    val jumlah: Int
+)
+
+// List bulan-bulan dalam satu tahun
+val months = listOf(
+    "Juni", "Juli", "Agustus", "September", "Oktober", "November"
+)
+
+// Contoh data transaksi untuk setiap bulan (dummy data)
+val dummyData = mapOf(
+    "Juni" to listOf(
+        Transaksi("Juni", "01", "Makanan & Minuman", "Nasi Ayam", 22000),
+        Transaksi("Juni", "02", "Mandiri", "Transfer dari Alfred", 10000),
+        // tambahkan transaksi untuk bulan Juni sesuai kebutuhan
+    ),
+    "Juli" to listOf(
+        Transaksi("Juli", "01", "Kesehatan", "Panadol", 10000),
+        Transaksi("Juli", "02", "Mandiri", "THR dari paman", 12000),
+        // tambahkan transaksi untuk bulan Juli sesuai kebutuhan
+    ),
+    "Agustus" to listOf(
+        Transaksi("Agustus", "01", "Makanan & Minuman", "Bakso", 15000),
+        Transaksi("Agustus", "02", "Transportasi", "Bensin", 50000),
+        // tambahkan transaksi untuk bulan Agustus sesuai kebutuhan
+    ),
+    // tambahkan data untuk bulan-bulan lainnya seperti September, Oktober, November, dst.
+)
+
+@Composable
+fun MonthlyScreen() {
+    var selectedMonth by remember { mutableStateOf<String?>(null) }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        months.forEach { month ->
+            Text(
+                text = month,
+                style = Typography.titleMedium,
+                color = PurpleSavvy1,
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .clickable { selectedMonth = month }            )
+            // Ketika bulan dipencet, tampilkan kartu transaksi untuk bulan tersebut
+            if (selectedMonth == month) {
+                MonthlyCard(month = month, transactions = dummyData[month] ?: emptyList())
+                Spacer(modifier = Modifier.height(10.dp))
+            } else {
+                // Tambahkan tombol atau cara lain untuk memilih bulan
+                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = PurpleSavvy1)
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun MonthlyCard(month: String, transactions: List<Transaksi>) {
+    Card(
+        shape = RoundedCornerShape(5.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = month,
+                style = Typography.titleMedium,
+                color = PurpleSavvy1,
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            transactions.forEach { transaction ->
+                TransactionItem(transaction = transaction)
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun TransactionItem(transaction: Transaksi) {
+    Column {
+        Text(
+            text = transaction.namaTransaksi,
+            style = Typography.bodyMedium,
+            color = Color.Black,
+        )
+        Text(
+            text = "Rp ${transaction.jumlah}",
+            style = Typography.bodySmall,
+            color = Color.Black,
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun MonthlyScreenPreview() {
-    MonthlyScreen(navController = rememberNavController())
+    MonthlyScreen()
 }
