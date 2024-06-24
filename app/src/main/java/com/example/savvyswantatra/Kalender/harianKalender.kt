@@ -56,8 +56,28 @@
         modifier: Modifier = Modifier,
     ) {
         val groupedByDate = itemList.groupBy { it.dateDataHarian }
+        var currentMonth by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+        var currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
 
-        kalenderbar(navController)
+        val onPreviousMonth: () -> Unit = {
+            if (currentMonth == 0) {
+                currentMonth = 11
+                currentYear--
+            } else {
+                currentMonth--
+            }
+        }
+
+        val onNextMonth: () -> Unit = {
+            if (currentMonth == 11) {
+                currentMonth = 0
+                currentYear++
+            } else {
+                currentMonth++
+            }
+        }
+        kalenderbar(navController, currentMonth, currentYear, onPreviousMonth, onNextMonth)
+
         Card(
             shape = RectangleShape,
             modifier = Modifier
@@ -77,12 +97,12 @@
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Pemasukan", color = PurpleSavvy2, style = Typography.bodyMedium)
-                        Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
+                        Text("Pemasukan", color = Pinkeu, style = Typography.bodyMedium)
+                        Text("Rp0", color = Pinkeu, style = Typography.bodyMedium)
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("Pengeluaran", color = PurpleSavvy2, style = Typography.bodyMedium)
-                        Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
+                        Text("Pengeluaran", color = Pinkeu, style = Typography.bodyMedium)
+                        Text("Rp0", color = Pinkeu, style = Typography.bodyMedium)
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
@@ -121,12 +141,12 @@
                                 modifier = Modifier.padding(horizontal = 5.dp)
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            HorizontalDivider(color = PurpleSavvy2, thickness = 2.dp)
+                            if(items.indexOf(item) < items.size - 1){
+                                HorizontalDivider(color = PurpleSavvy2, thickness = 2.dp)
 
+                            }
                         }
                     }
-
-
                 }
             }
         }

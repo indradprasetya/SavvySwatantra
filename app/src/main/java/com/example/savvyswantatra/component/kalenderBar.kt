@@ -1,6 +1,7 @@
 package com.example.savvyswantatra.component
 
 import android.provider.ContactsContract.Data
+import android.util.Log
 import android.widget.CalendarView
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -29,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.savvyswantatra.Kalender.CalendarView
+//import com.example.savvyswantatra.Kalender.CalendarView
 import com.example.savvyswantatra.R
 import com.example.savvyswantatra.model.DummyData
 import com.example.savvyswantatra.model.TransaksiKalender
@@ -39,352 +40,218 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
 import com.example.savvyswantatra.model.KalenderData
+import java.text.SimpleDateFormat
 
 
 @Composable
-fun kalenderbar(navController: NavController) {
+fun kalenderbar(navController: NavController, currentMonth: Int,
+                currentYear: Int,
+                onPreviousMonth: () -> Unit,
+                onNextMonth: () -> Unit) {
     // MutableState untuk mengontrol item yang dipilih
-    var selectedItem by remember { mutableStateOf<String?>(null) }
-    var isKalenderSelected by remember { mutableStateOf(false) }
 
 
+    var (selectedItem, setSelectedItem) = rememberSaveable { mutableStateOf("Kalender") }
 
-
+    Log.d("KalenderBar", "Recompose with selectedItem: $selectedItem")
 
     // Fungsi untuk menampilkan Divider di bawah item yang dipilih
     fun isItemSelected(item: String): Boolean {
         return selectedItem == item
     }
+
     Box(
+        modifier = Modifier
+            .background(PurpleSavvy1)
+            .fillMaxSize()
+
+    )
+    {
+        Text(
+            text = "Transaksi",
+            style = Typography.titleMedium,
+            fontWeight = FontWeight.SemiBold,
+            color = WhiteSavvy,
+            fontFamily = poppinsFontFamily,
             modifier = Modifier
-                .fillMaxSize()
-                .background(PurpleSavvy1)
+                .align(Alignment.TopCenter)
+                .padding(vertical = 70.dp)
+
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(top = 100.dp)
+                .padding(start = 15.dp)
+                .padding(end = 15.dp)
+                .align(Alignment.TopCenter)
+
+
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Header
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 40.dp, bottom = 0.dp)
-                        .background(color = Color.Transparent)
-                        .height(50.dp)
-                ) {
-                    Text(
-                        text = "Transaksi",
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.align(Alignment.Center),
-                        color = Color.White,
-                        style = Typography.titleMedium
-                    )
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu Icon",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 25.dp, top = 3.dp)
-                            .size(30.dp)
-                    )
-                }
+            Spacer(modifier = Modifier.width(15.dp))
+            IconButton(onClick = onPreviousMonth) {
+                Icon(
+                    Icons.Filled.KeyboardArrowLeft,
+                    contentDescription = "Previous Month",
+                    tint = WhiteSavvy
+                )
+            }
+            Text(
+                text = "${getMonthName(currentMonth)} $currentYear",
+                style = Typography.bodySmall,
+                color = WhiteSavvy
+            )
+            IconButton(onClick = onNextMonth) {
+                Icon(
+                    Icons.Filled.KeyboardArrowRight,
+                    contentDescription = "Next Month",
+                    tint = WhiteSavvy
+                )
+            }
+            Spacer(modifier = Modifier.width(15.dp))
 
-                // Calendar View
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color.Transparent)
-                        .padding(vertical = 0.dp)
-                ) {
-                    CalendarView()
-                }
-
-                // Tabs
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(20.dp)
-                        .background(color = PurpleSavvy1)
-                        .padding(vertical = 0.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(modifier = Modifier
-                            .clickable(onClick = {
-                                selectedItem = "Kalender"
-                                navController.navigate("TampilanKalender")
-                            })) {
-                            Text(
-                                text = "Kalender",
-                                fontSize = 10.sp,
-                                color = Color.White,
-                                fontFamily = poppinsFontFamily,
-                                modifier = Modifier.clickable(onClick = {
-                                    selectedItem = "Kalender"
-                                    navController.navigate("TampilanKalender")
-                                })
-                            )
-                            if (selectedItem == "Kalender") {
-                                Divider(
-                                    modifier = Modifier.width(45.dp)
-                                        .align(Alignment.BottomCenter),
-                                    thickness = 2.dp,
-                                    color = OrangeSavvy
-                                )
-                            }
-                        }
-                        Box(modifier = Modifier
-                            .clickable(onClick = {
-                                selectedItem = "Harian"
-                                navController.navigate("harianKalender")
-                            })
-                            .fillMaxHeight(),
-                            contentAlignment = Alignment.Center) {
-                            Text(
-                                text = "Harian",
-                                fontSize = 10.sp,
-                                color = Color.White,
-                                fontFamily = poppinsFontFamily
-                            )
-                            if (isItemSelected("Harian")) {
-                                Divider(
-                                    modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .width(45.dp),
-                                    thickness = 2.dp,
-                                    color = OrangeSavvy // Warna OrangeSavvy
-                                )
-                            }
-                        }
-                        Text(
-                            text = "Mingguan",
-                            fontSize = 10.sp,
-                            fontFamily = poppinsFontFamily,
-                            color = Color.White,
-                            modifier = Modifier.clickable (onClick = { navController.navigate("mingguanKalender") })
-                        )
-
-                        Text(
-                            text = "Bulanan",
-                            fontSize = 10.sp,
-                            fontFamily = poppinsFontFamily,
-                            color = Color.White,
-                            modifier = Modifier.clickable (onClick = { navController.navigate("bulananKalender") })
-                        )
-                        Text(
-                            text = "Ringkasan",
-                            fontSize = 10.sp,
-                            fontFamily = poppinsFontFamily,
-                            color = Color.White,
-                            modifier = Modifier.clickable (onClick = { navController.navigate("harianKalender") })
+        }
+        Row(
+            modifier = Modifier
+                .padding(vertical = 155.dp)
+        ) {
+            Spacer(modifier = Modifier.width(25.dp))
+            Column {
+                Text(
+                    text = "Kalender",
+                    style = Typography.bodySmall,
+                    color = Color.White,
+                    modifier = Modifier.clickable {
+                        setSelectedItem("Kalender")
+                        navController.navigate("kalender")
+                    }
+                )
+                if (isItemSelected("Kalender")) {
+                    Column {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Divider(
+                            modifier = Modifier.width(45.dp),
+                            thickness = 4.dp,
+                            color = OrangeSavvy // Warna OrangeSavvy
                         )
                     }
                 }
-
-
-//    Box(
-//        modifier = Modifier
-//            .background(PurpleSavvy1)
-//            .fillMaxSize()
-//
-//    )
-//    {
-//        Text(
-//            text = "Transaksi",
-//            style = Typography.titleMedium,
-//            fontWeight = FontWeight.SemiBold,
-//            color = WhiteSavvy,
-//            fontFamily = poppinsFontFamily,
-//            modifier = Modifier
-//                .align(Alignment.TopCenter)
-//                .padding(vertical = 70.dp)
-//
-//        )
-//        Spacer(modifier = Modifier.height(10.dp))
-//        Text(
-//            text = "Mei 2024",
-//            style = Typography.bodySmall,
-//            color = WhiteSavvy,
-//            fontFamily = poppinsFontFamily,
-//            modifier = Modifier
-//                .align(Alignment.TopCenter)
-//                .padding(vertical = 110.dp)
-//
-//        )
-//        Row(
-//            modifier = Modifier
-//                .padding(vertical = 155.dp)
-//        ) {
-//            Spacer(modifier = Modifier.width(25.dp))
-//            Column {
-//                Text(
-//                    text = "Kalender",
-//                    style = Typography.bodySmall,
-//                    color = Color.White,
-//                    modifier = Modifier.clickable (onClick =
-//                    { navController.navigate("kalender") })
-//                )
-//                if (isItemSelected("Kalender")) {
-//                    Column {
-//                        Spacer(modifier = Modifier.height(5.dp))
-//                        Divider(
-//                            modifier = Modifier.width(45.dp),
-//                            thickness = 4.dp,
-//                            color = OrangeSavvy // Warna OrangeSavvy
-//                        )
-//                    }
-//                }
-//            }
-//            Spacer(modifier = Modifier.width(25.dp))
-//            Column {
-//                Text(
-//                    text = "Harian",
-//                    style = Typography.bodySmall,
-//                    color = Color.White,
-//                    modifier = Modifier.clickable(onClick =
-//                    { navController.navigate("harianKalender") })
-//                )
-//                if (isItemSelected("Harian")) {
-//                    Column {
-//                        Spacer(modifier = Modifier.height(5.dp))
-//                        Divider(
-//                            modifier = Modifier.width(45.dp),
-//                            thickness = 4.dp,
-//                            color = OrangeSavvy  // Warna OrangeSavvy
-//                        )
-//                    }
-//                }
-//            }
-//
-//            Spacer(modifier = Modifier.width(25.dp))
-//            Column {
-//                Text(
-//                    text = "Mingguan",
-//                    style = Typography.bodySmall,
-//                    color = Color.White,
-//                    modifier = Modifier.clickable (onClick =
-//                    { navController.navigate("mingguanKalender") })
-//                )
-//                if (isItemSelected("Mingguan")) {
-//                    Column {
-//                        Spacer(modifier = Modifier.height(5.dp))
-//                        Divider(
-//                            modifier = Modifier.width(45.dp),
-//                            thickness = 4.dp,
-//                            color = OrangeSavvy  // Warna OrangeSavvy
-//                        )
-//                    }
-//                }
-//            }
-//
-//            Spacer(modifier = Modifier.width(25.dp))
-//            Column {
-//                Text(
-//                    text = "Bulanan",
-//                    style = Typography.bodySmall,
-//                    color = Color.White,
-//                    modifier = Modifier.clickable (onClick =
-//                    { navController.navigate("bulananKalender") })
-//                )
-//                if (isItemSelected("bulananKalender")) {
-//                    Column {
-//                        Spacer(modifier = Modifier.height(5.dp))
-//                        Divider(
-//                            modifier = Modifier.width(45.dp),
-//                            thickness = 4.dp,
-//                            color = OrangeSavvy  // Warna OrangeSavvy
-//                        )
-//                    }
-//                }
-//            }
-//
-//            Spacer(modifier = Modifier.width(25.dp))
-//            Column {
-//                Text(
-//                    text = "Ringkasan",
-//                    style = Typography.bodySmall,
-//                    color = Color.White,
-//                    modifier = Modifier.clickable  { setSelectedItem("Ringkasan")
-//                        navController.navigate("ringkasanKalender")}
-//                )
-//                if (isItemSelected("Ringkasan")) {
-//                    Column {
-//                        Spacer(modifier = Modifier.height(5.dp))
-//                        Divider(
-//                            modifier = Modifier.width(45.dp),
-//                            thickness = 4.dp,
-//                            color = OrangeSavvy  // Warna OrangeSavvy
-//                        )
-//                    }
-//                }
-//            }
-//
-//
-//            Spacer(modifier = Modifier.width(25.dp))
-//        }
-    }
-        @Composable
-        fun CalendarView() {
-            var currentYearMonth by remember { mutableStateOf(YearMonth.now()) }
-
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                ) {
-                    IconButton(onClick = { currentYearMonth = currentYearMonth.minusMonths(1) }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Previous Month",
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
+            }
+            Spacer(modifier = Modifier.width(25.dp))
+            Column {
+                Text(
+                    text = "Harian",
+                    style = Typography.bodySmall,
+                    color = Color.White,
+                    modifier = Modifier.clickable {
+                        setSelectedItem("Harian")
+                        navController.navigate("harianKalender")
                     }
-                    Text(
-                        text = "${
-                            currentYearMonth.month.getDisplayName(
-                                TextStyle.FULL,
-                                Locale.getDefault()
-                            )
-                        } ${currentYearMonth.year}",
-                        style = Typography.bodyMedium,
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        fontWeight = FontWeight.Thin
-                    )
-                    IconButton(onClick = { currentYearMonth = currentYearMonth.plusMonths(1) }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowForward,
-                            contentDescription = "Next Month",
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
+                )
+                if (isItemSelected("Harian")) {
+                    Column {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Divider(
+                            modifier = Modifier.width(45.dp),
+                            thickness = 4.dp,
+                            color = OrangeSavvy  // Warna OrangeSavvy
                         )
                     }
                 }
             }
 
+            Spacer(modifier = Modifier.width(25.dp))
+            Column {
+                Text(
+                    text = "Mingguan",
+                    style = Typography.bodySmall,
+                    color = Color.White,
+                    modifier = Modifier.clickable
+                    {
+                        setSelectedItem("Mingguan")
+                        navController.navigate("mingguanKalender")
+                    }
+                )
+                if (isItemSelected("Mingguan")) {
+                    Column {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Divider(
+                            modifier = Modifier.width(45.dp),
+                            thickness = 4.dp,
+                            color = OrangeSavvy  // Warna OrangeSavvy
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.width(25.dp))
+            Column {
+                Text(
+                    text = "Bulanan",
+                    style = Typography.bodySmall,
+                    color = Color.White,
+                    modifier = Modifier.clickable
+                    {
+                        setSelectedItem("bulananKalender")
+                        navController.navigate("bulananKalender")
+                    }
+                )
+                if (isItemSelected("bulananKalender")) {
+                    Column {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Divider(
+                            modifier = Modifier.width(45.dp),
+                            thickness = 4.dp,
+                            color = OrangeSavvy  // Warna OrangeSavvy
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.width(25.dp))
+            Column {
+                Text(
+                    text = "Ringkasan",
+                    style = Typography.bodySmall,
+                    color = Color.White,
+                    modifier = Modifier.clickable {
+                        setSelectedItem("Ringkasan")
+                        navController.navigate("ringkasanKalender")
+                        Log.d("KalenderBar", "Ringkasan clicked")
+                    }
+                )
+                if (isItemSelected("Ringkasan")) {
+                    Column {
+                        Spacer(modifier = Modifier.height(5.dp))
+                        Divider(
+                            modifier = Modifier.width(45.dp),
+                            thickness = 4.dp,
+                            color = OrangeSavvy  // Warna OrangeSavvy
+                        )
+                    }
+                }
+            }
+
+
+            Spacer(modifier = Modifier.width(25.dp))
         }
     }
-    }
-//}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewKalenderBar() {
-    val navController = rememberNavController()
-    kalenderbar(navController = navController)
 }
+
+fun getMonthName(month: Int): String {
+    return SimpleDateFormat("MMMM", Locale("id", "ID")).format(Calendar.getInstance().apply {
+        set(Calendar.MONTH, month)
+    }.time)
+}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewKalenderBar() {
+//    val navController = rememberNavController()
+//    kalenderbar(navController = navController)
+//}
 
 
 

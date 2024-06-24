@@ -18,6 +18,10 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,8 +45,10 @@ import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.Typography
 import java.time.format.DateTimeFormatter
 import com.example.savvyswantatra.component.MingguanKalenderItem
+import com.example.savvyswantatra.ui.theme.Pinkeu
 import java.text.NumberFormat
 import java.time.LocalDate
+import java.util.Calendar
 import java.util.Locale
 
 
@@ -53,8 +59,28 @@ fun MingguanKalender(
     modifier: Modifier = Modifier,
 ) {
     val groupedByDate = itemList.groupBy { it.dateDataMingguan }
+    var currentMonth by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    var currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
 
-    kalenderbar(navController)
+    val onPreviousMonth: () -> Unit = {
+        if (currentMonth == 0) {
+            currentMonth = 11
+            currentYear--
+        } else {
+            currentMonth--
+        }
+    }
+
+    val onNextMonth: () -> Unit = {
+        if (currentMonth == 11) {
+            currentMonth = 0
+            currentYear++
+        } else {
+            currentMonth++
+        }
+    }
+    kalenderbar(navController, currentMonth, currentYear, onPreviousMonth, onNextMonth)
+
     Card(
         shape = RectangleShape,
         modifier = Modifier
@@ -74,8 +100,8 @@ fun MingguanKalender(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Pemasukan", color = PurpleSavvy2, style = Typography.bodyMedium)
-                    Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
+                    Text("Pemasukan", color = Pinkeu, style = Typography.bodyMedium)
+                    Text("Rp0", color = Pinkeu, style = Typography.bodyMedium)
                 }
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Pengeluaran", color = PurpleSavvy2, style = Typography.bodyMedium)
