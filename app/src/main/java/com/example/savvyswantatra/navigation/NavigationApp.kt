@@ -35,7 +35,7 @@ import com.example.savvyswantatra.DetailScreen
 import com.example.savvyswantatra.Kalender.FormExpense
 import com.example.savvyswantatra.Kalender.FormIncome
 import com.example.savvyswantatra.Kalender.HarianKalender
-import com.example.savvyswantatra.Kalender.KalenderMingguan
+import com.example.savvyswantatra.Kalender.MingguanKalender
 import com.example.savvyswantatra.Kalender.MonthlyScreen
 import com.example.savvyswantatra.Kalender.RingkasanScreen
 import com.example.savvyswantatra.Kalender.TampilanKalender
@@ -49,6 +49,7 @@ import com.example.savvyswantatra.Wt1_screen
 import com.example.savvyswantatra.Wt2_screen
 import com.example.savvyswantatra.Wt3_screen
 import com.example.savvyswantatra.component.AnggaranData
+
 import com.example.savvyswantatra.model.KategoriAnggaran
 import com.example.savvyswantatra.component.KategoriAnggaranData
 import com.example.savvyswantatra.pengaturan.SyaratKet
@@ -107,7 +108,7 @@ fun NavigationApp() {
             VerifSucceed(navController = navController)
         }
         composable(Screen.syaratket.route) {
-            SyaratKet()
+            SyaratKet(navControler = navController)
         }
         composable(Screen.ubahsandi.route) {
             ubahSandi(navController = navController)
@@ -154,16 +155,18 @@ fun NavigationApp() {
             RingkasanScreen(navController = navController)
         }
         composable(Screen.harianKalender.route){
-            HarianKalender(navController = navController)
-        }
+            HarianKalender(navController = navController)}
         composable(Screen.mingguanKalender.route){
-            KalenderMingguan(navController = navController)
+            MingguanKalender(navController = navController)
         }
         composable(Screen.pemasukanKalender.route){
             FormIncome(navController = navController)
         }
         composable(Screen.pengeluaranKalender.route){
             FormExpense(navController = navController)
+        }
+        composable(Screen.tampilanKalender.route){
+            TampilanKalender(navController = navController)
         }
 
 
@@ -197,6 +200,41 @@ fun NavigationApp() {
                 bottomBar = { BottomNavigationBar(navController) }
             ) {
                 TampilanKalender(navController)
+            }
+        }
+        composable(Screen.bulananKalender.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                MonthlyScreen(navController)
+            }
+        }
+        composable(Screen.ringkasanKalender.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                RingkasanScreen(navController)
+            }
+        }
+        composable(Screen.harianKalender.route) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    bottomBar = { BottomNavigationBar(navController) }
+                ) {
+                    HarianKalender(
+                        navController = navController,
+                    )
+                }
+            }
+
+        composable(Screen.mingguanKalender.route) {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = { BottomNavigationBar(navController) }
+            ) {
+                MingguanKalender(navController = navController,)
             }
         }
         composable(Screen.anggaran.route) {

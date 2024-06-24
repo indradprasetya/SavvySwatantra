@@ -1,7 +1,9 @@
 package com.example.savvyswantatra.Kalender
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.SpaceEvenly
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,531 +12,230 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.savvyswantatra.R
+import com.example.savvyswantatra.component.TransaksiBulanan
+import com.example.savvyswantatra.component.TransaksibulananData
+import com.example.savvyswantatra.component.getEndDateOfMonth
+import com.example.savvyswantatra.component.getMonthIndex
+import com.example.savvyswantatra.component.kalenderbar
+import com.example.savvyswantatra.component.monthNames
 import com.example.savvyswantatra.ui.theme.OrangeSavvy
+import com.example.savvyswantatra.ui.theme.Pinkeu
 import com.example.savvyswantatra.ui.theme.PurpleSavvy1
 import com.example.savvyswantatra.ui.theme.PurpleSavvy2
 import com.example.savvyswantatra.ui.theme.PurpleSavvy3
 import com.example.savvyswantatra.ui.theme.Typography
 import com.example.savvyswantatra.ui.theme.WhiteSavvy
 import com.example.savvyswantatra.ui.theme.poppinsFontFamily
+import java.text.DateFormatSymbols
+import java.util.Calendar
+
 
 @Composable
-fun MonthlyScreen(navController: NavController) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(PurpleSavvy1)
-
-    )
-    {
-        Text(
-            text = "Transaksi",
-            style = Typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 70.dp)
-
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        Text(
-            text = "Mei 2024",
-            style = Typography.bodySmall,
-            color = WhiteSavvy,
-            fontFamily = poppinsFontFamily,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(vertical = 110.dp)
-
-        )
-        Row (
-            modifier = Modifier
-                .padding(vertical = 155.dp)
-        ){
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Kalender",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
+fun MonthlyScreen(navController : NavController) {
+    var selectedMonth by remember { mutableStateOf<String?>(null) }
+    var currentMonth by remember { mutableStateOf(Calendar.getInstance().get(Calendar.MONTH)) }
+    var currentYear by remember { mutableStateOf(Calendar.getInstance().get(Calendar.YEAR)) }
 
 
-            )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Harian",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
 
 
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Mingguan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-
-                )
-            Spacer(modifier = Modifier.width(25.dp))
-            Column {
-                Text(
-                    text = "Bulanan",
-                    style = Typography.bodySmall,
-                    color = WhiteSavvy,
-
-
-                    )
-                Spacer(modifier = Modifier.height(5.dp))
-                Divider(modifier = Modifier
-                    .width(45.dp),
-                    thickness = 4.dp,
-                    color = OrangeSavvy
-                )
-            }
-
-            Spacer(modifier = Modifier.width(25.dp))
-            Text(
-                text = "Ringkasan",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-
-                )
-
-        }
-        // Card di bagian bawah
-        Card(
-            shape = RectangleShape,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .padding(top = 180.dp)
-        ){
-            Row (modifier = Modifier
-                .padding(top = 15.dp))
-            {
-                Spacer(modifier = Modifier
-                    .width(45.dp)
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "Pemasukan",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                    Text(
-                        text = "Rp4,586,089",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                }
-
-                Spacer(modifier = Modifier
-                    .width(45.dp)
-                )
-                Column (
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ){
-                    Text(
-                        text = "Pengeluaran",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                    Text(
-                        text = "Rp4,586,089",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy3,
-                    )
-                }
-
-                Spacer(modifier = Modifier
-                    .width(45.dp)
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = "Total",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy2,
-                    )
-                    Text(
-                        text = "Rp605,964",
-                        style = Typography.bodyMedium,
-                        color = PurpleSavvy2,
-                    )
-                }
-            }
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .padding(top = 2.dp)
-            ) {
-                MeiCard()
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "Juni",
-                    style = Typography.titleMedium,
-                    color = PurpleSavvy1,
-
-                    )
-                Text(
-                    text = "01/05 - 30/05",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy1,
-
-                    )
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = PurpleSavvy1)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "Juli",
-                    style = Typography.titleMedium,
-                    color = PurpleSavvy1,
-
-                    )
-                Text(
-                    text = "01/05 - 31/05",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy1,
-
-                    )
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = PurpleSavvy1)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "Agustus",
-                    style = Typography.titleMedium,
-                    color = PurpleSavvy1,
-
-                    )
-                Text(
-                    text = "01/05 - 31/05",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy1,
-
-                    )
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = PurpleSavvy1)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "September",
-                    style = Typography.titleMedium,
-                    color = PurpleSavvy1,
-
-                    )
-                Text(
-                    text = "01/05 - 31/05",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy1,
-
-                    )
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = PurpleSavvy1)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "Oktober",
-                    style = Typography.titleMedium,
-                    color = PurpleSavvy1,
-
-                    )
-                Text(
-                    text = "01/05 - 31/05",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy1,
-
-                    )
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = PurpleSavvy1)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = "November",
-                    style = Typography.titleMedium,
-                    color = PurpleSavvy1,
-
-                    )
-                Text(
-                    text = "01/05 - 31/05",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy1,
-
-                    )
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 1.dp, color = PurpleSavvy1)
-            }
-
-
-        }
-
-    }
-}
-
-@Composable
-fun MeiCard(){
-    Card(
-        shape = RoundedCornerShape(5.dp),
-        modifier = Modifier
-            .width(350.dp) // Set the width of the card to 318.dp
-            .height(252.dp), // Set the height of the card to 141.dp
-        colors = CardDefaults.cardColors(containerColor = PurpleSavvy1)
-    ){
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-        ) {
-            Text(
-                text = "Mei",
-                style = Typography.titleMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = WhiteSavvy,
-                fontFamily = poppinsFontFamily,
-
-            )
-            Text(
-                text = "01/05 - 31/05",
-                style = Typography.bodySmall,
-                color = WhiteSavvy,
-                fontFamily = poppinsFontFamily,
-
-            )
-        }
-        Row (
-            modifier = Modifier
-                .padding(start=120.dp)
-        ){
-            Column {
-                Row {
-                    Text(
-                        text = "17",
-                        style = Typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = WhiteSavvy,
-                        fontFamily = poppinsFontFamily,
-
-                        )
-                    Text(
-                        text = "Senin",
-                        style = Typography.bodySmall,
-                        color = WhiteSavvy,
-                        fontFamily = poppinsFontFamily,
-                        modifier = Modifier
-                            .padding(5.dp)
-
-                        )
-                }
-                Column {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.panahatas),
-                            contentDescription = "Google Icon",
-                            modifier = Modifier
-                                .size(15.dp)
-                                .padding(2.dp),
-                            tint = OrangeSavvy
-                        )
-                        Column(
-                            modifier = Modifier
-                                .padding(start = 2.dp)
-                        ) {
-                            Text(
-                                text = "Makanan & Minuman",
-                                style = Typography.bodySmall,
-                                color = WhiteSavvy,
-                                fontFamily = poppinsFontFamily,
-
-                                )
-                            Text(
-                                text = "Nasi Ayam",
-                                style = Typography.bodySmall,
-                                color = PurpleSavvy3,
-                                fontFamily = poppinsFontFamily,
-
-                                )
+                    val onPreviousMonth: () -> Unit = {
+                        if (currentMonth == 0) {
+                            currentMonth = 11
+                            currentYear--
+                        } else {
+                            currentMonth--
                         }
                     }
-                        Row {
-                            Icon(
-                                painter = painterResource(id = R.drawable.panahbawah),
-                                contentDescription = "Google Icon",
+
+                    val onNextMonth: () -> Unit = {
+                        if (currentMonth == 11) {
+                            currentMonth = 0
+                            currentYear++
+                        } else {
+                            currentMonth++
+                        }
+                    }
+                    kalenderbar(
+                        navController,
+                        currentMonth,
+                        currentYear,
+                        onPreviousMonth,
+                        onNextMonth
+                    )
+
+                    // Card di bagian bawah
+                    Card(
+                        shape = RectangleShape,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(top = 180.dp)
+                            .padding(bottom = 45.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .background(Color.White)
+                                .padding(10.dp)
+                        ) {
+                            Row(
                                 modifier = Modifier
-                                    .size(15.dp)
-                                    .padding(2.dp),
-                                tint = Color.Green
-                            )
+                                    .fillMaxWidth()
+                                    .padding(bottom = 10.dp),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text("Pemasukan", color = Pinkeu, style = Typography.bodyMedium)
+                                    Text("Rp0", color = Pinkeu, style = Typography.bodyMedium)
+                                }
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        "Pengeluaran",
+                                        color = PurpleSavvy2,
+                                        style = Typography.bodyMedium
+                                    )
+                                    Text("Rp0", color = PurpleSavvy2, style = Typography.bodyMedium)
+                                }
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    Text(
+                                        "Total",
+                                        fontWeight = FontWeight.Bold,
+                                        color = PurpleSavvy1,
+                                        style = Typography.bodyMedium
+                                    )
+                                    Text(
+                                        "Rp0",
+                                        fontWeight = FontWeight.Bold,
+                                        color = PurpleSavvy1,
+                                        style = Typography.bodyMedium
+                                    )
+                                }
+                            }
+
+
                             Column(
                                 modifier = Modifier
-                                    .padding(start = 2.dp)
+                                    .padding(10.dp)
+                                    .navigationBarsPadding()
                             ) {
-                                Text(
-                                    text = "Mandiri",
-                                    style = Typography.bodySmall,
-                                    color = WhiteSavvy,
-                                    fontFamily = poppinsFontFamily,
+                                monthNames.forEach { month ->
+                                    LazyColumn(modifier = Modifier.padding(16.dp)) {
+                                        items(monthNames) { month ->
+                                            Text(
+                                                text = month,
+                                                style = Typography.titleMedium,
+                                                color = PurpleSavvy1,
+                                                modifier = Modifier
+                                                    .padding(vertical = 8.dp)
+                                                    .clickable { selectedMonth = month }
+                                            )
+                                            // Ketika bulan dipencet, tampilkan kartu transaksi untuk bulan tersebut
+                                            if (selectedMonth == month) {
+                                                MonthlyCard(
+                                                    month = month,
+                                                    transactions = TransaksibulananData[month]
+                                                        ?: emptyList()
+                                                )
+                                                Spacer(modifier = Modifier.height(10.dp))
+                                            } else {
+                                                // Tambahkan tombol atau cara lain untuk memilih bulan
+                                                Divider(
+                                                    modifier = Modifier.fillMaxWidth(),
+                                                    color = PurpleSavvy1
+                                                )
+                                                Spacer(modifier = Modifier.height(20.dp))
 
-                                    )
-                                Text(
-                                    text = "Transfer dari Alfred",
-                                    style = Typography.bodySmall,
-                                    color = PurpleSavvy3,
-                                    fontFamily = poppinsFontFamily,
-                                )
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-
-
-                }
-                Row {
-                    Text(
-                        text = "18",
-                        style = Typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = WhiteSavvy,
-                        fontFamily = poppinsFontFamily,
-
-                        )
-                    Text(
-                        text = "Selasa",
-                        style = Typography.bodySmall,
-                        color = WhiteSavvy,
-                        fontFamily = poppinsFontFamily,
-                        modifier = Modifier
-                            .padding(5.dp)
-
-                    )
-                }
-                Column {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.panahatas),
-                            contentDescription = "Google Icon",
-                            modifier = Modifier
-                                .size(15.dp)
-                                .padding(2.dp),
-                            tint = OrangeSavvy
-                        )
-                        Column(
-                            modifier = Modifier
-                                .padding(start = 2.dp)
-                        ) {
-                            Text(
-                                text = "Kesehatan",
-                                style = Typography.bodySmall,
-                                color = WhiteSavvy,
-                                fontFamily = poppinsFontFamily,
-
-                                )
-                            Text(
-                                text = "Panadol",
-                                style = Typography.bodySmall,
-                                color = PurpleSavvy3,
-                                fontFamily = poppinsFontFamily,
-
-                                )
-                        }
                     }
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.panahbawah),
-                            contentDescription = "Google Icon",
-                            modifier = Modifier
-                                .size(15.dp)
-                                .padding(2.dp),
-                            tint = Color.Green
-                        )
-                        Column(
-                            modifier = Modifier
-                                .padding(start = 2.dp)
-                        ) {
-                            Text(
-                                text = "Mandiri",
-                                style = Typography.bodySmall,
-                                color = WhiteSavvy,
-                                fontFamily = poppinsFontFamily,
-
-                                )
-                            Text(
-                                text = "THR dari paman",
-                                style = Typography.bodySmall,
-                                color = PurpleSavvy3,
-                                fontFamily = poppinsFontFamily,
-                            )
-                        }
-                    }
-
                 }
 
-            }
-            Column (
-                modifier = Modifier
-                    .padding(start = 25.dp)
+@Composable
+fun MonthlyCard(month: String, transactions: List<TransaksiBulanan>) {
+        Card(
+            shape = RoundedCornerShape(5.dp),
+            colors = CardDefaults.cardColors(containerColor = PurpleSavvy1),
+            modifier = Modifier
+                .fillMaxWidth(),
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
             ) {
+                val startDate = "01"
+                val endDate = getEndDateOfMonth(month)
                 Text(
-                    text = "Rp22,000",
-                    style = Typography.bodyMedium,
-                    color = WhiteSavvy,
-                    )
-                Spacer(modifier = Modifier.height(25.dp))
-                Text(
-                    text = "Rp10,000",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy3,
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(
-                    text = "Rp12,000",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy3,
-                )
-                Spacer(modifier = Modifier.height(7.dp))
-                Text(
-                    text = "Rp22,000",
-                    style = Typography.bodyMedium,
+                    text = "$startDate/${getMonthIndex(month)} - $endDate/${getMonthIndex(month)}",
+                    style = Typography.titleSmall,
                     color = WhiteSavvy,
                 )
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    text = "Rp10,000",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy3,
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(
-                    text = "Rp12,000",
-                    style = Typography.bodySmall,
-                    color = PurpleSavvy3,
-                )
+                Spacer(modifier = Modifier.height(10.dp))
 
+                transactions.forEach { transaction ->
+                    TransactionItem(transaction = transaction)
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
             }
-
-
         }
-
-    }
 }
+
+
+@Composable
+    fun TransactionItem(transaction: TransaksiBulanan) {
+        Column {
+            Text(
+                text = transaction.catatan,
+                style = Typography.bodyMedium,
+                color = WhiteSavvy,
+            )
+            Text(
+                text = "Rp ${transaction.jumlah}",
+                style = Typography.bodySmall,
+                color = WhiteSavvy,
+            )
+        }
+    }
+
 
 @Preview(showBackground = true)
 @Composable
 fun MonthlyScreenPreview() {
-    MonthlyScreen(navController = rememberNavController())
+    val navController = rememberNavController()
+    MonthlyScreen(navController)
 }
